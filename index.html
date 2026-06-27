@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tesla Investor Hub</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-main: #050505;
+            --bg-card: #0d0d0d;
+            --tesla-red: #e82127;
+            --text-main: #ffffff;
+            --text-muted: #707070;
+            --border-color: #1c1c1c;
+            --green-trend: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- AUTH MATRIX INTERFACE OVERLAY --- */
+        #auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+        .auth-card {
+            background: var(--bg-card);
+            padding: 30px 20px; border-radius: 16px;
+            width: 100%; max-width: 400px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .auth-card h2 { color: var(--tesla-red); margin-bottom: 20px; font-weight: 700; letter-spacing: 2px; font-size: 20px; }
+        .auth-card input {
+            width: 100%; padding: 14px; margin: 8px 0;
+            background: #141414; border: 1px solid var(--border-color);
+            color: white; border-radius: 8px; outline: none; font-size: 14px;
+        }
+        .auth-card button {
+            width: 100%; padding: 14px; background: var(--tesla-red);
+            color: white; border: none; border-radius: 8px;
+            font-weight: 600; cursor: pointer; margin-top: 15px; font-size: 14px;
+        }
+        .auth-toggle-text { margin-top: 20px; font-size: 13px; color: var(--text-muted); }
+        .auth-toggle-text span { color: var(--text-main); cursor: pointer; font-weight: 500; text-decoration: underline; }
+
+        /* --- LAYOUT WRAPPER PANELS --- */
+        .wrapper {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 80px; /* Space for Mobile Bottom Navigation bar */
+        }
+
+        /* --- MOBILE PREMIUM TOP NAVBAR HEADER --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #000000;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-left-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-left-brand i {
+            color: var(--tesla-red);
+            font-size: 22px;
+        }
+        .nav-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .nav-icon-btn {
+            color: var(--text-main);
+            font-size: 18px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .nav-icon-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: var(--tesla-red);
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 4px;
+            border-radius: 10px;
+            color: white;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-profile img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--border-color);
+        }
+
+        /* --- MAIN MOBILE BOX CONTAINERS --- */
+        .main-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Live Status Info Stripe Row */
+        .status-manager-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .manager-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+        .manager-info strong {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        .online-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--green-trend);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--green-trend);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--green-trend);
+        }
+
+        /* Hero Image Welcome Banner */
+        .hero-banner {
+            position: relative;
+            height: 180px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.2), #000000), url('https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=800&q=80') center/cover;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .hero-text h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .hero-text p { color: var(--text-muted); font-size: 13px; }
+
+        /* Balance & Profit Panel Stacking Cards */
+        .metrics-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 24px 20px;
+            border-radius: 16px;
+            position: relative;
+        }
+        .metric-card.accent-red-bg {
+            background: linear-gradient(135deg, #2b0406 0%, var(--bg-card) 100%);
+        }
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .metric-card h3 { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+        
+        .visibility-toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+        }
+        .visibility-toggle-btn:hover { color: #fff; }
+
+        .metric-card .value-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .metric-card .value { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .copy-wallet-btn {
+            background: #141414;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 12px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .copy-wallet-btn:hover { color: #fff; border-color: #333; }
+
+        .metric-card .trend { font-size: 12px; color: var(--green-trend); display: flex; align-items: center; gap: 4px; font-weight: 500; }
+
+        /* Quick Action Icon Grid */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .action-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 16px 10px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .action-btn i { font-size: 18px; color: var(--tesla-red); }
+        .action-btn span { font-size: 12px; font-weight: 500; color: var(--text-main); }
+
+        /* Unified Stack Panels */
+        .panel-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .panel-header h3 { font-size: 16px; font-weight: 600; }
+        .panel-select { background: #141414; border: 1px solid var(--border-color); color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 12px; outline: none; }
+
+        /* Mobile Chart View Sizing wrappers */
+        .chart-frame-bar { position: relative; width: 100%; height: 260px; }
+        .chart-frame-donut { position: relative; width: 100%; height: 200px; margin: 10px 0; }
+
+        /* Portfolio Breakdowns */
+        .allocation-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .allocation-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; border-bottom: 1px solid #141414; padding-bottom: 8px; }
+        .alloc-left { display: flex; align-items: center; gap: 8px; }
+        .alloc-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .alloc-label { color: var(--text-muted); }
+        .alloc-pct { font-weight: 600; color: #fff; margin-left: 4px; }
+
+        .view-all-btn { width: 100%; background: #141414; border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; color: #fff; font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 15px; text-align: center; }
+
+        /* Lists Tables for Mobile layout */
+        .watchlist-table { width: 100%; border-collapse: collapse; }
+        .watchlist-table th { color: var(--text-muted); font-size: 12px; font-weight: 500; padding-bottom: 10px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .watchlist-table td { padding: 12px 0; font-size: 13px; border-bottom: 1px solid #141414; }
+        .trend-green { color: var(--green-trend); font-weight: 500; }
+        .trend-red { color: #ef4444; font-weight: 500; }
+
+        /* Settings item rows */
+        .quick-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: #141414; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        .quick-left { display: flex; align-items: center; gap: 12px; }
+        .quick-left i { font-size: 16px; color: var(--text-muted); width: 20px; text-align: center; }
+        .quick-details h4 { font-size: 13px; font-weight: 500; color: #fff; }
+        .quick-details p { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+        .quick-right { color: var(--text-muted); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+        .quick-badge { background: var(--tesla-red); color: white; font-size: 10px; font-weight: bold; padding: 1px 6px; border-radius: 10px; }
+
+        /* Promotional Marketing Section */
+        .promo-banner {
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, #000000 100%), url('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80') center/cover;
+            border: 1px solid var(--border-color); border-radius: 16px; padding: 30px 20px; display: flex; flex-direction: column; gap: 12px;
+        }
+        .promo-banner h2 { font-size: 24px; font-weight: 700; }
+        .promo-banner p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+        .promo-btn { background: var(--tesla-red); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; width: max-content; margin-top: 5px; }
+
+        /* Responsive Mobile Footer layout */
+        footer {
+            border-top: 1px solid var(--border-color); padding: 30px 0 10px 0; margin-top: 10px;
+            display: flex; flex-direction: column; gap: 24px; font-size: 13px; color: var(--text-muted);
+        }
+        footer h4 { color: white; margin-bottom: 10px; font-size: 14px; font-weight: 600; }
+        footer p { margin-bottom: 8px; line-height: 1.4; }
+        .footer-socials { display: flex; gap: 15px; margin-top: 10px; }
+        .footer-socials a { color: var(--text-muted); font-size: 16px; }
+        .copyright-bar { text-align: center; font-size: 11px; color: var(--text-muted); padding-top: 20px; border-top: 1px solid #111; margin-top: 20px; }
+
+        /* --- PREMIUM MOBILE BOTTOM FIXED NAVIGATION BAR --- */
+        .mobile-bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: 64px;
+            background: #000000;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 999;
+            padding: 0 10px;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 18px;
+            gap: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .nav-item.active {
+            color: var(--tesla-red);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-overlay">
+        <div class="auth-card" id="login-mode-card">
+            <h2>TESLA LOGIN</h2>
+            <input type="email" id="login-email" placeholder="Investor Email Address">
+            <input type="password" id="login-password" placeholder="Secure Dashboard Key">
+            <button onclick="handleLoginClick()">Secure Authentication</button>
+            <div class="auth-toggle-text">
+                New investor? <span onclick="toggleAuthMode('signup')">Join Journey / Register</span>
+            </div>
+        </div>
+
+        <div class="auth-card" id="signup-mode-card" style="display: none;">
+            <h2>INVESTOR SIGNUP</h2>
+            <input type="text" id="signup-name" placeholder="Full Name">
+            <input type="email" id="signup-email" placeholder="Gmail Address">
+            <input type="password" id="signup-password" placeholder="Create Access Key">
+            <input type="text" id="signup-phone" placeholder="Phone Number">
+            <button onclick="handleSignupClick()">Submit Registration</button>
+            <div class="auth-toggle-text">
+                Already registered? <span onclick="toggleAuthMode('login')">Return to Login</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <nav>
+            <div class="nav-left-brand">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="nav-right-actions">
+                <button class="nav-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="nav-icon-btn">
+                    <i class="fa-regular fa-bell"></i>
+                    <div class="nav-icon-badge">3</div>
+                </button>
+                <div class="user-profile">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Profile">
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            
+            <div class="status-manager-bar">
+                <div class="manager-info">
+                    Account Manager: <strong>Sarah Jenkins</strong>
+                </div>
+                <div class="online-status">
+                    <div class="online-dot"></div>
+                    Online
+                </div>
+            </div>
+
+            <div class="hero-banner">
+                <div class="hero-text">
+                    <h1 id="welcome-string">Welcome back, Alex Morgan</h1>
+                    <p>Track. Invest. Grow.</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card accent-red-bg">
+                    <div class="metric-header">
+                        <h3>Total Balance</h3>
+                        <button class="visibility-toggle-btn" onclick="toggleBalanceVisibility('balance')">
+                            <i id="balance-eye-icon" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="value-container">
+                        <div class="value" id="dash-balance">$200,500.00</div>
+                        <button class="copy-wallet-btn" onclick="copyWalletAddress()"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <div class="trend"><i class="fa-solid fa-caret-up"></i> 5.24% vs last month</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <h3>Total Profit</h3>
+                        <button class="visibility-toggle-btn" onclick="toggleBalanceVisibility('profit')">
+                            <i id="profit-eye-icon" class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="value-container">
+                        <div class="value" id="dash-profit">$150,000.00</div>
+                    </div>
+                    <div class="trend"><i class="fa-solid fa-caret-up"></i> 8.45% vs last month</div>
+                </div>
+            </div>
+
+            <div class="actions-grid">
+                <div class="action-btn" onclick="triggerAction('Invest')"><i class="fa-solid fa-circle-dollar-to-slot"></i><span>Invest</span></div>
+                <div class="action-btn" onclick="triggerAction('Withdraw')"><i class="fa-solid fa-building-columns"></i><span>Withdraw</span></div>
+                <div class="action-btn" onclick="triggerAction('Send')"><i class="fa-solid fa-paper-plane"></i><span>Send</span></div>
+                <div class="action-btn" onclick="triggerAction('Buy Share')"><i class="fa-solid fa-chart-line"></i><span>Buy Share</span></div>
+                <div class="action-btn" onclick="triggerAction('Receive')"><i class="fa-solid fa-hand-holding-dollar"></i><span>Receive</span></div>
+                <div class="action-btn" onclick="triggerAction('Bills')"><i class="fa-solid fa-receipt"></i><span>Bills</span></div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h3>Stock Delivery</h3>
+                    <select class="panel-select">
+                        <option>2024</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                    </select>
+                </div>
+                <div class="chart-frame-bar">
+                    <canvas id="barChartCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h3>My Portfolio</h3>
+                </div>
+                <div class="chart-frame-donut">
+                    <canvas id="donutChartCanvas"></canvas>
+                </div>
+                <div class="allocation-list">
+                    <div class="allocation-item">
+                        <div class="alloc-left">
+                            <div class="alloc-dot" style="background: var(--tesla-red);"></div>
+                            <div class="alloc-label">Tesla Stock (TSLA) <span class="alloc-pct">70%</span></div>
+                        </div>
+                        <div>$140,350.00</div>
+                    </div>
+                    <div class="allocation-item">
+                        <div class="alloc-left">
+                            <div class="alloc-dot" style="background: #333333;"></div>
+                            <div class="alloc-label">Cash Balance <span class="alloc-pct">20%</span></div>
+                        </div>
+                        <div>$40,100.00</div>
+                    </div>
+                    <div class="allocation-item">
+                        <div class="alloc-left">
+                            <div class="alloc-dot" style="background: #707070;"></div>
+                            <div class="alloc-label">Other Assets <span class="alloc-pct">10%</span></div>
+                        </div>
+                        <div>$20,050.00</div>
+                    </div>
+                </div>
+                <button class="view-all-btn" onclick="triggerAction('Markets')">View Portfolio</button>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h3>Futures & Watchlist</h3>
+                </div>
+                <table class="watchlist-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><b>TSLA</b><br><span style="font-size:10px;color:var(--text-muted)">Tesla, Inc.</span></td><td>$254.85</td><td class="trend-green">+5.13%</td></tr>
+                        <tr><td><b>NASDAQ 100</b><br><span style="font-size:10px;color:var(--text-muted)">NQ FUT</span></td><td>18,892.25</td><td class="trend-green">+0.51%</td></tr>
+                        <tr><td><b>S&P 500</b><br><span style="font-size:10px;color:var(--text-muted)">ES FUT</span></td><td>5,345.75</td><td class="trend-green">+0.44%</td></tr>
+                        <tr><td><b>Dow Jones</b><br><span style="font-size:10px;color:var(--text-muted)">YM FUT</span></td><td>38,932.00</td><td class="trend-red">-0.12%</td></tr>
+                        <tr><td><b>Gold</b><br><span style="font-size:10px;color:var(--text-muted)">GC FUT</span></td><td>2,385.40</td><td class="trend-green">+0.72%</td></tr>
+                    </tbody>
+                </table>
+                <button class="view-all-btn" onclick="triggerAction('Markets')">View All Watchlist</button>
+            </div>
+
+            <div class="panel-box">
+                <div class="panel-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                
+                <div class="quick-item" onclick="triggerAction('Profile Settings')">
+                    <div class="quick-left">
+                        <i class="fa-regular fa-user"></i>
+                        <div class="quick-details">
+                            <h4>Profile Settings</h4>
+                            <p>Manage your account</p>
+                        </div>
+                    </div>
+                    <div class="quick-right"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+
+                <div class="quick-item" onclick="triggerAction('About Us')">
+                    <div class="quick-left">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <div class="quick-details">
+                            <h4>About Us</h4>
+                            <p>Learn more about Tesla</p>
+                        </div>
+                    </div>
+                    <div class="quick-right"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+
+                <div class="quick-item" onclick="triggerAction('Messages')">
+                    <div class="quick-left">
+                        <i class="fa-regular fa-envelope"></i>
+                        <div class="quick-details">
+                            <h4>Messages</h4>
+                            <p>You have 3 new messages</p>
+                        </div>
+                    </div>
+                    <div class="quick-right"><span class="quick-badge">3</span><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+
+                <div class="quick-item" onclick="triggerAction('App Center')">
+                    <div class="quick-left">
+                        <i class="fa-solid fa-cubes"></i>
+                        <div class="quick-details">
+                            <h4>App Center</h4>
+                            <p>Explore more tools</p>
+                        </div>
+                    </div>
+                    <div class="quick-right"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+
+                <div class="quick-item" onclick="handleLogout()">
+                    <div class="quick-left">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <div class="quick-details">
+                            <h4>Sign Out</h4>
+                            <p>Logout from account</p>
+                        </div>
+                    </div>
+                    <div class="quick-right"><i class="fa-solid fa-chevron-right"></i></div>
+                </div>
+            </div>
+
+            <div class="promo-banner">
+                <h2>The Future is Electric</h2>
+                <p>Invest in innovation. Drive the future.</p>
+                <button class="promo-btn" onclick="triggerAction('Invest')">Invest Now</button>
+            </div>
+
+            <footer>
+                <div>
+                    <h4>Tesla Investor Hub</h4>
+                    <p style="font-size:12px;line-height:1.5;">Your mobile portal for global assets tracking.</p>
+                    <div class="footer-socials">
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4>Links</h4>
+                    <p>Help Center</p>
+                    <p>Terms & Privacy</p>
+                </div>
+            </footer>
+            <div class="copyright-bar">
+                &copy; 2026 Tesla Investor Hub. All rights reserved.
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-bottom-nav">
+        <div class="nav-item active"><i class="fa-solid fa-chart-pie"></i><span>Overview</span></div>
+        <div class="nav-item" onclick="triggerAction('Wallet')"><i class="fa-solid fa-wallet"></i><span>Wallet</span></div>
+        <div class="nav-item" onclick="triggerAction('Markets')"><i class="fa-solid fa-arrow-trend-up"></i><span>Markets</span></div>
+        <div class="nav-item" onclick="triggerAction('Messages')"><i class="fa-solid fa-envelope"></i><span>Inbox</span></div>
+        <div class="nav-item" onclick="triggerAction('Profile Settings')"><i class="fa-solid fa-sliders"></i><span>Settings</span></div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3Dc9vyRFd5z59eMuuzD0DNegaWRs2BLWTwtMnaTAaMsoPYD927kNi1CQdFwJIJMMT/exec";
+
+        let sessionToken = localStorage.getItem("session_token") || "";
+        let sessionEmail = localStorage.getItem("session_email") || "";
+        
+        let realBalanceRaw = "$200,500.00";
+        let realProfitRaw = "$150,000.00";
+        
+        let isBalanceHidden = false;
+        let isProfitHidden = false;
+
+        let deliveryChartInstance = null;
+        let donutChartInstance = null;
+
+        window.onload = function() {
+            if (sessionToken && sessionEmail) {
+                document.getElementById("auth-overlay").style.display = "none";
+                loadDashboardData();
+            } else {
+                renderMainCharts();
+            }
+        };
+
+        function toggleAuthMode(mode) {
+            const loginCard = document.getElementById("login-mode-card");
+            const signupCard = document.getElementById("signup-mode-card");
+            if (mode === 'signup') {
+                loginCard.style.display = "none";
+                signupCard.style.display = "block";
+            } else {
+                loginCard.style.display = "block";
+                signupCard.style.display = "none";
+            }
+        }
+
+        function handleSignupClick() {
+            const name = document.getElementById("signup-name").value.trim();
+            const email = document.getElementById("signup-email").value.trim();
+            const password = document.getElementById("signup-password").value;
+            const phone = document.getElementById("signup-phone").value.trim();
+
+            if (!name || !email || !password || !phone) return alert("Complete all signup parameters.");
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "signup", name: name, email: email, password: password, phone: phone })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "Success") {
+                    alert("Registration successful! Proceeding to portal log.");
+                    toggleAuthMode('login');
+                    document.getElementById("login-email").value = email;
+                } else {
+                    alert(data.error || "Could not register access keys.");
+                }
+            });
+        }
+
+        function handleLoginClick() {
+            const email = document.getElementById("login-email").value.trim();
+            const password = document.getElementById("login-password").value;
+            if(!email || !password) return alert("Complete all login fields.");
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ action: "login", email: email, password: password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "Success") {
+                    localStorage.setItem("session_token", data.token);
+                    localStorage.setItem("session_email", data.email);
+                    sessionToken = data.token;
+                    sessionEmail = data.email;
+                    document.getElementById("auth-overlay").style.display = "none";
+                    loadDashboardData();
+                } else {
+                    alert(data.error || "Invalid user credentials.");
+                }
+            });
+        }
+
+        function handleLogout() {
+            localStorage.removeItem("session_token");
+            localStorage.removeItem("session_email");
+            location.reload();
+        }
+
+        function loadDashboardData() {
+            fetch(SCRIPT_URL + "?action=getDashboard&token=" + sessionToken + "&email=" + sessionEmail)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "Success") {
+                    document.getElementById("welcome-string").innerText = "Welcome back, " + (data.name || "Investor");
+                    
+                    realBalanceRaw = data.balance || "$0.00";
+                    realProfitRaw = data.profit || "$0.00";
+                    
+                    updateValueDisplays();
+                    renderMainCharts();
+                } else {
+                    handleLogout();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                renderMainCharts();
+            });
+        }
+
+        function updateValueDisplays() {
+            const balEl = document.getElementById("dash-balance");
+            const prfEl = document.getElementById("dash-profit");
+            
+            if(balEl) balEl.innerText = isBalanceHidden ? "••••••" : realBalanceRaw;
+            if(prfEl) prfEl.innerText = isProfitHidden ? "••••••" : realProfitRaw;
+        }
+
+        function toggleBalanceVisibility(type) {
+            if(type === 'balance') {
+                isBalanceHidden = !isBalanceHidden;
+                document.getElementById("balance-eye-icon").className = isBalanceHidden ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+            } else {
+                isProfitHidden = !isProfitHidden;
+                document.getElementById("profit-eye-icon").className = isProfitHidden ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+            }
+            updateValueDisplays();
+        }
+
+        function copyWalletAddress() {
+            navigator.clipboard.writeText(realBalanceRaw);
+            alert("Balance info parsed to clipboard storage.");
+        }
+
+        function triggerAction(actionName) {
+            alert("Initialization request sent for action: " + actionName);
+        }
+
+        function renderMainCharts() {
+            const barCtx = document.getElementById('barChartCanvas').getContext('2d');
+            if(deliveryChartInstance) deliveryChartInstance.destroy();
+            deliveryChartInstance = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Deliveries',
+                        data: [12000, 19000, 15000, 25000],
+                        backgroundColor: '#e82127'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const donutCtx = document.getElementById('donutChartCanvas').getContext('2d');
+            if(donutChartInstance) donutChartInstance.destroy();
+            donutChartInstance = new Chart(donutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['TSLA', 'Cash', 'Other'],
+                    datasets: [{
+                        data: [70, 20, 10],
+                        backgroundColor: ['#e82127', '#333333', '#707070']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>
