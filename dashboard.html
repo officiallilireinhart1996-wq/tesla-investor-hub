@@ -23,10 +23,44 @@
             <button class="text-neutral-400 hover:text-white">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </button>
+            
             <div class="relative">
-                <span class="absolute -top-1 -right-1 bg-[#E82127] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
-                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                <button id="notiBellBtn" class="focus:outline-none relative block text-neutral-400 hover:text-white transition-colors active:scale-95">
+                    <span id="notiBadge" class="absolute -top-1 -right-1 bg-[#E82127] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white transition-all">3</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                </button>
+
+                <div id="notiMenu" class="hidden absolute right-0 mt-3 w-72 bg-[#121212] border border-[#262626] rounded-2xl shadow-2xl overflow-hidden z-50 transition-all transform scale-95 opacity-0 origin-top-right">
+                    <div class="px-4 py-3 border-b border-[#222] flex items-center justify-between">
+                        <span class="text-xs font-bold tracking-wider text-neutral-400 uppercase">Live Operations Terminal</span>
+                        <button onclick="clearSystemNotifications()" class="text-[9px] font-bold text-red-400 hover:text-red-500 uppercase tracking-tight">Clear All</button>
+                    </div>
+                    <div id="notiListContainer" class="divide-y divide-[#1c1c1c] max-h-64 overflow-y-auto">
+                        <div class="p-3.5 hover:bg-neutral-900/40 transition-colors flex items-start space-x-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#E82127] mt-1.5 shrink-0 animate-pulse"></span>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-200">Allocation Settlement Cleared</p>
+                                <p class="text-[10px] text-neutral-500 mt-0.5 font-mono">Institutional node sync fully archived.</p>
+                            </div>
+                        </div>
+                        <div class="p-3.5 hover:bg-neutral-900/40 transition-colors flex items-start space-x-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#E82127] mt-1.5 shrink-0 animate-pulse"></span>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-200">Security Vault Update</p>
+                                <p class="text-[10px] text-neutral-500 mt-0.5 font-mono">End-to-end cryptographic lock refreshed.</p>
+                            </div>
+                        </div>
+                        <div class="p-3.5 hover:bg-neutral-900/40 transition-colors flex items-start space-x-3">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#E82127] mt-1.5 shrink-0 animate-pulse"></span>
+                            <div>
+                                <p class="text-xs font-medium text-neutral-200">Global Share Tracking Active</p>
+                                <p class="text-[10px] text-neutral-500 mt-0.5 font-mono">Live ticker monitoring operational streams.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <a href="profile.html" class="flex items-center space-x-2 active:scale-95 transition-transform">
                 <div id="avatarContainer" class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300 overflow-hidden">PL</div>
             </a>
@@ -220,6 +254,76 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
         const userId = localStorage.getItem("userId");
         const fullName = localStorage.getItem("fullName");
+
+        // Web Audio API Audio Engine Context for Premium Chime feedback
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playPremiumChime(isClearAction) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                // Pure clean sinus sound curves
+                osc.type = 'sine';
+                if(isClearAction) {
+                    // Descending swipe sweep sound
+                    osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.25);
+                } else {
+                    // Standard premium tech alert tick
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                }
+                
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e){}
+        }
+
+        // Dropdown Menu Toggler Execution
+        const notiBellBtn = document.getElementById("notiBellBtn");
+        const notiMenu = document.getElementById("notiMenu");
+
+        notiBellBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if(notiMenu.classList.contains("hidden")) {
+                playPremiumChime(false);
+                notiMenu.classList.remove("hidden");
+                setTimeout(() => {
+                    notiMenu.classList.remove("scale-95", "opacity-0");
+                    notiMenu.classList.add("scale-100", "opacity-100");
+                }, 10);
+            } else {
+                closeNotiMenu();
+            }
+        });
+
+        function closeNotiMenu() {
+            notiMenu.classList.remove("scale-100", "opacity-100");
+            notiMenu.classList.add("scale-95", "opacity-0");
+            setTimeout(() => notiMenu.classList.add("hidden"), 150);
+        }
+
+        // Document level click tracking to dismiss popovers
+        document.addEventListener("click", (e) => {
+            if(!notiMenu.contains(e.target) && e.target !== notiBellBtn) {
+                if(!notiMenu.classList.contains("hidden")) closeNotiMenu();
+            }
+        });
+
+        // Dynamic State clear execution
+        function clearSystemNotifications() {
+            playPremiumChime(true);
+            document.getElementById("notiListContainer").innerHTML = `
+                <div class="p-6 text-center text-neutral-600 text-[10px] uppercase font-mono tracking-wider">
+                    Terminal Log Clear // 0 Messages
+                </div>`;
+            const badge = document.getElementById("notiBadge");
+            badge.classList.add("scale-0", "opacity-0");
+            setTimeout(() => badge.remove(), 200);
+        }
 
         if (!userId) {
             window.location.href = "index.html";
