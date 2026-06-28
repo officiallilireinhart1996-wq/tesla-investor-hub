@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        /* Hide scrollbars but preserve scrolling function */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -36,7 +35,7 @@
             </p>
         </div>
 
-        <div class="flex items-start space-x-3 max-w-[85%] animate-fade-in">
+        <div class="flex items-start space-x-3 max-w-[85%]">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#E82127] to-[#901115] flex items-center justify-center text-xs font-bold shrink-0 shadow-md">
                 T
             </div>
@@ -50,7 +49,7 @@
             </div>
         </div>
 
-        <div class="flex items-start space-x-3 max-w-[85%] animate-fade-in">
+        <div class="flex items-start space-x-3 max-w-[85%]">
             <div class="w-8 h-8 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-xs font-bold shrink-0 shadow-md text-red-500">
                 🤖
             </div>
@@ -107,7 +106,7 @@
             <span class="text-[9px] font-medium mt-1 tracking-tight">Settings</span>
         </a>
 
-        <a href="message.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
+        <a href="messages.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
             </svg>
@@ -143,8 +142,6 @@
             const input = document.getElementById("messageInput");
             const text = input.value.trim();
             if (!text) return;
-
-            // Simple interface cleanup on submit
             input.value = "";
         }
     </script>
