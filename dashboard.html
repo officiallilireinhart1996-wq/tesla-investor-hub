@@ -27,9 +27,9 @@
                 <span class="absolute -top-1 -right-1 bg-[#E82127] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
                 <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
             </div>
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300">PL</div>
-            </div>
+            <a href="profile.html" class="flex items-center space-x-2 active:scale-95 transition-transform">
+                <div id="avatarContainer" class="w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center text-xs font-bold text-neutral-300 overflow-hidden">PL</div>
+            </a>
         </div>
     </header>
 
@@ -225,6 +225,16 @@
             window.location.href = "index.html";
         } else {
             document.getElementById('userName').innerText = fullName || "Investor";
+            
+            // Check and sync updated avatar photo if it exists inside localStorage
+            const savedAvatar = localStorage.getItem("userAvatarImage");
+            if (savedAvatar) {
+                document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+            } else if (fullName) {
+                const initials = fullName.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+                document.getElementById('avatarContainer').innerText = initials;
+            }
+
             loadDashboardMetrics();
             initializePremiumCharts();
         }
