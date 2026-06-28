@@ -15,22 +15,41 @@
 </head>
 <body class="text-white min-h-screen pb-32">
 
+    <!-- Active Search Overlay Modal -->
+    <div id="searchModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col pt-6 px-4 transition-all duration-200 opacity-0">
+        <div class="max-w-md w-full mx-auto space-y-4">
+            <div class="flex items-center space-x-3 bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 shadow-xl">
+                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" id="searchInput" placeholder="Search portal actions or assets..." class="bg-transparent w-full focus:outline-none text-sm text-neutral-200 placeholder-neutral-500">
+                <button id="closeSearchBtn" class="text-xs text-neutral-500 hover:text-white uppercase font-bold tracking-tight">Close</button>
+            </div>
+            
+            <!-- Filterable Results Engine Layout -->
+            <div id="searchResults" class="bg-[#121212] border border-neutral-800/80 rounded-2xl overflow-hidden hidden max-h-80 overflow-y-auto divide-y divide-neutral-900 shadow-2xl">
+                <!-- Search items are injected dynamically via JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] sticky top-0 z-50">
         <div class="flex items-center space-x-3">
             <span class="text-xl font-bold tracking-widest text-[#E82127]">TESLA</span>
         </div>
         <div class="flex items-center space-x-4">
-            <button class="text-neutral-400 hover:text-white">
+            <!-- Active Search Interface Trigger -->
+            <button id="openSearchBtn" class="text-neutral-400 hover:text-white transition-colors active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </button>
             
+            <!-- Real Notification Engine Anchor Dropdown Container -->
             <div class="relative">
                 <button id="notiBellBtn" class="focus:outline-none relative block text-neutral-400 hover:text-white transition-colors active:scale-95">
                     <span id="notiBadge" class="absolute -top-1 -right-1 bg-[#E82127] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold text-white transition-all">3</span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                 </button>
 
-                <div id="notiMenu" class="hidden absolute right-0 mt-3 w-72 bg-[#121212] border border-[#262626] rounded-2xl shadow-2xl overflow-hidden z-50 transition-all transform scale-95 opacity-0 origin-top-right">
+                <!-- Premium Floating Notification Popover Menu -->
+                <div id="notiMenu" class="hidden absolute right-0 mt-3 w-72 bg-[#121212] border border-[#262626] rounded-2xl shadow-2xl overflow-hidden z-40 transition-all transform scale-95 opacity-0 origin-top-right">
                     <div class="px-4 py-3 border-b border-[#222] flex items-center justify-between">
                         <span class="text-xs font-bold tracking-wider text-neutral-400 uppercase">Live Operations Terminal</span>
                         <button onclick="clearSystemNotifications()" class="text-[9px] font-bold text-red-400 hover:text-red-500 uppercase tracking-tight">Clear All</button>
@@ -255,6 +274,70 @@
         const userId = localStorage.getItem("userId");
         const fullName = localStorage.getItem("fullName");
 
+        // Searchable Database Content Framework
+        const searchDatabase = [
+            { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
+            { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
+            { name: "Withdrawal System Portal", url: "withdraw.html", category: "Operations" },
+            { name: "Send Cryptographic Assets", url: "send.html", category: "Operations" },
+            { name: "Receive Assets Network", url: "receive.html", category: "Operations" },
+            { name: "Bills & Institutional Invoices", url: "bills.html", category: "Operations" },
+            { name: "Account Profile & Bio Settings", url: "profile.html", category: "System" },
+            { name: "System Interface Adjustments", url: "settings.html", category: "System" },
+            { name: "Secure Message Terminal", url: "messages.html", category: "Communication" }
+        ];
+
+        // UI Target Hooks
+        const openSearchBtn = document.getElementById("openSearchBtn");
+        const closeSearchBtn = document.getElementById("closeSearchBtn");
+        const searchModal = document.getElementById("searchModal");
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+
+        // Open Modal Controller
+        openSearchBtn.addEventListener("click", () => {
+            searchModal.classList.remove("hidden");
+            setTimeout(() => {
+                searchModal.classList.remove("opacity-0");
+                searchModal.classList.add("opacity-100");
+                searchInput.focus();
+            }, 50);
+            renderSearchResults(""); // Initialize list configuration
+        });
+
+        // Close Modal Controller
+        function closeSearchModal() {
+            searchModal.classList.remove("opacity-100");
+            searchModal.classList.add("opacity-0");
+            setTimeout(() => {
+                searchModal.classList.add("hidden");
+                searchInput.value = "";
+            }, 200);
+        }
+        closeSearchBtn.addEventListener("click", closeSearchModal);
+
+        // Input Filtering Mechanism
+        searchInput.addEventListener("input", (e) => {
+            renderSearchResults(e.target.value);
+        });
+
+        function renderSearchResults(query) {
+            const cleanQuery = query.toLowerCase().trim();
+            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(cleanQuery));
+
+            if (filtered.length === 0) {
+                searchResults.innerHTML = `<div class="p-4 text-center text-xs text-neutral-500 font-mono">No matching network records found.</div>`;
+            } else {
+                searchResults.innerHTML = filtered.map(item => `
+                    <a href="${item.url}" class="flex items-center justify-between p-3.5 hover:bg-neutral-900/60 transition-colors group">
+                        <span class="text-xs text-neutral-200 font-medium group-hover:text-white">${item.name}</span>
+                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-500 font-mono tracking-wider px-2 py-0.5 rounded-md uppercase">${item.category}</span>
+                    </a>
+                `).join('');
+            }
+            searchResults.classList.remove("hidden");
+        }
+
         // Web Audio API Audio Engine Context for Premium Chime feedback
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playPremiumChime(isClearAction) {
@@ -264,14 +347,11 @@
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 
-                // Pure clean sinus sound curves
                 osc.type = 'sine';
                 if(isClearAction) {
-                    // Descending swipe sweep sound
                     osc.frequency.setValueAtTime(520, audioCtx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.25);
                 } else {
-                    // Standard premium tech alert tick
                     osc.frequency.setValueAtTime(880, audioCtx.currentTime);
                 }
                 
@@ -330,7 +410,6 @@
         } else {
             document.getElementById('userName').innerText = fullName || "Investor";
             
-            // Check and sync updated avatar photo if it exists inside localStorage
             const savedAvatar = localStorage.getItem("userAvatarImage");
             if (savedAvatar) {
                 document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
