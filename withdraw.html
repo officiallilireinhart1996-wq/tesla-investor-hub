@@ -1,1 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Withdraw</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+            ‹ Back to Hub
+        </a>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Capital Extraction</span>
+        <div class="w-12"></div>
+    </header>
+
+    <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
+        <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+            <h2 class="text-xl font-bold tracking-tight mb-1">Request Settlement</h2>
+            <p class="text-xs text-neutral-400 mb-6">Specify your payout asset and destination terminal parameters.</p>
+
+            <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
+
+            <form id="withdrawForm" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Payout Asset</label>
+                    <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+                        <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
+                        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+                        <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
+                        <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
+                        <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
+                        <option value="Solana (SOL)">Solana (SOL)</option>
+                        <option value="Litecoin (LTC)">Litecoin (LTC)</option>
+                        <option value="XRP (XRP)">XRP (XRP)</option>
+                        <option value="Tron (TRX)">Tron (TRX)</option>
+                        <option value="Dash (DASH)">Dash (DASH)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Withdrawal Amount (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
+                        <input type="number" id="withdrawAmount" required min="10" placeholder="0.00" 
+                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-semibold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Your Receiving Wallet Address</label>
+                    <input type="text" id="userAddress" required placeholder="Enter your destination address" 
+                        class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
+                    <p class="text-[10px] text-neutral-500 mt-1.5 leading-normal">Double-check your network address carefully. Cross-network distributions cannot be reversed.</p>
+                </div>
+
+                <button type="submit" id="submitBtn" 
+                    class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm shadow-lg shadow-red-900/20 mt-4">
+                    Initialize Extraction Protocol
+                </button>
+            </form>
+        </div>
+
+        <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5">
+            <div class="w-16 h-16 bg-emerald-950/30 border border-emerald-800 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl shadow-lg">
+                ✓
+            </div>
+            <div>
+                <h2 class="text-xl font-bold tracking-tight text-emerald-400">Extraction Dispatched</h2>
+                <p class="text-xs text-neutral-400 mt-1.5 px-2">Your settlement application has been registered into the core ledger queue and is pending standard administrative validation.</p>
+            </div>
+
+            <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-4 text-left font-mono text-xs space-y-2 text-neutral-300">
+                <div class="flex justify-between"><span class="text-neutral-500">Asset:</span> <span id="summaryAsset"></span></div>
+                <div class="flex justify-between"><span class="text-neutral-500">Amount:</span> <span id="summaryAmount"></span></div>
+                <div class="flex justify-between"><span class="text-neutral-500">Terminal:</span> <span id="summaryAddress" class="break-all text-right max-w-[180px]"></span></div>
+            </div>
+
+            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 rounded-xl block transition-all text-sm border border-neutral-800 tracking-wide font-semibold">
+                Return to Hub Overview
+            </a>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+        const userId = localStorage.getItem("userId");
+
+        if (!userId) {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusBox = document.getElementById('statusBox');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            statusBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Transmitting settlement request...";
+
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const asset = document.getElementById('assetSelect').value;
+            const userAddress = document.getElementById('userAddress').value;
+
+            // Transmit configuration data payload straight to your tab matrices
+            const payload = {
+                action: "submitWithdrawal", 
+                userId: userId,
+                amount: amount,
+                asset: asset,
+                address: userAddress
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    // Populate success card metrics summary row values
+                    document.getElementById('summaryAsset').innerText = asset;
+                    document.getElementById('summaryAmount').innerText = `$${amount.toFixed(2)} USD`;
+                    document.getElementById('summaryAddress').innerText = userAddress;
+
+                    document.getElementById('formCard').classList.add('hidden');
+                    document.getElementById('successCard').classList.remove('hidden');
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
+                statusBox.innerText = err.message || "Failed to establish secure proxy channel.";
+                statusBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Initialize Extraction Protocol";
+            }
+        });
+    </script>
+</body>
+</html>
