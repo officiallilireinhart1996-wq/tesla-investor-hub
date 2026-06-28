@@ -1,13 +1,5 @@
-<!-- Secure Network Status Banner (Place right under your main balance cards / action buttons) -->
-<div class="bg-neutral-900/40 border border-neutral-800/60 rounded-xl p-3 flex items-center space-x-2.5 my-4">
-    <span class="text-emerald-500 text-sm">🛡️</span>
-    <p class="text-[11px] text-neutral-400 font-medium tracking-tight">
-        Secure Network Status: <span class="text-emerald-400 font-bold">100% Operational</span> | End-to-End Encryption Secured
-    </p>
-</div>
-
 <!-- Quick Actions Container Section -->
-<div class="bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl space-y-4 my-4">
+<div class="bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl space-y-4">
     <h3 class="text-xs font-bold tracking-widest text-neutral-400 uppercase">Quick Actions</h3>
     
     <div class="space-y-2.5">
@@ -45,25 +37,44 @@
             <span class="text-neutral-600 group-hover:text-neutral-400 transition-colors text-xs">›</span>
         </a>
 
-        <!-- Action item 3: Messages -->
-        <a href="message.html" class="flex items-center justify-between bg-[#1c1c1c] hover:bg-[#222] border border-[#282828] rounded-xl p-3.5 transition-all group">
+        <!-- Action item 3: Messages with Badge Display -->
+        <a href="messages.html" class="flex items-center justify-between bg-[#1c1c1c] hover:bg-[#222] border border-[#282828] rounded-xl p-3.5 transition-all group">
             <div class="flex items-center space-x-3.5">
                 <div class="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-400 group-hover:text-white transition-colors relative">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
+                    <!-- Exact dynamic notification badge layer from desktop asset image_2.png -->
                     <span class="absolute -top-1 -right-1 bg-[#E82127] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-[#141414]">3</span>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-white tracking-tight">Messages</h4>
-                    <p class="text-[10px] text-neutral-500">You have 3 new notifications pending</p>
+                    <div class="flex items-center space-x-2">
+                        <h4 class="text-xs font-bold text-white tracking-tight">Messages</h4>
+                    </div>
+                    <p class="text-[10px] text-neutral-500">You have 3 new messages pending</p>
                 </div>
             </div>
             <span class="text-neutral-600 group-hover:text-neutral-400 transition-colors text-xs">›</span>
         </a>
 
-        <!-- Action item 4: Sign Out -->
-        <a href="logout.html" class="flex items-center justify-between bg-[#1c1c1c] hover:bg-red-950/20 hover:border-red-900/30 border border-[#282828] rounded-xl p-3.5 transition-all group">
+        <!-- Action item 4: App Center (Transaction / Vault Explorer) -->
+        <a href="transactions.html" class="flex items-center justify-between bg-[#1c1c1c] hover:bg-[#222] border border-[#282828] rounded-xl p-3.5 transition-all group">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-8 h-8 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-400 group-hover:text-white transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-white tracking-tight">App Center</h4>
+                    <p class="text-[10px] text-neutral-500">Explore more operational tools</p>
+                </div>
+            </div>
+            <span class="text-neutral-600 group-hover:text-neutral-400 transition-colors text-xs">›</span>
+        </a>
+
+        <!-- Action item 5: Sign Out -->
+        <div onclick="handleSessionTermination()" class="flex items-center justify-between bg-[#1c1c1c] hover:bg-red-950/20 hover:border-red-900/30 border border-secondary border-[#282828] rounded-xl p-3.5 transition-all group cursor-pointer">
             <div class="flex items-center space-x-3.5">
                 <div class="w-8 h-8 bg-neutral-800 group-hover:bg-red-950/40 rounded-lg flex items-center justify-center text-neutral-400 group-hover:text-[#E82127] transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -72,11 +83,19 @@
                 </div>
                 <div>
                     <h4 class="text-xs font-bold text-white tracking-tight group-hover:text-[#E82127] transition-colors">Sign Out</h4>
-                    <p class="text-[10px] text-neutral-500">Securely exit your terminal session</p>
+                    <p class="text-[10px] text-neutral-500">Logout from your account context secure token</p>
                 </div>
             </div>
             <span class="text-neutral-600 group-hover:text-[#E82127] transition-colors text-xs">›</span>
-        </a>
+        </div>
 
     </div>
 </div>
+
+<script>
+    // Appended configuration framework logic to drop local storage profiles safely on click
+    function handleSessionTermination() {
+        localStorage.removeItem("userId");
+        window.location.href = "logout.html";
+    }
+</script>
