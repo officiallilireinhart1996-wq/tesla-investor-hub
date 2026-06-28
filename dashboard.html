@@ -192,7 +192,7 @@
             <span class="text-[9px] font-medium mt-1 tracking-tight">Settings</span>
         </a>
 
-        <a href="message.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors relative">
+        <a href="messages.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors relative">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
             </svg>
@@ -257,7 +257,6 @@
         }
 
         function initializePremiumCharts() {
-            // 1. Initializing Quarterly Deliveries Bar Chart
             const ctxBar = document.getElementById('deliveryChart').getContext('2d');
             new Chart(ctxBar, {
                 type: 'bar',
@@ -284,7 +283,6 @@
                 }
             });
 
-            // 2. Initializing Asset Allocation Donut Chart
             const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
             new Chart(ctxDonut, {
                 type: 'doughnut',
