@@ -95,6 +95,30 @@
             </div>
         </div>
 
+        <!-- Available Shares Progress Pool -->
+        <div class="w-full bg-gradient-to-b from-[#161616] to-[#111111] border border-neutral-800 rounded-2xl p-4 shadow-xl">
+            <div class="flex items-center justify-between mb-2">
+                <div class="space-y-0.5">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-300">Private Liquidity Allocation</h4>
+                    <p class="text-[11px] text-red-400 font-medium tracking-tight">Only <span class="font-bold font-mono" id="sharesRemainingText">1,240</span> shares remaining out of 10,000</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-black font-mono text-neutral-200" id="sharesPercentageText">87.6%</span>
+                    <p class="text-[9px] uppercase tracking-widest text-neutral-500 font-bold">Block Filled</p>
+                </div>
+            </div>
+            
+            <!-- Progress Track -->
+            <div class="w-full bg-neutral-900 border border-neutral-800 h-2.5 rounded-full overflow-hidden p-0.5">
+                <div id="sharesProgressBar" class="h-full rounded-full bg-gradient-to-r from-[#901115] to-[#E82127] shadow-[0_0_10px_rgba(232,33,39,0.4)] transition-all duration-1000 ease-out" style="width: 87.6%;"></div>
+            </div>
+            
+            <div class="flex items-center justify-between mt-2 text-[9px] text-neutral-500 font-mono font-medium">
+                <span>POOL STATUS: CRITICAL CAPACITY</span>
+                <span class="animate-pulse text-red-500 font-bold">● LIVE PRIVATE STREAM</span>
+            </div>
+        </div>
+
         <!-- Live Premium Transactions Feed -->
         <div class="w-full bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-xl relative overflow-hidden">
             <div class="flex items-center justify-between mb-2.5">
@@ -360,6 +384,38 @@
             renderSearchResults(e.target.value);
         });
 
+        // Live Declining Private Shares Counter Simulation
+        function initializePrivatePoolCounter() {
+            let runningShares = 1240;
+            const totalShares = 10000;
+            const textEl = document.getElementById('sharesRemainingText');
+            const percentEl = document.getElementById('sharesPercentageText');
+            const barEl = document.getElementById('sharesProgressBar');
+
+            function updatePoolUI() {
+                textEl.innerText = runningShares.toLocaleString();
+                const precisionFilledPercent = (((totalShares - runningShares) / totalShares) * 100).toFixed(1);
+                percentEl.innerText = `${precisionFilledPercent}%`;
+                barEl.style.width = `${precisionFilledPercent}%`;
+            }
+
+            function subtractRandomShares() {
+                // Drop shares every 8 to 15 seconds to look dynamic and authentic
+                const customDelay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
+                setTimeout(() => {
+                    if (runningShares > 184) {
+                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2; // Subtracts between 2 and 9 shares
+                        runningShares -= chunksToSubtract;
+                        updatePoolUI();
+                    }
+                    subtractRandomShares();
+                }, customDelay);
+            }
+
+            updatePoolUI();
+            subtractRandomShares();
+        }
+
         function renderSearchResults(query) {
             const cleanQuery = query.toLowerCase().trim();
             const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(cleanQuery));
@@ -463,6 +519,7 @@
             loadDashboardMetrics();
             initializePremiumCharts();
             initializeLiveActivityFeed();
+            initializePrivatePoolCounter();
         }
 
         function formatCurrency(val) {
