@@ -27,7 +27,7 @@
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
+    <main id="chatContainer" class="max-w-md mx-auto px-4 mt-4 space-y-4">
         
         <div class="bg-[#141414] border border-neutral-800/40 rounded-xl p-3 text-center">
             <p class="text-[10px] text-neutral-500">
@@ -131,18 +131,117 @@
     </div>
 
     <script>
+        // Set this configuration to match your internal Google Sheets Apps Script API endpoint configurations
+        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+        let userId = "";
+        let displayedMessageIds = new Set(); // Prevents layout duplication conflicts during polling updates
+
         document.addEventListener("DOMContentLoaded", () => {
-            const userId = localStorage.getItem("userId");
+            userId = localStorage.getItem("userId");
             if (!userId) {
                 window.location.href = "index.html";
+                return;
             }
+            
+            // Fire off immediate historical query log, then lock into 4-second checking increments
+            fetchChatHistory();
+            setInterval(fetchChatHistory, 4000);
         });
 
-        function handleSendMessage() {
+        // Appends a styled bubble inside your message content pipeline layout
+        function renderBubble(sender, content, timeString) {
+            const container = document.getElementById("chatContainer");
+            const wrapper = document.createElement("div");
+            
+            if (sender === "user") {
+                wrapper.className = "flex items-start justify-end space-x-3 max-w-[85%] ml-auto";
+                wrapper.innerHTML = `
+                    <div class="space-y-1 text-right">
+                        <div class="bg-[#E82127] rounded-2xl rounded-tr-none p-3.5 shadow-md text-left">
+                            <p class="text-xs text-white leading-relaxed">${content}</p>
+                        </div>
+                        <p class="text-[9px] text-neutral-600 pr-1 font-medium">You • ${timeString}</p>
+                    </div>
+                `;
+            } else {
+                wrapper.className = "flex items-start space-x-3 max-w-[85%]";
+                wrapper.innerHTML = `
+                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#E82127] to-[#901115] flex items-center justify-center text-xs font-bold shrink-0 shadow-md">T</div>
+                    <div class="space-y-1">
+                        <div class="bg-[#141414] border border-[#222] rounded-2xl rounded-tl-none p-3.5 shadow-md">
+                            <p class="text-xs text-neutral-300 leading-relaxed">${content}</p>
+                        </div>
+                        <p class="text-[9px] text-neutral-600 pl-1 font-medium">Tesla Support Desk • ${timeString}</p>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(wrapper);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        async function handleSendMessage() {
             const input = document.getElementById("messageInput");
             const text = input.value.trim();
             if (!text) return;
+            
             input.value = "";
+            
+            // Format dynamic locale timestamps instantly
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Visual optimistic rendering for fluid client processing speed
+            renderBubble("user", text, timeString);
+            
+            const payload = {
+                action: "sendMessage",
+                userId: userId,
+                sender: "user",
+                message: text,
+                timestamp: now.toISOString()
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                console.error("Message backup syncing failed:", err);
+            }
+        }
+
+        async function fetchChatHistory() {
+            if (!userId) return;
+            
+            try {
+                const target = `${API_URL}?action=getMessages&userId=${encodeURIComponent(userId)}`;
+                const response = await fetch(target, { method: "GET", mode: "cors" });
+                const result = await response.json();
+                
+                if (result && result.status === "success" && Array.isArray(result.messages)) {
+                    result.messages.forEach(msg => {
+                        // Rely on row unique keys or composite matching IDs to stop duplicate appends
+                        const msgKey = msg.id || `${msg.timestamp}_${msg.message}`;
+                        if (!displayedMessageIds.has(msgKey)) {
+                            displayedMessageIds.add(msgKey);
+                            
+                            const msgTime = new Date(msg.timestamp);
+                            const formattedTime = isNaN(msgTime.getTime()) ? "Just Now" : msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            
+                            // Don't duplicate rendering if already put into container view optimistically
+                            if (msg.sender !== "user") {
+                                renderBubble(msg.sender, msg.message, formattedTime);
+                            }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.warn("Unable to reach synchronization server grid:", err);
+            }
         }
     </script>
 </body>
