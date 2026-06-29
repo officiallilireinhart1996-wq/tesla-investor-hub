@@ -15,7 +15,6 @@
 </head>
 <body class="text-white min-h-screen pb-32">
 
-    <!-- Search Modal -->
     <div id="searchModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex flex-col pt-6 px-4 transition-all duration-200 opacity-0">
         <div class="max-w-md w-full mx-auto space-y-4">
             <div class="flex items-center space-x-3 bg-neutral-900 border border-neutral-800 rounded-xl px-3.5 py-2.5 shadow-xl">
@@ -29,7 +28,6 @@
         </div>
     </div>
 
-    <!-- Header -->
     <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] sticky top-0 z-50">
         <div class="flex items-center space-x-3">
             <span class="text-xl font-bold tracking-widest text-[#E82127]">TESLA</span>
@@ -82,10 +80,8 @@
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="max-w-md mx-auto px-4 mt-4 space-y-5">
         
-        <!-- Welcome Banner -->
         <div class="relative rounded-2xl overflow-hidden h-32 bg-neutral-900 flex items-end p-4 border border-[#222]">
             <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=600');"></div>
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
@@ -95,7 +91,6 @@
             </div>
         </div>
 
-        <!-- Available Shares Progress Pool -->
         <div class="w-full bg-gradient-to-b from-[#161616] to-[#111111] border border-neutral-800 rounded-2xl p-4 shadow-xl">
             <div class="flex items-center justify-between mb-2">
                 <div class="space-y-0.5">
@@ -108,7 +103,6 @@
                 </div>
             </div>
             
-            <!-- Progress Track -->
             <div class="w-full bg-neutral-900 border border-neutral-800 h-2.5 rounded-full overflow-hidden p-0.5">
                 <div id="sharesProgressBar" class="h-full rounded-full bg-gradient-to-r from-[#901115] to-[#E82127] shadow-[0_0_10px_rgba(232,33,39,0.4)] transition-all duration-1000 ease-out" style="width: 87.6%;"></div>
             </div>
@@ -119,7 +113,6 @@
             </div>
         </div>
 
-        <!-- Live Premium Transactions Feed -->
         <div class="w-full bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-xl relative overflow-hidden">
             <div class="flex items-center justify-between mb-2.5">
                 <div class="flex items-center space-x-2">
@@ -142,7 +135,6 @@
             </div>
         </div>
 
-        <!-- Metric Cards -->
         <div class="grid grid-cols-2 gap-4">
             <div class="gradient-card rounded-2xl p-4 relative shadow-lg">
                 <p class="text-[10px] font-semibold uppercase tracking-wider text-red-200">Total Balance</p>
@@ -157,7 +149,6 @@
             </div>
         </div>
 
-        <!-- Quick Links Grid -->
         <div class="grid grid-cols-3 gap-2.5">
             <a href="invest.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
                 <span class="text-neutral-400 text-sm font-medium">Invest</span>
@@ -179,7 +170,6 @@
             </a>
         </div>
 
-        <!-- Network Status Banner -->
         <div class="bg-[#141414] border border-neutral-800/60 rounded-xl p-3 flex items-center justify-center space-x-2.5 shadow-md">
             <span class="text-emerald-500 text-xs">🛡️</span>
             <p class="text-[10px] text-neutral-400 font-medium tracking-tight">
@@ -187,7 +177,6 @@
             </p>
         </div>
 
-        <!-- Bar Chart Card -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3 shadow-xl">
             <div class="flex items-center justify-between">
                 <div>
@@ -204,7 +193,6 @@
             </div>
         </div>
 
-        <!-- Doughnut Allocation Card -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3 shadow-xl">
             <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Asset Allocation</h4>
             <div class="flex items-center justify-between">
@@ -237,7 +225,6 @@
             </div>
         </div>
 
-        <!-- Watchlist Widget -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4">
             <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Futures & Watchlist</h4>
             <div class="space-y-3">
@@ -264,7 +251,38 @@
             </div>
         </div>
 
-        <!-- Frame Footer Accent Banner -->
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Activity Log & History</h4>
+                    <p class="text-[10px] text-neutral-500">Real-time ledger updates</p>
+                </div>
+                <button onclick="fetchTransactionHistory()" class="text-[9px] bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-300 px-2 py-1 rounded-md transition-all font-bold uppercase tracking-tight">
+                    Refresh Log
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-[#1c1c1c] text-[9px] uppercase tracking-wider text-neutral-500 font-bold">
+                            <th class="pb-2">Date/ID</th>
+                            <th class="pb-2">Asset Channel</th>
+                            <th class="pb-2 text-right">Amount</th>
+                            <th class="pb-2 text-right">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody" class="divide-y divide-[#181818] text-[11px]">
+                        <tr>
+                            <td colspan="4" class="py-6 text-center text-neutral-500 italic font-mono text-[10px]">
+                                Synchronizing transaction pipeline...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="relative rounded-2xl overflow-hidden p-5 border border-red-900/30 bg-gradient-to-r from-neutral-950 via-[#180506] to-neutral-950 shadow-inner group">
             <div class="absolute top-0 right-0 p-3 opacity-20 text-red-600 transition-transform duration-700 group-hover:rotate-12">
                 <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
@@ -280,7 +298,6 @@
 
     </main>
 
-    <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-4 left-4 right-4 bg-[#141414]/90 backdrop-blur-md border border-[#222] h-16 rounded-2xl shadow-2xl flex items-center justify-between px-2 z-50 max-w-md mx-auto">
         
         <a href="dashboard.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
@@ -322,7 +339,6 @@
 
     </div>
 
-    <!-- Script Logic Engine -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
         const userId = localStorage.getItem("userId");
@@ -373,7 +389,7 @@
             searchModal.classList.remove("opacity-100");
             searchModal.classList.add("opacity-0");
             setTimeout(() => {
-                searchModal.add("hidden");
+                searchModal.classList.add("hidden");
                 searchInput.value = "";
             }, 200);
         }
@@ -502,6 +518,64 @@
             }
         }
 
+        // Asynchronous Transaction History Data Feed Fetcher
+        async function fetchTransactionHistory() {
+            const tableBody = document.getElementById("historyTableBody");
+            if (!userId || !tableBody) return;
+
+            try {
+                // Use standard GET request parameters explicitly configured inside doGet execution branch
+                const queryUrl = `${API_URL}?action=getTransactionHistory&userId=${encodeURIComponent(userId)}`;
+                const response = await fetch(queryUrl, { method: "GET", mode: "cors" });
+                const data = await response.json();
+
+                if (data.status === "success" && data.transactions && data.transactions.length > 0) {
+                    tableBody.innerHTML = "";
+                    
+                    data.transactions.forEach(tx => {
+                        const row = document.createElement("tr");
+                        row.className = "hover:bg-neutral-900/40 transition-colors font-mono text-neutral-300 border-b border-[#141414]";
+                        
+                        let badgeStyle = "bg-amber-950/40 border-amber-900 text-amber-400";
+                        if (tx.status === "Settled" || tx.status === "Success") {
+                            badgeStyle = "bg-emerald-950/40 border-emerald-900 text-emerald-400";
+                        } else if (tx.status === "Failed" || tx.status === "Rejected") {
+                            badgeStyle = "bg-red-950/40 border-red-900 text-red-400";
+                        }
+
+                        row.innerHTML = `
+                            <td class="py-2.5">
+                                <div class="text-[10px] text-white font-sans">${tx.timestamp}</div>
+                                <div class="text-[9px] text-neutral-500 font-mono">#${tx.id}</div>
+                            </td>
+                            <td class="py-2.5 text-neutral-400 font-sans">
+                                ${tx.asset}
+                                <span class="block text-[8px] text-neutral-600 font-mono">${tx.vehicle || ''}</span>
+                            </td>
+                            <td class="py-2.5 text-right font-bold text-neutral-100 font-sans">$${parseFloat(tx.amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                            <td class="py-2.5 text-right">
+                                <span class="inline-block px-1.5 py-0.5 rounded text-[8px] font-bold uppercase border ${badgeStyle}">
+                                    ${tx.status}
+                                </span>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" class="py-6 text-center text-neutral-500 italic font-mono text-[10px]">No historical data found.</td>
+                        </tr>`;
+                }
+            } catch (err) {
+                console.error("Ledger synchronization exception details:", err);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="py-6 text-center text-neutral-500 italic font-mono text-[10px]">Pipeline synchronization offline.</td>
+                    </tr>`;
+            }
+        }
+
         // Init & Profile Check Context
         if (!userId) {
             window.location.href = "index.html";
@@ -511,139 +585,77 @@
             const savedAvatar = localStorage.getItem("userAvatarImage");
             if (savedAvatar) {
                 document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
-            } else if (fullName) {
-                const initials = fullName.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
-                document.getElementById('avatarContainer').innerText = initials;
             }
 
-            loadDashboardMetrics();
-            initializePremiumCharts();
-            initializeLiveActivityFeed();
-            initializePrivatePoolCounter();
-        }
-
-        function formatCurrency(val) {
-            const num = parseFloat(String(val).replace(/[^0-9.-]+/g,"")) || 0;
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
-        }
-
-        async function loadDashboardMetrics() {
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ action: "getDashboardData", userId: userId })
-                });
-                const result = await response.json();
-                if (result.status === "success") {
-                    document.getElementById('totalBalance').innerText = formatCurrency(result.account.balance);
-                    document.getElementById('totalProfit').innerText = formatCurrency(result.account.profit);
+            // Fetch metrics from backend setup
+            fetch(`${API_URL}`, {
+                method: 'POST',
+                mode: 'cors',
+                body: JSON.stringify({ action: "getDashboardData", userId: userId })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if(resData.status === "success" && resData.account) {
+                    document.getElementById("totalBalance").innerText = "$" + parseFloat(resData.account.balance).toLocaleString();
+                    document.getElementById("totalProfit").innerText = "$" + parseFloat(resData.account.profit).toLocaleString();
                 } else {
-                    document.getElementById('totalBalance').innerText = "Error";
-                    document.getElementById('totalProfit').innerText = "Error";
+                    document.getElementById("totalBalance").innerText = "$0.00";
+                    document.getElementById("totalProfit").innerText = "$0.00";
                 }
-            } catch (err) {
-                document.getElementById('totalBalance').innerText = "Disconnected";
-                document.getElementById('totalProfit').innerText = "Disconnected";
-            }
-        }
-
-        function initializePremiumCharts() {
-            const ctxBar = document.getElementById('deliveryChart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                    datasets: [{
-                        label: 'Deliveries',
-                        data: [422875, 466140, 435059, 484507],
-                        backgroundColor: 'rgba(232, 33, 39, 0.85)',
-                        hoverBackgroundColor: '#E82127',
-                        borderRadius: 6,
-                        borderSkipped: false,
-                        barThickness: 24
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
-                        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666', font: { size: 9 }, maxTicksLimit: 4 } }
-                    }
-                }
+            })
+            .catch(() => {
+                document.getElementById("totalBalance").innerText = "$0.00";
+                document.getElementById("totalProfit").innerText = "$0.00";
             });
 
-            const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
-            new Chart(ctxDonut, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Tesla Shares', 'Liquid Cash', 'Other Assets'],
-                    datasets: [{
-                        data: [70, 20, 10],
-                        backgroundColor: ['#E82127', '#2a2a2a', '#5c5c5c'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    cutout: '72%',
-                    plugins: { legend: { display: false } }
+            // Initialize visual animations and history table hooks
+            initializePrivatePoolCounter();
+            fetchTransactionHistory();
+        }
+
+        // --- CHART CONTROLLERS ---
+        const ctxDelivery = document.getElementById('deliveryChart').getContext('2d');
+        new Chart(ctxDelivery, {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: 'Deliveries',
+                    data: [140100, 180200, 220100, 280400],
+                    backgroundColor: '#E82127',
+                    borderRadius: 4,
+                    barThickness: 16
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#666', font: { size: 9 } } },
+                    y: { grid: { color: '#1c1c1c' }, ticks: { color: '#666', font: { size: 9 } } }
                 }
-            });
-        }
-
-        // Live Activities Feed Swapper Implementation
-        function initializeLiveActivityFeed() {
-            const feedData = [
-                { text: 'Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)', time: '2 mins ago' },
-                { text: 'Investor ID ***911 withdrew <span class="text-neutral-400 font-mono font-semibold">$1,400</span> to Bank Account', time: '12 mins ago' },
-                { text: 'Investor ID ***104 added position capital pipeline (<span class="text-emerald-400 font-mono font-semibold">$10,250</span> via USDT)', time: 'Just now' },
-                { text: 'Investor ID ***661 secured 15 fractional equities (<span class="text-emerald-400 font-mono font-semibold">$850</span>)', time: '4 mins ago' },
-                { text: 'Investor ID ***319 clearing system payout of <span class="text-neutral-400 font-mono font-semibold">$4,100</span> complete', time: '22 mins ago' },
-                { text: 'Investor ID ***882 initialized institutional collateral allocation (<span class="text-emerald-400 font-mono font-semibold">$15,000</span>)', time: '1 min ago' }
-            ];
-
-            const containerBox = document.getElementById('liveActivityBox');
-            const textBox = document.getElementById('activityText');
-            const timeBox = document.getElementById('activityTime');
-            let currentIndex = 0;
-
-            function cycleFeed() {
-                containerBox.classList.remove('translate-y-0', 'opacity-100');
-                containerBox.classList.add('-translate-y-2', 'opacity-0');
-
-                setTimeout(() => {
-                    currentIndex = (currentIndex + 1) % feedData.length;
-                    const currentItem = feedData[currentIndex];
-
-                    textBox.innerHTML = currentItem.text;
-                    timeBox.innerText = currentItem.time;
-
-                    containerBox.classList.remove('-translate-y-2');
-                    containerBox.classList.add('translate-y-2');
-
-                    setTimeout(() => {
-                        containerBox.classList.remove('translate-y-2', 'opacity-0');
-                        containerBox.classList.add('translate-y-0', 'opacity-100');
-                    }, 50);
-                }, 500);
             }
+        });
 
-            function queueNextCycle() {
-                const randomizedInterval = Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
-                setTimeout(() => {
-                    cycleFeed();
-                    queueNextCycle();
-                }, randomizedInterval);
+        const ctxPortfolio = document.getElementById('portfolioChart').getContext('2d');
+        new Chart(ctxPortfolio, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tesla Shares', 'Liquid Cash', 'Other Assets'],
+                datasets: [{
+                    data: [70, 20, 10],
+                    backgroundColor: ['#E82127', '#3d3d3d', '#8f8f8f'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: { legend: { display: false } }
             }
-
-            queueNextCycle();
-        }
+        });
     </script>
 </body>
 </html>
