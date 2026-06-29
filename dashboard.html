@@ -114,24 +114,20 @@
         </div>
 
         <div class="w-full bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-xl relative overflow-hidden">
-            <div class="flex items-center justify-between mb-2.5">
+            <div class="flex items-center justify-between mb-3.5">
                 <div class="flex items-center space-x-2">
                     <span class="flex h-2 w-2 relative">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Live Activity Feed</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Institutional Ledger Feed</span>
                 </div>
-                <span class="text-[9px] bg-[#E82127]/10 border border-[#E82127]/20 text-[#E82127] font-extrabold uppercase px-2 py-0.5 rounded-md tracking-wider">System Broadcaster</span>
+                <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 font-mono font-bold uppercase px-2 py-0.5 rounded-md tracking-wider">Live Sync Active</span>
             </div>
-            <div class="bg-[#0d0d0d] border border-[#1f1f1f] rounded-xl px-4 py-3 min-h-[52px] flex items-center justify-between overflow-hidden relative">
-                <div id="liveActivityBox" class="flex items-center justify-between w-full transition-all duration-500 transform translate-y-0 opacity-100">
-                    <div class="flex items-center space-x-3 text-xs">
-                        <span class="text-emerald-500 font-bold font-mono">⚡</span>
-                        <p class="text-neutral-200 tracking-tight leading-snug" id="activityText">Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)</p>
+            
+            <div class="relative h-44 overflow-hidden rounded-xl border border-[#1f1f1f] bg-[#0d0d0d] p-2" id="ledgerViewFrame">
+                <div id="ledgerScrollContainer" class="space-y-2 transition-transform duration-500 ease-in-out">
                     </div>
-                    <span class="text-[10px] text-neutral-500 shrink-0 ml-4 font-medium font-mono" id="activityTime">2 mins ago</span>
-                </div>
             </div>
         </div>
 
@@ -408,6 +404,7 @@
             const percentEl = document.getElementById('sharesPercentageText');
             const barEl = document.getElementById('sharesProgressBar');
 
+            style="width: 87.6%;"
             function updatePoolUI() {
                 textEl.innerText = runningShares.toLocaleString();
                 const precisionFilledPercent = (((totalShares - runningShares) / totalShares) * 100).toFixed(1);
@@ -416,11 +413,10 @@
             }
 
             function subtractRandomShares() {
-                // Drop shares every 8 to 15 seconds to look dynamic and authentic
                 const customDelay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
                 setTimeout(() => {
                     if (runningShares > 184) {
-                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2; // Subtracts between 2 and 9 shares
+                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2;
                         runningShares -= chunksToSubtract;
                         updatePoolUI();
                     }
@@ -450,9 +446,10 @@
         }
 
         // Web Audio API Audio Engine Context for Premium Chime feedback
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let audioCtx;
         function playPremiumChime(isClearAction) {
             try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
@@ -492,169 +489,96 @@
         });
 
         function closeNotiMenu() {
-            notiMenu.classList.remove("scale-100", "opacity-100");
-            notiMenu.classList.add("scale-95", "opacity-0");
-            setTimeout(() => notiMenu.classList.add("hidden"), 150);
+            if(!notiMenu.classList.contains("hidden")) {
+                notiMenu.classList.remove("scale-100", "opacity-100");
+                notiMenu.classList.add("scale-95", "opacity-0");
+                setTimeout(() => notiMenu.classList.add("hidden"), 150);
+            }
         }
 
-        // Document level click tracking to dismiss popovers
+        // Document level click tracking to dismiss popovers safely
         document.addEventListener("click", (e) => {
             if(!notiMenu.contains(e.target) && e.target !== notiBellBtn) {
-                if(!notiMenu.classList.contains("hidden")) closeNotiMenu();
+                closeNotiMenu();
             }
         });
 
-        // Dynamic State clear execution
         function clearSystemNotifications() {
             playPremiumChime(true);
             document.getElementById("notiListContainer").innerHTML = `
-                <div class="p-6 text-center text-neutral-600 text-[10px] uppercase font-mono tracking-wider">
-                    Terminal Log Clear // 0 Messages
-                </div>`;
-            const badge = document.getElementById("notiBadge");
-            if (badge) {
-                badge.classList.add("scale-0", "opacity-0");
-                setTimeout(() => badge.remove(), 200);
-            }
+                <div class="p-6 text-center text-neutral-600 text-xs font-mono">
+                    Operation logs cleared.
+                </div>
+            `;
+            document.getElementById("notiBadge").classList.add("opacity-0", "scale-50");
         }
 
-        // Asynchronous Transaction History Data Feed Fetcher
-        async function fetchTransactionHistory() {
-            const tableBody = document.getElementById("historyTableBody");
-            if (!userId || !tableBody) return;
-
-            try {
-                // Use standard GET request parameters explicitly configured inside doGet execution branch
-                const queryUrl = `${API_URL}?action=getTransactionHistory&userId=${encodeURIComponent(userId)}`;
-                const response = await fetch(queryUrl, { method: "GET", mode: "cors" });
-                const data = await response.json();
-
-                if (data.status === "success" && data.transactions && data.transactions.length > 0) {
-                    tableBody.innerHTML = "";
-                    
-                    data.transactions.forEach(tx => {
-                        const row = document.createElement("tr");
-                        row.className = "hover:bg-neutral-900/40 transition-colors font-mono text-neutral-300 border-b border-[#141414]";
-                        
-                        let badgeStyle = "bg-amber-950/40 border-amber-900 text-amber-400";
-                        if (tx.status === "Settled" || tx.status === "Success") {
-                            badgeStyle = "bg-emerald-950/40 border-emerald-900 text-emerald-400";
-                        } else if (tx.status === "Failed" || tx.status === "Rejected") {
-                            badgeStyle = "bg-red-950/40 border-red-900 text-red-400";
-                        }
-
-                        row.innerHTML = `
-                            <td class="py-2.5">
-                                <div class="text-[10px] text-white font-sans">${tx.timestamp}</div>
-                                <div class="text-[9px] text-neutral-500 font-mono">#${tx.id}</div>
-                            </td>
-                            <td class="py-2.5 text-neutral-400 font-sans">
-                                ${tx.asset}
-                                <span class="block text-[8px] text-neutral-600 font-mono">${tx.vehicle || ''}</span>
-                            </td>
-                            <td class="py-2.5 text-right font-bold text-neutral-100 font-sans">$${parseFloat(tx.amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                            <td class="py-2.5 text-right">
-                                <span class="inline-block px-1.5 py-0.5 rounded text-[8px] font-bold uppercase border ${badgeStyle}">
-                                    ${tx.status}
-                                </span>
-                            </td>
-                        `;
-                        tableBody.appendChild(row);
-                    });
-                } else {
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td colspan="4" class="py-6 text-center text-neutral-500 italic font-mono text-[10px]">No historical data found.</td>
-                        </tr>`;
-                }
-            } catch (err) {
-                console.error("Ledger synchronization exception details:", err);
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="py-6 text-center text-neutral-500 italic font-mono text-[10px]">Pipeline synchronization offline.</td>
-                    </tr>`;
-            }
-        }
-
-        // Init & Profile Check Context
-        if (!userId) {
-            window.location.href = "index.html";
-        } else {
-            document.getElementById('userName').innerText = fullName || "Investor";
+        // HIGH-END PREMIUM LEDGER INJECTOR FEED CONTROLLER
+        function initPremiumLedgerFeed() {
+            const container = document.getElementById("ledgerScrollContainer");
+            if (!container) return;
             
-            const savedAvatar = localStorage.getItem("userAvatarImage");
-            if (savedAvatar) {
-                document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+            const mockEvents = [
+                { id: "482", type: "acquisition", details: "Purchased 45 Tesla Shares ($2,500)", time: "2 mins ago" },
+                { id: "911", type: "extraction", details: "Withdrew $1,400 to Bank Account", time: "12 mins ago" },
+                { id: "229", type: "acquisition", details: "Purchased 18 Tesla Shares ($1,050)", time: "19 mins ago" },
+                { id: "704", type: "extraction", details: "Withdrew $3,100 to Institutional Bank", time: "28 mins ago" },
+                { id: "115", type: "acquisition", details: "Purchased 90 Tesla Shares ($5,300)", time: "35 mins ago" },
+                { id: "883", type: "extraction", details: "Withdrew $950 to Bank Account", time: "51 mins ago" }
+            ];
+
+            function createLedgerNode(item) {
+                const div = document.createElement("div");
+                div.className = "bg-[#1c1c1c]/40 border border-neutral-900/60 rounded-xl p-3 flex items-center justify-between shadow-sm backdrop-blur-sm";
+                
+                const isAcquisition = item.type === "acquisition";
+                const badgeColor = isAcquisition ? "bg-emerald-950/40 text-emerald-400 border-emerald-900/30" : "bg-red-950/40 text-red-400 border-red-900/30";
+                const badgeText = isAcquisition ? "BUY" : "WIRE";
+
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[8px] font-black border ${badgeColor} px-1.5 py-0.5 rounded tracking-widest font-mono shrink-0">${badgeText}</span>
+                        <div class="space-y-0.5">
+                            <p class="text-xs text-neutral-200 font-medium">Investor ID <span class="font-mono text-neutral-400">***${item.id}</span></p>
+                            <p class="text-[11px] text-neutral-400 font-normal tracking-wide">${item.details}</p>
+                        </div>
+                    </div>
+                    <span class="text-[9px] text-neutral-600 font-medium tracking-tight shrink-0 font-mono">${item.time}</span>
+                `;
+                return div;
             }
 
-            // Fetch metrics from backend setup
-            fetch(`${API_URL}`, {
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify({ action: "getDashboardData", userId: userId })
-            })
-            .then(res => res.json())
-            .then(resData => {
-                if(resData.status === "success" && resData.account) {
-                    document.getElementById("totalBalance").innerText = "$" + parseFloat(resData.account.balance).toLocaleString();
-                    document.getElementById("totalProfit").innerText = "$" + parseFloat(resData.account.profit).toLocaleString();
-                } else {
-                    document.getElementById("totalBalance").innerText = "$0.00";
-                    document.getElementById("totalProfit").innerText = "$0.00";
-                }
-            })
-            .catch(() => {
-                document.getElementById("totalBalance").innerText = "$0.00";
-                document.getElementById("totalProfit").innerText = "$0.00";
-            });
+            // Populate base items
+            mockEvents.forEach(item => container.appendChild(createLedgerNode(item)));
 
-            // Initialize visual animations and history table hooks
-            initializePrivatePoolCounter();
-            fetchTransactionHistory();
+            // Smooth high-end vertical loop interval
+            setInterval(() => {
+                const firstChild = container.firstElementChild;
+                if (!firstChild) return;
+
+                container.style.transition = "transform 600ms ease-in-out";
+                container.style.transform = `translateY(-${firstChild.offsetHeight + 8}px)`;
+
+                setTimeout(() => {
+                    container.style.transition = "none";
+                    container.style.transform = "translateY(0)";
+                    container.appendChild(firstChild);
+                }, 600);
+            }, 4500);
         }
 
-        // --- CHART CONTROLLERS ---
-        const ctxDelivery = document.getElementById('deliveryChart').getContext('2d');
-        new Chart(ctxDelivery, {
-            type: 'bar',
-            data: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-                datasets: [{
-                    label: 'Deliveries',
-                    data: [140100, 180200, 220100, 280400],
-                    backgroundColor: '#E82127',
-                    borderRadius: 4,
-                    barThickness: 16
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false }, ticks: { color: '#666', font: { size: 9 } } },
-                    y: { grid: { color: '#1c1c1c' }, ticks: { color: '#666', font: { size: 9 } } }
-                }
+        // App Initializer Setup Matrix
+        window.addEventListener("DOMContentLoaded", () => {
+            // Setup User Profiles
+            if (fullName) {
+                document.getElementById("userName").innerText = fullName;
+                const initials = fullName.split(" ").map(n => n[0]).join("").substring(0,2).toUpperCase();
+                document.getElementById("avatarContainer").innerText = initials || "PL";
             }
-        });
-
-        const ctxPortfolio = document.getElementById('portfolioChart').getContext('2d');
-        new Chart(ctxPortfolio, {
-            type: 'doughnut',
-            data: {
-                labels: ['Tesla Shares', 'Liquid Cash', 'Other Assets'],
-                datasets: [{
-                    data: [70, 20, 10],
-                    backgroundColor: ['#E82127', '#3d3d3d', '#8f8f8f'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '80%',
-                plugins: { legend: { display: false } }
-            }
+            
+            // Invoke Premium components
+            initializePrivatePoolCounter();
+            initPremiumLedgerFeed();
         });
     </script>
 </body>
