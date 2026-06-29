@@ -95,6 +95,29 @@
             </div>
         </div>
 
+        <!-- Live Premium Transactions Feed -->
+        <div class="w-full bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between mb-2.5">
+                <div class="flex items-center space-x-2">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Live Activity Feed</span>
+                </div>
+                <span class="text-[9px] bg-[#E82127]/10 border border-[#E82127]/20 text-[#E82127] font-extrabold uppercase px-2 py-0.5 rounded-md tracking-wider">System Broadcaster</span>
+            </div>
+            <div class="bg-[#0d0d0d] border border-[#1f1f1f] rounded-xl px-4 py-3 min-h-[52px] flex items-center justify-between overflow-hidden relative">
+                <div id="liveActivityBox" class="flex items-center justify-between w-full transition-all duration-500 transform translate-y-0 opacity-100">
+                    <div class="flex items-center space-x-3 text-xs">
+                        <span class="text-emerald-500 font-bold font-mono">⚡</span>
+                        <p class="text-neutral-200 tracking-tight leading-snug" id="activityText">Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)</p>
+                    </div>
+                    <span class="text-[10px] text-neutral-500 shrink-0 ml-4 font-medium font-mono" id="activityTime">2 mins ago</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Metric Cards -->
         <div class="grid grid-cols-2 gap-4">
             <div class="gradient-card rounded-2xl p-4 relative shadow-lg">
@@ -326,7 +349,7 @@
             searchModal.classList.remove("opacity-100");
             searchModal.classList.add("opacity-0");
             setTimeout(() => {
-                searchModal.classList.add("hidden");
+                searchModal.add("hidden");
                 searchInput.value = "";
             }, 200);
         }
@@ -439,6 +462,7 @@
 
             loadDashboardMetrics();
             initializePremiumCharts();
+            initializeLiveActivityFeed();
         }
 
         function formatCurrency(val) {
@@ -514,6 +538,54 @@
                     plugins: { legend: { display: false } }
                 }
             });
+        }
+
+        // Live Activities Feed Swapper Implementation
+        function initializeLiveActivityFeed() {
+            const feedData = [
+                { text: 'Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)', time: '2 mins ago' },
+                { text: 'Investor ID ***911 withdrew <span class="text-neutral-400 font-mono font-semibold">$1,400</span> to Bank Account', time: '12 mins ago' },
+                { text: 'Investor ID ***104 added position capital pipeline (<span class="text-emerald-400 font-mono font-semibold">$10,250</span> via USDT)', time: 'Just now' },
+                { text: 'Investor ID ***661 secured 15 fractional equities (<span class="text-emerald-400 font-mono font-semibold">$850</span>)', time: '4 mins ago' },
+                { text: 'Investor ID ***319 clearing system payout of <span class="text-neutral-400 font-mono font-semibold">$4,100</span> complete', time: '22 mins ago' },
+                { text: 'Investor ID ***882 initialized institutional collateral allocation (<span class="text-emerald-400 font-mono font-semibold">$15,000</span>)', time: '1 min ago' }
+            ];
+
+            const containerBox = document.getElementById('liveActivityBox');
+            const textBox = document.getElementById('activityText');
+            const timeBox = document.getElementById('activityTime');
+            let currentIndex = 0;
+
+            function cycleFeed() {
+                containerBox.classList.remove('translate-y-0', 'opacity-100');
+                containerBox.classList.add('-translate-y-2', 'opacity-0');
+
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % feedData.length;
+                    const currentItem = feedData[currentIndex];
+
+                    textBox.innerHTML = currentItem.text;
+                    timeBox.innerText = currentItem.time;
+
+                    containerBox.classList.remove('-translate-y-2');
+                    containerBox.classList.add('translate-y-2');
+
+                    setTimeout(() => {
+                        containerBox.classList.remove('translate-y-2', 'opacity-0');
+                        containerBox.classList.add('translate-y-0', 'opacity-100');
+                    }, 50);
+                }, 500);
+            }
+
+            function queueNextCycle() {
+                const randomizedInterval = Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
+                setTimeout(() => {
+                    cycleFeed();
+                    queueNextCycle();
+                }, randomizedInterval);
+            }
+
+            queueNextCycle();
         }
     </script>
 </body>
