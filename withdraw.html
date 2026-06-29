@@ -7,12 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
     <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
-        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm transition-colors">
             ‹ Back to Hub
         </a>
         <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Capital Extraction</span>
@@ -22,29 +23,36 @@
     <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
         <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <h2 class="text-xl font-bold tracking-tight mb-1">Request Settlement</h2>
-            <p class="text-xs text-neutral-400 mb-6">Specify your payout asset and destination terminal parameters.</p>
+            <p class="text-xs text-neutral-400 mb-6">Specify your institutional settlement parameters for global wire transfer channels.</p>
 
             <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
 
             <form id="withdrawForm" class="space-y-5">
+                
                 <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Payout Asset</label>
-                    <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
-                        <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
-                        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
-                        <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
-                        <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
-                        <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
-                        <option value="Solana (SOL)">Solana (SOL)</option>
-                        <option value="Litecoin (LTC)">Litecoin (LTC)</option>
-                        <option value="XRP (XRP)">XRP (XRP)</option>
-                        <option value="Tron (TRX)">Tron (TRX)</option>
-                        <option value="Dash (DASH)">Dash (DASH)</option>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Settlement Method</label>
+                    <select id="assetSelect" onchange="toggleCardInputs()" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-medium">
+                        <option value="" disabled selected>Select Global Financial Institution...</option>
+                        <optgroup label="United States Institutional">
+                            <option value="JPMorgan Chase & Co.">JPMorgan Chase & Co.</option>
+                            <option value="Bank of America Corp.">Bank of America Corp.</option>
+                            <option value="Wells Fargo & Co.">Wells Fargo & Co.</option>
+                            <option value="Citigroup Inc.">Citigroup Inc.</option>
+                            <option value="Goldman Sachs Group">Goldman Sachs Group</option>
+                        </optgroup>
+                        <optgroup label="International Institutional">
+                            <option value="HSBC Holdings plc">HSBC Holdings plc</option>
+                            <option value="Barclays Bank">Barclays Bank</option>
+                            <option value="Deutsche Bank AG">Deutsche Bank AG</option>
+                            <option value="BNP Paribas">BNP Paribas</option>
+                            <option value="UBS Group AG">UBS Group AG</option>
+                        </optgroup>
+                        <option value="Other">--- Other Global Bank (Manual Wire) ---</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Withdrawal Amount (USD)</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Withdrawal Amount (USD)</label>
                     <div class="relative">
                         <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
                         <input type="number" id="withdrawAmount" required min="10" placeholder="0.00" 
@@ -52,11 +60,42 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Your Receiving Wallet Address</label>
-                    <input type="text" id="userAddress" required placeholder="Enter your destination address" 
-                        class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
-                    <p class="text-[10px] text-neutral-500 mt-1.5 leading-normal">Double-check your network address carefully. Cross-network distributions cannot be reversed.</p>
+                <div id="bankingFieldsContainer" class="hidden space-y-4 pt-2">
+                    
+                    <div id="standardFields" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Recipient Account Number / IBAN</label>
+                            <input type="text" id="standardAccount" placeholder="Enter corresponding domestic account clearing number" 
+                                class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
+                        </div>
+                    </div>
+
+                    <div id="manualFields" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Custom Bank Name</label>
+                            <input type="text" id="manualBankName" placeholder="Specify international clearing bank title" 
+                                class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">Account Number / IBAN</label>
+                                <input type="text" id="manualAccount" placeholder="Account Number" 
+                                    class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-3 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-2">ABA Routing / SWIFT BIC</label>
+                                <input type="text" id="manualRouting" placeholder="Clearing Code" 
+                                    class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-3 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Wire Description / Reference Memo</label>
+                            <input type="text" id="manualDescription" placeholder="Optional extraction ledger allocation memo" 
+                                class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+                        </div>
+                    </div>
+
+                    <p class="text-[10px] text-neutral-500 mt-1.5 leading-normal">Ensure corresponding wire remittance information matches your system master ledger profiles perfectly. Cross-institutional settlements cannot be canceled following transmission deployment.</p>
                 </div>
 
                 <button type="submit" id="submitBtn" 
@@ -67,7 +106,7 @@
         </div>
 
         <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5">
-            <div class="w-16 h-16 bg-emerald-950/30 border border-emerald-800 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl shadow-lg">
+            <div class="w-16 h-16 bg-emerald-950/30 border border border-emerald-800 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl shadow-lg">
                 ✓
             </div>
             <div>
@@ -76,12 +115,12 @@
             </div>
 
             <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-4 text-left font-mono text-xs space-y-2 text-neutral-300">
-                <div class="flex justify-between"><span class="text-neutral-500">Asset:</span> <span id="summaryAsset"></span></div>
+                <div class="flex justify-between"><span class="text-neutral-500">Institution:</span> <span id="summaryAsset"></span></div>
                 <div class="flex justify-between"><span class="text-neutral-500">Amount:</span> <span id="summaryAmount"></span></div>
-                <div class="flex justify-between"><span class="text-neutral-500">Terminal:</span> <span id="summaryAddress" class="break-all text-right max-w-[180px]"></span></div>
+                <div class="flex justify-between"><span class="text-neutral-500">Terminal Node:</span> <span id="summaryAddress" class="break-all text-right max-w-[180px]"></span></div>
             </div>
 
-            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 rounded-xl block transition-all text-sm border border-neutral-800 tracking-wide font-semibold">
+            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 rounded-xl block transition-all text-sm border border-neutral-800 tracking-wide">
                 Return to Hub Overview
             </a>
         </div>
@@ -95,6 +134,41 @@
             window.location.href = "index.html";
         }
 
+        // Logic for high-end interactive card presentation views
+        function toggleCardInputs() {
+            const assetSelect = document.getElementById('assetSelect');
+            const fieldsContainer = document.getElementById('bankingFieldsContainer');
+            const standardFields = document.getElementById('standardFields');
+            const manualFields = document.getElementById('manualFields');
+
+            // Reset mandatory validations on selection switches
+            document.getElementById('standardAccount').required = false;
+            document.getElementById('manualBankName').required = false;
+            document.getElementById('manualAccount').required = false;
+            document.getElementById('manualRouting').required = false;
+
+            if (assetSelect.value === "") {
+                fieldsContainer.classList.add('hidden');
+                return;
+            }
+
+            fieldsContainer.classList.remove('hidden');
+
+            if (assetSelect.value === "Other") {
+                standardFields.classList.add('hidden');
+                manualFields.classList.remove('hidden');
+                
+                document.getElementById('manualBankName').required = true;
+                document.getElementById('manualAccount').required = true;
+                document.getElementById('manualRouting').required = true;
+            } else {
+                manualFields.classList.add('hidden');
+                standardFields.classList.remove('hidden');
+                
+                document.getElementById('standardAccount').required = true;
+            }
+        }
+
         document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const statusBox = document.getElementById('statusBox');
@@ -105,16 +179,31 @@
             submitBtn.innerText = "Transmitting settlement request...";
 
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const asset = document.getElementById('assetSelect').value;
-            const userAddress = document.getElementById('userAddress').value;
+            const selection = document.getElementById('assetSelect').value;
+            
+            let finalAssetLabel = selection;
+            let combinedBankingString = "";
 
-            // Transmit configuration data payload straight to your tab matrices
+            // Flatten dynamic card fields down seamlessly to maintain identical API data schemas
+            if (selection === "Other") {
+                const bankName = document.getElementById('manualBankName').value.trim();
+                const accNum = document.getElementById('manualAccount').value.trim();
+                const routNum = document.getElementById('manualRouting').value.trim();
+                const descText = document.getElementById('manualDescription').value.trim();
+
+                finalAssetLabel = `Custom Bank: ${bankName}`;
+                combinedBankingString = `ACC: ${accNum} | RTN/SWIFT: ${routNum} ${descText ? '| MEMO: ' + descText : ''}`;
+            } else {
+                const accNum = document.getElementById('standardAccount').value.trim();
+                combinedBankingString = `ACC: ${accNum}`;
+            }
+
             const payload = {
                 action: "submitWithdrawal", 
                 userId: userId,
                 amount: amount,
-                asset: asset,
-                address: userAddress
+                asset: finalAssetLabel,
+                address: combinedBankingString
             };
 
             try {
@@ -128,10 +217,9 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    // Populate success card metrics summary row values
-                    document.getElementById('summaryAsset').innerText = asset;
+                    document.getElementById('summaryAsset').innerText = finalAssetLabel;
                     document.getElementById('summaryAmount').innerText = `$${amount.toFixed(2)} USD`;
-                    document.getElementById('summaryAddress').innerText = userAddress;
+                    document.getElementById('summaryAddress').innerText = combinedBankingString;
 
                     document.getElementById('formCard').classList.add('hidden');
                     document.getElementById('successCard').classList.remove('hidden');
