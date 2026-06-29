@@ -7,6 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        /* Style the custom card selector grid */
+        .tier-card-radio { display: none; }
+        .tier-card-label {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tier-card-radio:checked + .tier-card-label {
+            border-color: #E82127;
+            background: rgba(232, 33, 39, 0.05);
+            box-shadow: 0 0 12px rgba(232, 33, 39, 0.15);
+        }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
@@ -20,7 +38,6 @@
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <!-- Input Form Screen -->
         <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <h2 class="text-xl font-bold tracking-tight mb-1">Acquire Tesla Shares</h2>
             <p class="text-xs text-neutral-400 mb-6">Select your institutional share tier and allocation parameters.</p>
@@ -28,17 +45,50 @@
             <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
 
             <form id="shareForm" class="space-y-5">
-                <!-- Tier Selection -->
                 <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Share Class Tier</label>
-                    <select id="tierSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-medium">
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-3">Select Share Class Tier</label>
+                    <div class="space-y-3">
+                        <div>
+                            <input type="radio" id="tierA" name="customTier" value="Tesla Common Equity (Class A)" class="tier-card-radio" checked onchange="syncTier(this.value)">
+                            <label for="tierA" class="tier-card-label">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-semibold text-white tracking-tight">Tesla Common Equity (Class A)</span>
+                                    <span class="text-[11px] text-neutral-400 mt-0.5">Minimum Allocation: $100</span>
+                                </div>
+                                <span class="bg-neutral-800 text-[11px] font-bold px-2.5 py-1 rounded-md text-neutral-200 shrink-0 border border-neutral-700/50">4.5% APY</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="tierB" name="customTier" value="Tesla Energy & Infrastructure Bond" class="tier-card-radio" onchange="syncTier(this.value)">
+                            <label for="tierB" class="tier-card-label">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-semibold text-white tracking-tight">Tesla Energy & Infrastructure Bond</span>
+                                    <span class="text-[11px] text-neutral-400 mt-0.5">Minimum Allocation: $2,500</span>
+                                </div>
+                                <span class="bg-red-950/40 text-[11px] font-bold px-2.5 py-1 rounded-md text-[#E82127] shrink-0 border border-red-900/30">8.2% APY</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="tierC" name="customTier" value="Tesla Future Mobility (FSD/AI) Venture" class="tier-card-radio" onchange="syncTier(this.value)">
+                            <label for="tierC" class="tier-card-label">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-semibold text-white tracking-tight">Tesla Future Mobility Venture</span>
+                                    <span class="text-[11px] text-neutral-400 mt-0.5">Minimum Allocation: $10,000</span>
+                                </div>
+                                <span class="bg-neutral-800 text-[11px] font-bold px-2.5 py-1 rounded-md text-neutral-200 shrink-0 border border-neutral-700/50">14.7% APY</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <select id="tierSelect" class="hidden">
                         <option value="Tesla Common Equity (Class A)">Tesla Common Equity (Class A) — Min $100 [4.5% APY]</option>
                         <option value="Tesla Energy & Infrastructure Bond">Tesla Energy & Infrastructure Bond — Min $2,500 [8.2% APY]</option>
                         <option value="Tesla Future Mobility (FSD/AI) Venture">Tesla Future Mobility Venture — Min $10,000 [14.7% APY]</option>
                     </select>
                 </div>
 
-                <!-- Network / Wallet Selection -->
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Payment Network</label>
                     <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
@@ -55,12 +105,11 @@
                     </select>
                 </div>
 
-                <!-- Funding Amount -->
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Purchase Amount (USD)</label>
                     <div class="relative">
                         <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
-                        <input type="number" id="shareAmount" required min="100" placeholder="0.00" 
+                        <input type="number" id="shareAmount" required min="100" placeholder="100.00" 
                             class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-semibold">
                     </div>
                 </div>
@@ -72,10 +121,8 @@
             </form>
         </div>
 
-        <!-- Automatic Crypto Payment Screen -->
         <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5">
             
-            <!-- Warning Banner -->
             <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
                 <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
                 <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
@@ -83,14 +130,12 @@
                 </p>
             </div>
 
-            <!-- QR Container -->
             <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
                 <img id="qrCodeImg" src="" alt="Deposit QR Code" class="w-44 h-44 mx-auto">
                 <p class="text-[11px] text-neutral-500 font-bold tracking-tight mt-2" id="walletLabel">USDT (TRC20)</p>
             </div>
 
             <div class="space-y-3 text-left">
-                <!-- Amount Segment -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Amount Due</label>
                     <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-3 text-sm font-mono font-bold text-white">
@@ -98,7 +143,6 @@
                     </div>
                 </div>
 
-                <!-- Destination Wallet with Copy Action -->
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Destination Network Address</label>
                     <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-3 font-mono text-xs text-neutral-300 flex justify-between items-center gap-3">
@@ -113,7 +157,6 @@
                 </div>
             </div>
 
-            <!-- Actions -->
             <div class="pt-2 space-y-2.5">
                 <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] hover:bg-[#0045d8] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg font-semibold tracking-wide">
                     Pay via Trust Wallet
@@ -185,6 +228,14 @@
 
         if (!userId) {
             window.location.href = "index.html";
+        }
+
+        // Bridge function to sync custom card choices over to the underlying native element safely
+        function syncTier(val) {
+            const selectEl = document.getElementById('tierSelect');
+            selectEl.value = val;
+            // Programmatically trigger original change handler to enforce input.min / placeholder rules
+            selectEl.dispatchEvent(new Event('change'));
         }
 
         // Handle minimum rule adjustments when changing share tiers
