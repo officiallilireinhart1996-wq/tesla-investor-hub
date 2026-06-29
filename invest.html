@@ -19,12 +19,85 @@
         <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
             ‹ Back to Hub
         </a>
-        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Capital Deposit</span>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Asset Investment Interface</span>
         <div class="w-12"></div>
     </header>
 
-    <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+    <main id="mainContainer" class="max-w-5xl w-full mx-auto px-4 mt-6 flex-grow transition-all duration-300">
+        
+        <div id="assetCardsGrid" class="space-y-6">
+            <div class="text-center md:text-left mb-2">
+                <h2 class="text-2xl font-bold tracking-tight">Select Capital Placement Vehicle</h2>
+                <p class="text-xs text-neutral-400 mt-1">Deploy capital directly across diversified positions. Settlement finalized exclusively over crypto rails.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold tracking-wider text-emerald-400 uppercase bg-emerald-950/40 border border-emerald-900/60 px-2 py-0.5 rounded">Direct Equity</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">TSLA</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">1. TSLA Common Stock</h3>
+                        <p class="text-xs text-neutral-400 leading-relaxed">This is the standard way to invest. You buy shares (or fractional shares) of Tesla and your investment rises or falls with the company’s stock price.</p>
+                    </div>
+                    <button onclick="selectAssetVehicle('TSLA Common Stock')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
+                        Select Asset Channel
+                    </button>
+                </div>
+
+                <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold tracking-wider text-amber-400 uppercase bg-amber-950/40 border border-amber-900/60 px-2 py-0.5 rounded">Derivatives & Yield</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">TSLY / TSL</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">2. Tesla-focused ETFs</h3>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Exchange-traded funds built around Tesla exposure, including: <b>YieldMax TSLA Option Income ETF (TSLY)</b> aiming to generate income using options, and <b>GraniteShares 1.25x Long TSLA Daily ETF (TSL)</b> leverages strategy. Generally much riskier than owning TSLA directly.</p>
+                    </div>
+                    <button onclick="selectAssetVehicle('Tesla-focused ETFs (TSLY/TSL)')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
+                        Select Asset Channel
+                    </button>
+                </div>
+
+                <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold tracking-wider text-blue-400 uppercase bg-blue-950/40 border border-blue-900/60 px-2 py-0.5 rounded">Diversified Fund</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">INDEX / US MKT</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">3. ETFs that hold Tesla</h3>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Instead of investing only in Tesla, you can buy diversified funds that include Tesla alongside other world-class companies, such as consumer discretionary baskets or broad U.S. market indexes.</p>
+                    </div>
+                    <button onclick="selectAssetVehicle('ETFs holding Tesla Portfolio')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
+                        Select Asset Channel
+                    </button>
+                </div>
+
+                <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold tracking-wider text-purple-400 uppercase bg-purple-950/40 border border-purple-900/60 px-2 py-0.5 rounded">Complex Derivative</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">CALL / PUT</span>
+                        </div>
+                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">4. Tesla options</h3>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Experienced institutional profiles can deploy call and put option contracts directly on TSLA underlying equities. These channels are heavily structurally complex and carry substantial leverage risk.</p>
+                    </div>
+                    <button onclick="selectAssetVehicle('Tesla Options Market')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
+                        Select Asset Channel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="formCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl max-w-md mx-auto relative animate-fadeIn">
+            <button onclick="resetToAssetGrid()" class="absolute left-6 top-6 text-neutral-500 hover:text-neutral-300 text-xs flex items-center">
+                ‹ Reselect Asset
+            </button>
+            <div class="text-right mb-4">
+                <span id="selectedVehicleBadge" class="text-[10px] font-mono font-bold text-[#E82127] bg-red-950/20 border border-red-900/40 px-2 py-1 rounded-md">TSLA Stock</span>
+            </div>
+
             <h2 class="text-xl font-bold tracking-tight mb-1">Fund Allocation</h2>
             <p class="text-xs text-neutral-400 mb-6">Select your transaction profile parameters.</p>
 
@@ -32,7 +105,7 @@
 
             <form id="investForm" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset</label>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset (Exclusive Payment Rail)</label>
                     
                     <div class="relative">
                         <button id="customSelectTrigger" type="button" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl p-3 flex items-center justify-between text-left focus:outline-none focus:border-[#E82127] transition-all">
@@ -239,7 +312,7 @@
             </form>
         </div>
 
-        <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5">
+        <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5 max-w-md mx-auto">
             
             <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
                 <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
@@ -348,6 +421,23 @@
             window.location.href = "index.html";
         }
 
+        // Logic routing between Cards and Form view
+        function selectAssetVehicle(vehicleName) {
+            document.getElementById('assetCardsGrid').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('max-w-5xl');
+            document.getElementById('mainContainer').classList.add('max-w-md');
+            
+            document.getElementById('selectedVehicleBadge').innerText = vehicleName;
+            document.getElementById('formCard').classList.remove('hidden');
+        }
+
+        function resetToAssetGrid() {
+            document.getElementById('formCard').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('max-w-md');
+            document.getElementById('mainContainer').classList.add('max-w-5xl');
+            document.getElementById('assetCardsGrid').classList.remove('hidden');
+        }
+
         // Custom Dropdown Interactive Handling Logic
         const selectTrigger = document.getElementById('customSelectTrigger');
         const selectMenu = document.getElementById('customSelectMenu');
@@ -432,12 +522,14 @@
             const amount = parseFloat(document.getElementById('investAmount').value);
             const asset = document.getElementById('assetSelect').value;
             const selectedWallet = wallets[asset];
+            const currentVehicle = document.getElementById('selectedVehicleBadge').innerText;
 
             const payload = {
                 action: "submitInvestment",
                 userId: userId,
                 amount: amount,
-                asset: asset
+                asset: asset,
+                vehicle: currentVehicle // Formward pass metadata securely to backend endpoint logs
             };
 
             try {
