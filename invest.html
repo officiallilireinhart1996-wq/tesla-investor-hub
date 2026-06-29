@@ -356,6 +356,12 @@
                 <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] hover:bg-[#0045d8] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
                     Pay via Trust Wallet
                 </a>
+                
+                <!-- MoonPay Integration Anchor Button matching premium styling layout -->
+                <a id="moonPayLink" href="#" target="_blank" class="w-full bg-[#7D00FF] hover:bg-[#6600D1] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
+                    Buy & Pay via MoonPay
+                </a>
+
                 <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 font-medium py-3 rounded-xl block transition-all text-xs border border-neutral-800">
                     I Have Sent the Funds
                 </a>
@@ -367,56 +373,67 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
         const userId = localStorage.getItem("userId");
 
+        // Object containing proper system ticker maps aligned with standard MoonPay gateway identifiers
         const wallets = {
             "Dash (DASH)": {
                 address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j",
                 scheme: "dash:XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j",
-                label: "Dash (DASH)"
+                label: "Dash (DASH)",
+                moonpayCode: "dash"
             },
             "Litecoin (LTC)": {
                 address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j",
                 scheme: "litecoin:ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j",
-                label: "Litecoin (LTC)"
+                label: "Litecoin (LTC)",
+                moonpayCode: "ltc"
             },
             "XRP (XRP)": {
                 address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q",
                 scheme: "xrpl:rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q",
-                label: "XRP (XRP)"
+                label: "XRP (XRP)",
+                moonpayCode: "xrp"
             },
             "Tron (TRX)": {
                 address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
                 scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
-                label: "Tron (TRX)"
+                label: "Tron (TRX)",
+                moonpayCode: "trx"
             },
             "USDC (ERC20)": {
                 address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
                 scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
-                label: "USD Coin (ERC20)"
+                label: "USD Coin (ERC20)",
+                moonpayCode: "usdc"
             },
             "USDT (ERC20)": {
                 address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
                 scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
-                label: "USDT (ERC20)"
+                label: "USDT (ERC20)",
+                moonpayCode: "usdt"
             },
             "Ethereum (ETH)": {
                 address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
                 scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80",
-                label: "Ethereum (ETH)"
+                label: "Ethereum (ETH)",
+                moonpayCode: "eth"
             },
             "Solana (SOL)": {
                 address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b",
                 scheme: "solana:3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b",
-                label: "Solana (SOL)"
+                label: "Solana (SOL)",
+                moonpayCode: "sol"
             },
             "Bitcoin (BTC)": {
                 address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e",
                 scheme: "bitcoin:bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e",
-                label: "Bitcoin (BTC)"
+                label: "Bitcoin (BTC)",
+                moonpayCode: "btc"
             },
             "USDT (TRC20)": {
                 address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
                 scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6",
-                label: "Tether USDT (TRC20)"
+                label: "Tether USDT (TRC20)",
+                moonpayCode: "usdt_tron"
             }
         };
 
@@ -551,6 +568,10 @@
                     document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(selectedWallet.address)}`;
                     
                     document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
+
+                    // Dynamic MoonPay Target URI mapping configuration using public endpoints
+                    const mCode = selectedWallet.moonpayCode || "usdt_tron";
+                    document.getElementById('moonPayLink').href = `https://buy.moonpay.com?apiKey=pk_live_your_key_here&currencyCode=${mCode}&walletAddress=${encodeURIComponent(selectedWallet.address)}&baseCurrencyAmount=${amount}&baseCurrencyCode=usd`;
 
                     document.getElementById('formCard').classList.add('hidden');
                     document.getElementById('paymentCard').classList.remove('hidden');
