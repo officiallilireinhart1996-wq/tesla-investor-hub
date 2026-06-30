@@ -527,8 +527,8 @@
 
         function initializePremiumCharts() {
             // Glowing Line Chart
-            const canvas = document.getElementById("deliveryChart");
-const ctx = canvas.getContext("2d");
+            const ctxLine = document.getElementById('deliveryChart').getContext('2d');
+
 
             const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
             gradient.addColorStop(0, 'rgba(232, 33, 39, 0.3)');
