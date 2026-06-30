@@ -528,14 +528,12 @@
         function initializePremiumCharts() {
             // Glowing Line Chart
             const ctxLine = document.getElementById('deliveryChart').getContext('2d');
-
- const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
+            const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
             gradient.addColorStop(0, 'rgba(232, 33, 39, 0.3)');
             gradient.addColorStop(1, 'rgba(232, 33, 39, 0)');
 
-     const chart = new Chart(ctx,{
-
-  type: 'line',
+            new Chart(ctxLine, {
+                type: 'line',
                 data: {
                     labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13'],
                     datasets: [{
@@ -629,4 +627,3 @@
     </script>
 </body>
 </html>
-
