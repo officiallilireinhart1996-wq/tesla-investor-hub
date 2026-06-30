@@ -187,16 +187,16 @@
             </p>
         </div>
 
-        <!-- Bar Chart Card -->
+        <!-- Chart Card (Updated) -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3 shadow-xl">
             <div class="flex items-center justify-between">
                 <div>
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Quarterly Deliveries</h4>
-                    <p class="text-[10px] text-neutral-500">Global vehicle distribution metrics</p>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Tesla Performance</h4>
+                    <p class="text-[10px] text-neutral-500">Live share valuation history</p>
                 </div>
                 <div class="flex items-center space-x-1.5 bg-red-950/40 px-2 py-0.5 rounded-full border border-red-900/30">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#E82127] animate-pulse"></span>
-                    <span class="text-[9px] text-red-400 font-bold tracking-tight uppercase">Live Tracking</span>
+                    <span class="text-[9px] text-red-400 font-bold tracking-tight uppercase">Live</span>
                 </div>
             </div>
             <div class="relative w-full h-36">
@@ -282,14 +282,12 @@
 
     <!-- Bottom Navigation Bar -->
     <div class="fixed bottom-4 left-4 right-4 bg-[#141414]/90 backdrop-blur-md border border-[#222] h-16 rounded-2xl shadow-2xl flex items-center justify-between px-2 z-50 max-w-md mx-auto">
-        
         <a href="dashboard.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
             </svg>
             <span class="text-[9px] font-bold mt-1 tracking-tight">Home</span>
         </a>
-
         <a href="settings.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
@@ -297,38 +295,32 @@
             </svg>
             <span class="text-[9px] font-medium mt-1 tracking-tight">Settings</span>
         </a>
-
         <a href="messages.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors relative">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z"></path>
             </svg>
             <span class="absolute top-1 right-5 bg-[#E82127] text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#141414]">3</span>
             <span class="text-[9px] font-medium mt-1 tracking-tight">Messages</span>
         </a>
-
         <a href="about.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             <span class="text-[9px] font-medium mt-1 tracking-tight">About</span>
         </a>
-
         <a href="#" id="logoutBtn" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-500 hover:text-red-400 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
             </svg>
             <span class="text-[9px] font-medium mt-1 tracking-tight">Exit</span>
         </a>
-
     </div>
 
-    <!-- Script Logic Engine -->
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
         const userId = localStorage.getItem("userId");
         const fullName = localStorage.getItem("fullName");
 
-        // Active Inline Logout Controller Engine
         document.getElementById("logoutBtn").addEventListener("click", (e) => {
             e.preventDefault();
             localStorage.removeItem("userId");
@@ -337,7 +329,6 @@
             window.location.href = "index.html";
         });
 
-        // Searchable Database Content Framework
         const searchDatabase = [
             { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
             { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
@@ -350,14 +341,12 @@
             { name: "Secure Message Terminal", url: "messages.html", category: "Communication" }
         ];
 
-        // UI Target Hooks
         const openSearchBtn = document.getElementById("openSearchBtn");
         const closeSearchBtn = document.getElementById("closeSearchBtn");
         const searchModal = document.getElementById("searchModal");
         const searchInput = document.getElementById("searchInput");
         const searchResults = document.getElementById("searchResults");
 
-        // Open Modal Controller
         openSearchBtn.addEventListener("click", () => {
             searchModal.classList.remove("hidden");
             setTimeout(() => {
@@ -368,23 +357,20 @@
             renderSearchResults(""); 
         });
 
-        // Close Modal Controller
         function closeSearchModal() {
             searchModal.classList.remove("opacity-100");
             searchModal.classList.add("opacity-0");
             setTimeout(() => {
-                searchModal.add("hidden");
+                searchModal.classList.add("hidden");
                 searchInput.value = "";
             }, 200);
         }
         closeSearchBtn.addEventListener("click", closeSearchModal);
 
-        // Input Filtering Mechanism
         searchInput.addEventListener("input", (e) => {
             renderSearchResults(e.target.value);
         });
 
-        // Live Declining Private Shares Counter Simulation
         function initializePrivatePoolCounter() {
             let runningShares = 1240;
             const totalShares = 10000;
@@ -400,11 +386,10 @@
             }
 
             function subtractRandomShares() {
-                // Drop shares every 8 to 15 seconds to look dynamic and authentic
                 const customDelay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
                 setTimeout(() => {
                     if (runningShares > 184) {
-                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2; // Subtracts between 2 and 9 shares
+                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2;
                         runningShares -= chunksToSubtract;
                         updatePoolUI();
                     }
@@ -433,7 +418,6 @@
             searchResults.classList.remove("hidden");
         }
 
-        // Web Audio API Audio Engine Context for Premium Chime feedback
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playPremiumChime(isClearAction) {
             try {
@@ -441,7 +425,6 @@
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                
                 osc.type = 'sine';
                 if(isClearAction) {
                     osc.frequency.setValueAtTime(520, audioCtx.currentTime);
@@ -449,7 +432,6 @@
                 } else {
                     osc.frequency.setValueAtTime(880, audioCtx.currentTime);
                 }
-                
                 gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
                 osc.start();
@@ -457,7 +439,6 @@
             } catch(e){}
         }
 
-        // Dropdown Menu Toggler Execution
         const notiBellBtn = document.getElementById("notiBellBtn");
         const notiMenu = document.getElementById("notiMenu");
 
@@ -481,14 +462,12 @@
             setTimeout(() => notiMenu.classList.add("hidden"), 150);
         }
 
-        // Document level click tracking to dismiss popovers
         document.addEventListener("click", (e) => {
             if(!notiMenu.contains(e.target) && e.target !== notiBellBtn) {
                 if(!notiMenu.classList.contains("hidden")) closeNotiMenu();
             }
         });
 
-        // Dynamic State clear execution
         function clearSystemNotifications() {
             playPremiumChime(true);
             document.getElementById("notiListContainer").innerHTML = `
@@ -502,12 +481,10 @@
             }
         }
 
-        // Init & Profile Check Context
         if (!userId) {
             window.location.href = "index.html";
         } else {
             document.getElementById('userName').innerText = fullName || "Investor";
-            
             const savedAvatar = localStorage.getItem("userAvatarImage");
             if (savedAvatar) {
                 document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
@@ -515,7 +492,6 @@
                 const initials = fullName.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
                 document.getElementById('avatarContainer').innerText = initials;
             }
-
             loadDashboardMetrics();
             initializePremiumCharts();
             initializeLiveActivityFeed();
@@ -550,24 +526,31 @@
         }
 
         function initializePremiumCharts() {
-            const ctxBar = document.getElementById('deliveryChart').getContext('2d');
-            new Chart(ctxBar, {
-                type: 'bar',
+            // Glowing Line Chart
+            const ctxLine = document.getElementById('deliveryChart').getContext('2d');
+            const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
+            gradient.addColorStop(0, 'rgba(232, 33, 39, 0.3)');
+            gradient.addColorStop(1, 'rgba(232, 33, 39, 0)');
+
+            new Chart(ctxLine, {
+                type: 'line',
                 data: {
-                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13'],
                     datasets: [{
-                        label: 'Deliveries',
-                        data: [422875, 466140, 435059, 484507],
-                        backgroundColor: 'rgba(232, 33, 39, 0.85)',
-                        hoverBackgroundColor: '#E82127',
-                        borderRadius: 6,
-                        borderSkipped: false,
-                        barThickness: 24
+                        data: [1000, 1200, 1100, 1500, 1400, 1800, 2500, 4228],
+                        borderColor: '#E82127',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: gradient,
+                        pointRadius: 0,
+                        borderCapStyle: 'round'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    animation: { duration: 2000, easing: 'easeInOutQuart' },
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
@@ -576,6 +559,7 @@
                 }
             });
 
+            // Doughnut Allocation
             const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
             new Chart(ctxDonut, {
                 type: 'doughnut',
@@ -597,7 +581,6 @@
             });
         }
 
-        // Live Activities Feed Swapper Implementation
         function initializeLiveActivityFeed() {
             const feedData = [
                 { text: 'Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)', time: '2 mins ago' },
@@ -620,10 +603,8 @@
                 setTimeout(() => {
                     currentIndex = (currentIndex + 1) % feedData.length;
                     const currentItem = feedData[currentIndex];
-
                     textBox.innerHTML = currentItem.text;
                     timeBox.innerText = currentItem.time;
-
                     containerBox.classList.remove('-translate-y-2');
                     containerBox.classList.add('translate-y-2');
 
@@ -641,9 +622,9 @@
                     queueNextCycle();
                 }, randomizedInterval);
             }
-
             queueNextCycle();
         }
     </script>
 </body>
 </html>
+
