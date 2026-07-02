@@ -7,6 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        ::-webkit-scrollbar { display: none; }
+        @keyframes checkmark { 0% { stroke-dashoffset: 100; } 100% { stroke-dashoffset: 0; } }
+        .animate-check { stroke-dasharray: 100; stroke-dashoffset: 100; animation: checkmark 0.8s ease-in-out forwards; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
@@ -20,7 +23,6 @@
     </header>
 
     <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <!-- Transfer Input Form -->
         <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <h2 class="text-xl font-bold tracking-tight mb-1">Send Assets</h2>
             <p class="text-xs text-neutral-400 mb-6">Transfer capital or specific share holdings securely to external networks or user terminals.</p>
@@ -28,7 +30,6 @@
             <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
 
             <form id="sendForm" class="space-y-5">
-                <!-- Select Network Asset -->
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Asset Asset/Network</label>
                     <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
@@ -45,14 +46,12 @@
                     </select>
                 </div>
 
-                <!-- Destination Address/User Identity -->
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Recipient Terminal Address / Profile ID</label>
                     <input type="text" id="recipientAddress" required placeholder="Paste wallet address or user ID" 
                         class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
                 </div>
 
-                <!-- Sending Value -->
                 <div>
                     <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Transfer Amount (USD)</label>
                     <div class="relative">
@@ -69,13 +68,14 @@
             </form>
         </div>
 
-        <!-- Success Screen -->
-        <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5">
-            <div class="w-16 h-16 bg-emerald-950/30 border border-emerald-800 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl shadow-lg">
-                ✓
+        <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5 animate-in fade-in duration-500">
+            <div class="w-20 h-20 border-4 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                </svg>
             </div>
             <div>
-                <h2 class="text-xl font-bold tracking-tight text-emerald-400">Transfer Initiated</h2>
+                <h2 class="text-xl font-bold tracking-tight text-white">Transfer Initiated</h2>
                 <p class="text-xs text-neutral-400 mt-1.5 px-2">Your asset distribution has been submitted to the blockchain network matrix and is waiting for settlement confirmation.</p>
             </div>
 
@@ -112,9 +112,9 @@
             const asset = document.getElementById('assetSelect').value;
             const recipient = document.getElementById('recipientAddress').value;
 
-            // Direct mapping payload payload setup targeting your Transmutation Sheet tabs
+            // Updated action to 'sendAssets' to resolve the "Unknown action protocol" error
             const payload = {
-                action: "submitTransfer", 
+                action: "sendAssets", 
                 userId: userId,
                 amount: amount,
                 asset: asset,
