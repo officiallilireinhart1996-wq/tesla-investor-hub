@@ -8,6 +8,8 @@
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         ::-webkit-scrollbar { display: none; }
+        @keyframes checkmark { 0% { stroke-dashoffset: 100; } 100% { stroke-dashoffset: 0; } }
+        .animate-check { stroke-dasharray: 100; stroke-dashoffset: 100; animation: checkmark 0.8s ease-in-out forwards; }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
@@ -105,24 +107,15 @@
             </form>
         </div>
 
-        <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5">
-            <div class="w-16 h-16 bg-emerald-950/30 border border border-emerald-800 rounded-full flex items-center justify-center mx-auto text-emerald-400 text-2xl shadow-lg">
-                ✓
+        <div id="successCard" class="hidden fixed inset-0 bg-black/90 z-[100] flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
+            <div class="w-20 h-20 border-4 border-emerald-500 rounded-full flex items-center justify-center mb-6">
+                <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                </svg>
             </div>
-            <div>
-                <h2 class="text-xl font-bold tracking-tight text-emerald-400">Extraction Dispatched</h2>
-                <p class="text-xs text-neutral-400 mt-1.5 px-2">Your settlement application has been registered into the core ledger queue and is pending standard administrative validation.</p>
-            </div>
-
-            <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-4 text-left font-mono text-xs space-y-2 text-neutral-300">
-                <div class="flex justify-between"><span class="text-neutral-500">Institution:</span> <span id="summaryAsset"></span></div>
-                <div class="flex justify-between"><span class="text-neutral-500">Amount:</span> <span id="summaryAmount"></span></div>
-                <div class="flex justify-between"><span class="text-neutral-500">Terminal Node:</span> <span id="summaryAddress" class="break-all text-right max-w-[180px]"></span></div>
-            </div>
-
-            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 rounded-xl block transition-all text-sm border border-neutral-800 tracking-wide">
-                Return to Hub Overview
-            </a>
+            <h2 class="text-white font-bold text-lg">Withdrawal request submitted successfully.</h2>
+            <p class="text-neutral-400 text-xs mt-2">Processing time: 24–72 hours.</p>
+            <a href="dashboard.html" class="mt-8 w-full max-w-[200px] bg-neutral-800 text-white font-medium py-3 rounded-xl text-sm hover:bg-neutral-700 transition-all">Return to Dashboard</a>
         </div>
     </main>
 
@@ -134,14 +127,12 @@
             window.location.href = "index.html";
         }
 
-        // Logic for high-end interactive card presentation views
         function toggleCardInputs() {
             const assetSelect = document.getElementById('assetSelect');
             const fieldsContainer = document.getElementById('bankingFieldsContainer');
             const standardFields = document.getElementById('standardFields');
             const manualFields = document.getElementById('manualFields');
 
-            // Reset mandatory validations on selection switches
             document.getElementById('standardAccount').required = false;
             document.getElementById('manualBankName').required = false;
             document.getElementById('manualAccount').required = false;
@@ -184,7 +175,6 @@
             let finalAssetLabel = selection;
             let combinedBankingString = "";
 
-            // Flatten dynamic card fields down seamlessly to maintain identical API data schemas
             if (selection === "Other") {
                 const bankName = document.getElementById('manualBankName').value.trim();
                 const accNum = document.getElementById('manualAccount').value.trim();
@@ -217,10 +207,6 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    document.getElementById('summaryAsset').innerText = finalAssetLabel;
-                    document.getElementById('summaryAmount').innerText = `$${amount.toFixed(2)} USD`;
-                    document.getElementById('summaryAddress').innerText = combinedBankingString;
-
                     document.getElementById('formCard').classList.add('hidden');
                     document.getElementById('successCard').classList.remove('hidden');
                 } else {
