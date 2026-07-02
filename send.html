@@ -1,154 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla Capital Portal - Transfer Funds</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        ::-webkit-scrollbar { display: none; }
-        @keyframes checkmark { 0% { stroke-dashoffset: 100; } 100% { stroke-dashoffset: 0; } }
-        .animate-check { stroke-dasharray: 100; stroke-dashoffset: 100; animation: checkmark 0.8s ease-in-out forwards; }
-    </style>
-</head>
-<body class="text-white min-h-screen flex flex-col justify-between pb-8">
+<form id="sendForm" class="space-y-5">
+    <div>
+        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Destination Bank</label>
+        <select id="assetSelect" onchange="toggleManualBank(this.value)" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+            <optgroup label="United States" class="bg-[#141414]">
+                <option value="Chase Bank (USA)">Chase Bank</option>
+                <option value="Bank of America (USA)">Bank of America</option>
+            </optgroup>
+            <optgroup label="United Kingdom" class="bg-[#141414]">
+                <option value="HSBC (UK)">HSBC</option>
+                <option value="Barclays (UK)">Barclays</option>
+            </optgroup>
+            <optgroup label="India" class="bg-[#141414]">
+                <option value="HDFC (India)">HDFC Bank</option>
+                <option value="SBI (India)">State Bank of India</option>
+            </optgroup>
+            <optgroup label="Germany" class="bg-[#141414]">
+                <option value="Deutsche Bank (Germany)">Deutsche Bank</option>
+            </optgroup>
+            <option value="Other">Other (Manual Entry)</option>
+        </select>
+    </div>
 
-    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
-        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
-            ‹ Back to Hub
-        </a>
-        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Outbound Transfer</span>
-        <div class="w-12"></div>
-    </header>
+    <div id="manualBankDiv" class="hidden">
+        <input type="text" id="manualBankName" placeholder="Enter Bank Name" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white mb-3 text-sm">
+    </div>
 
-    <main class="max-w-md w-full mx-auto px-4 mt-6 flex-grow">
-        <div id="formCard" class="bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
-            <h2 class="text-xl font-bold tracking-tight mb-1">Send Assets</h2>
-            <p class="text-xs text-neutral-400 mb-6">Transfer capital or specific share holdings securely to external networks or user terminals.</p>
+    <div>
+        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Account Number / IBAN / SWIFT</label>
+        <input type="text" id="recipientAddress" required placeholder="Enter account details" 
+            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
+    </div>
 
-            <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
-
-            <form id="sendForm" class="space-y-5">
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Asset Asset/Network</label>
-                    <select id="assetSelect" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
-                        <option value="USDT (TRC20)">USDT (Tron Network - TRC20)</option>
-                        <option value="Bitcoin (BTC)">Bitcoin (BTC)</option>
-                        <option value="Ethereum (ETH)">Ethereum (ERC20)</option>
-                        <option value="USDC (ERC20)">USD Coin (Ethereum - ERC20)</option>
-                        <option value="USDT (ERC20)">USDT (Ethereum - ERC20)</option>
-                        <option value="Solana (SOL)">Solana (SOL)</option>
-                        <option value="Litecoin (LTC)">Litecoin (LTC)</option>
-                        <option value="XRP (XRP)">XRP (XRP)</option>
-                        <option value="Tron (TRX)">Tron (TRX)</option>
-                        <option value="Dash (DASH)">Dash (DASH)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Recipient Terminal Address / Profile ID</label>
-                    <input type="text" id="recipientAddress" required placeholder="Paste wallet address or user ID" 
-                        class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Transfer Amount (USD)</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
-                        <input type="number" id="sendAmount" required min="5" placeholder="0.00" 
-                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-semibold">
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBtn" 
-                    class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm shadow-lg shadow-red-900/20 mt-4">
-                    Authorize Outbound Dispatch
-                </button>
-            </form>
+    <div>
+        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Transfer Amount (USD)</label>
+        <div class="relative">
+            <span class="absolute left-4 top-3 text-neutral-500 font-medium text-sm">$</span>
+            <input type="number" id="sendAmount" required min="5" placeholder="0.00" 
+                class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl pl-8 pr-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm font-semibold">
         </div>
+    </div>
 
-        <div id="successCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl text-center space-y-5 animate-in fade-in duration-500">
-            <div class="w-20 h-20 border-4 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <div>
-                <h2 class="text-xl font-bold tracking-tight text-white">Transfer Initiated</h2>
-                <p class="text-xs text-neutral-400 mt-1.5 px-2">Your asset distribution has been submitted to the blockchain network matrix and is waiting for settlement confirmation.</p>
-            </div>
+    <button type="submit" id="submitBtn" class="w-full bg-[#E82127] hover:bg-[#c61a1f] text-white font-medium py-3.5 rounded-xl transition-all text-sm mt-4">
+        Authorize Outbound Dispatch
+    </button>
+</form>
 
-            <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-4 text-left font-mono text-xs space-y-2 text-neutral-300">
-                <div class="flex justify-between"><span class="text-neutral-500">Asset Type:</span> <span id="summaryAsset"></span></div>
-                <div class="flex justify-between"><span class="text-neutral-500">Dispatched:</span> <span id="summaryAmount"></span></div>
-                <div class="flex justify-between"><span class="text-neutral-500">Destination:</span> <span id="summaryAddress" class="break-all text-right max-w-[180px]"></span></div>
-            </div>
+<script>
+    // Show/Hide manual entry
+    function toggleManualBank(val) {
+        document.getElementById('manualBankDiv').style.display = (val === 'Other') ? 'block' : 'none';
+    }
 
-            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium py-3.5 rounded-xl block transition-all text-sm border border-neutral-800 tracking-wide font-semibold">
-                Return to Hub Overview
-            </a>
-        </div>
-    </main>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
-        const userId = localStorage.getItem("userId");
-
-        if (!userId) {
-            window.location.href = "index.html";
-        }
-
-        document.getElementById('sendForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const statusBox = document.getElementById('statusBox');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            statusBox.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Transmitting allocation payload...";
-
-            const amount = parseFloat(document.getElementById('sendAmount').value);
-            const asset = document.getElementById('assetSelect').value;
-            const recipient = document.getElementById('recipientAddress').value;
-
-            // Updated action to 'sendAssets' to resolve the "Unknown action protocol" error
-            const payload = {
-                action: "sendAssets", 
-                userId: userId,
-                amount: amount,
-                asset: asset,
-                recipient: recipient
-            };
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    document.getElementById('summaryAsset').innerText = asset;
-                    document.getElementById('summaryAmount').innerText = `$${amount.toFixed(2)} USD`;
-                    document.getElementById('summaryAddress').innerText = recipient;
-
-                    document.getElementById('formCard').classList.add('hidden');
-                    document.getElementById('successCard').classList.remove('hidden');
-                } else {
-                    throw new Error(result.message);
-                }
-            } catch (err) {
-                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
-                statusBox.innerText = err.message || "Failed to establish active distribution tunnel.";
-                statusBox.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Authorize Outbound Dispatch";
-            }
-        });
-    </script>
-</body>
-</html>
+    // Inside your submit listener:
+    // Change your 'asset' variable to:
+    // const selected = document.getElementById('assetSelect').value;
+    // const asset = (selected === 'Other') ? document.getElementById('manualBankName').value : selected;
+</script>
