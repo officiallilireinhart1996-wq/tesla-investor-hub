@@ -264,6 +264,76 @@
             </div>
         </div>
 
+        <!-- Transactions History (New Section) -->
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4 shadow-xl">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Transaction History</h4>
+                <a href="#" onclick="alert('Full history would open here in a real app');" class="text-[10px] text-[#E82127] hover:text-red-400 font-medium flex items-center gap-1">
+                    View All 
+                    <span class="text-xs">→</span>
+                </a>
+            </div>
+            
+            <div id="transactionsList" class="space-y-3 max-h-80 overflow-y-auto pr-1 custom-scroll">
+                <!-- Sample transactions -->
+                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
+                        <div>
+                            <p class="text-sm font-medium text-neutral-200">Share Purchase</p>
+                            <p class="text-[10px] text-neutral-500 font-mono">TSLA • 45 shares</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-emerald-400 font-medium font-mono">+$2,500.00</p>
+                        <p class="text-[10px] text-neutral-500">2 hours ago</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 text-lg">↑</div>
+                        <div>
+                            <p class="text-sm font-medium text-neutral-200">Withdrawal</p>
+                            <p class="text-[10px] text-neutral-500 font-mono">Bank Transfer</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-red-400 font-medium font-mono">-$1,400.00</p>
+                        <p class="text-[10px] text-neutral-500">Yesterday</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
+                        <div>
+                            <p class="text-sm font-medium text-neutral-200">Deposit</p>
+                            <p class="text-[10px] text-neutral-500 font-mono">USDT Transfer</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-emerald-400 font-medium font-mono">+$10,250.00</p>
+                        <p class="text-[10px] text-neutral-500">Jul 1</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
+                        <div>
+                            <p class="text-sm font-medium text-neutral-200">Fractional Share Buy</p>
+                            <p class="text-[10px] text-neutral-500 font-mono">TSLA • 15 shares</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-emerald-400 font-medium font-mono">+$850.00</p>
+                        <p class="text-[10px] text-neutral-500">Jun 29</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Frame Footer Accent Banner -->
         <div class="relative rounded-2xl overflow-hidden p-5 border border-red-900/30 bg-gradient-to-r from-neutral-950 via-[#180506] to-neutral-950 shadow-inner group">
             <div class="absolute top-0 right-0 p-3 opacity-20 text-red-600 transition-transform duration-700 group-hover:rotate-12">
