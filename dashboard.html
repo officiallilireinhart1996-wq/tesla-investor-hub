@@ -264,13 +264,12 @@
             </div>
         </div>
 
-        <!-- Transactions History - UPDATED -->
+        <!-- Transactions History - UPDATED TO LOAD FROM GOOGLE SHEETS -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4 shadow-xl">
             <div class="flex items-center justify-between">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Transaction History</h4>
                 <span onclick="loadTransactions()" class="text-[10px] text-[#E82127] hover:text-red-400 font-medium cursor-pointer flex items-center gap-1">
-                    Refresh 
-                    <span class="text-xs">↻</span>
+                    Refresh <span class="text-xs">↻</span>
                 </span>
             </div>
             
@@ -344,7 +343,157 @@
             window.location.href = "index.html";
         });
 
-        // ... (All your original code for search, notifications, charts, etc. remains exactly the same)
+        const searchDatabase = [
+            { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
+            { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
+            { name: "Withdrawal System Portal", url: "withdraw.html", category: "Operations" },
+            { name: "Send Cryptographic Assets", url: "send.html", category: "Operations" },
+            { name: "Receive Assets Network", url: "receive.html", category: "Operations" },
+            { name: "Bills & Institutional Invoices", url: "bills.html", category: "Operations" },
+            { name: "Account Profile & Bio Settings", url: "profile.html", category: "System" },
+            { name: "System Interface Adjustments", url: "settings.html", category: "System" },
+            { name: "Secure Message Terminal", url: "messages.html", category: "Communication" }
+        ];
+
+        const openSearchBtn = document.getElementById("openSearchBtn");
+        const closeSearchBtn = document.getElementById("closeSearchBtn");
+        const searchModal = document.getElementById("searchModal");
+        const searchInput = document.getElementById("searchInput");
+        const searchResults = document.getElementById("searchResults");
+
+        openSearchBtn.addEventListener("click", () => {
+            searchModal.classList.remove("hidden");
+            setTimeout(() => {
+                searchModal.classList.remove("opacity-0");
+                searchModal.classList.add("opacity-100");
+                searchInput.focus();
+            }, 50);
+            renderSearchResults(""); 
+        });
+
+        function closeSearchModal() {
+            searchModal.classList.remove("opacity-100");
+            searchModal.classList.add("opacity-0");
+            setTimeout(() => {
+                searchModal.classList.add("hidden");
+                searchInput.value = "";
+            }, 200);
+        }
+        closeSearchBtn.addEventListener("click", closeSearchModal);
+
+        searchInput.addEventListener("input", (e) => {
+            renderSearchResults(e.target.value);
+        });
+
+        function initializePrivatePoolCounter() {
+            let runningShares = 1240;
+            const totalShares = 10000;
+            const textEl = document.getElementById('sharesRemainingText');
+            const percentEl = document.getElementById('sharesPercentageText');
+            const barEl = document.getElementById('sharesProgressBar');
+
+            function updatePoolUI() {
+                textEl.innerText = runningShares.toLocaleString();
+                const precisionFilledPercent = (((totalShares - runningShares) / totalShares) * 100).toFixed(1);
+                percentEl.innerText = `${precisionFilledPercent}%`;
+                barEl.style.width = `${precisionFilledPercent}%`;
+            }
+
+            function subtractRandomShares() {
+                const customDelay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
+                setTimeout(() => {
+                    if (runningShares > 184) {
+                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2;
+                        runningShares -= chunksToSubtract;
+                        updatePoolUI();
+                    }
+                    subtractRandomShares();
+                }, customDelay);
+            }
+
+            updatePoolUI();
+            subtractRandomShares();
+        }
+
+        function renderSearchResults(query) {
+            const cleanQuery = query.toLowerCase().trim();
+            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(cleanQuery));
+
+            if (filtered.length === 0) {
+                searchResults.innerHTML = `<div class="p-4 text-center text-xs text-neutral-500 font-mono">No matching network records found.</div>`;
+            } else {
+                searchResults.innerHTML = filtered.map(item => `
+                    <a href="${item.url}" class="flex items-center justify-between p-3.5 hover:bg-neutral-900/60 transition-colors group">
+                        <span class="text-xs text-neutral-200 font-medium group-hover:text-white">${item.name}</span>
+                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-500 font-mono tracking-wider px-2 py-0.5 rounded-md uppercase">${item.category}</span>
+                    </a>
+                `).join('');
+            }
+            searchResults.classList.remove("hidden");
+        }
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playPremiumChime(isClearAction) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                if(isClearAction) {
+                    osc.frequency.setValueAtTime(520, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.25);
+                } else {
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                }
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch(e){}
+        }
+
+        const notiBellBtn = document.getElementById("notiBellBtn");
+        const notiMenu = document.getElementById("notiMenu");
+
+        notiBellBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if(notiMenu.classList.contains("hidden")) {
+                playPremiumChime(false);
+                notiMenu.classList.remove("hidden");
+                setTimeout(() => {
+                    notiMenu.classList.remove("scale-95", "opacity-0");
+                    notiMenu.classList.add("scale-100", "opacity-100");
+                }, 10);
+            } else {
+                closeNotiMenu();
+            }
+        });
+
+        function closeNotiMenu() {
+            notiMenu.classList.remove("scale-100", "opacity-100");
+            notiMenu.classList.add("scale-95", "opacity-0");
+            setTimeout(() => notiMenu.classList.add("hidden"), 150);
+        }
+
+        document.addEventListener("click", (e) => {
+            if(!notiMenu.contains(e.target) && e.target !== notiBellBtn) {
+                if(!notiMenu.classList.contains("hidden")) closeNotiMenu();
+            }
+        });
+
+        function clearSystemNotifications() {
+            playPremiumChime(true);
+            document.getElementById("notiListContainer").innerHTML = `
+                <div class="p-6 text-center text-neutral-600 text-[10px] uppercase font-mono tracking-wider">
+                    Terminal Log Clear // 0 Messages
+                </div>`;
+            const badge = document.getElementById("notiBadge");
+            if (badge) {
+                badge.classList.add("scale-0", "opacity-0");
+                setTimeout(() => badge.remove(), 200);
+            }
+        }
 
         if (!userId) {
             window.location.href = "index.html";
@@ -361,25 +510,164 @@
             initializePremiumCharts();
             initializeLiveActivityFeed();
             initializePrivatePoolCounter();
-            loadTransactions(); // ← New: Load real transactions
+            loadTransactions(); // Load real transactions
         }
 
-        // ... (Keep all your existing functions: formatCurrency, loadDashboardMetrics, initializePremiumCharts, etc.)
+        function formatCurrency(val) {
+            const num = parseFloat(String(val).replace(/[^0-9.-]+/g,"")) || 0;
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
 
-        // NEW: Load Transactions from Google Sheet
+        async function loadDashboardMetrics() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "getDashboardData", userId: userId })
+                });
+                const result = await response.json();
+                if (result.status === "success") {
+                    document.getElementById('totalBalance').innerText = formatCurrency(result.account.balance);
+                    document.getElementById('totalProfit').innerText = formatCurrency(result.account.profit);
+                } else {
+                    document.getElementById('totalBalance').innerText = "Error";
+                    document.getElementById('totalProfit').innerText = "Error";
+                }
+            } catch (err) {
+                document.getElementById('totalBalance').innerText = "Disconnected";
+                document.getElementById('totalProfit').innerText = "Disconnected";
+            }
+        }
+
+        function initializePremiumCharts() {
+            const ctxLine = document.getElementById('deliveryChart').getContext('2d');
+            const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
+            gradient.addColorStop(0, 'rgba(232, 33, 39, 0.45)');
+            gradient.addColorStop(1, 'rgba(232, 33, 39, 0)');
+
+            const teslaChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13', 'MAR', 'APR', 'MAY 14', 'JUN', 'JUL', 'AUG 15'],
+                    datasets: [{
+                        data: [980, 1250, 1180, 1620, 1480, 1750, 2100, 2850, 5200, 7800, 10500, 9200, 11800, 15200],
+                        borderColor: '#E82127',
+                        borderWidth: 3.5,
+                        tension: 0.35,
+                        fill: true,
+                        backgroundColor: gradient,
+                        pointRadius: 0,
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 4200, easing: 'easeOutExpo' },
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: {
+                        x: { grid: { display: false, color: '#222' }, ticks: { color: '#666', font: { size: 9 } } },
+                        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666', font: { size: 9 }, callback: function(value) { return '$' + value/1000 + 'K'; } } }
+                    }
+                }
+            });
+
+            // Live price updater
+            let currentPrice = 4228;
+            const priceLabels = [4228, 6386, 8322, 10000, 9826, 11000, 9056, 13000, 15200];
+            let priceIndex = 0;
+
+            setInterval(() => {
+                if (priceIndex < priceLabels.length - 1) {
+                    priceIndex++;
+                    currentPrice = priceLabels[priceIndex];
+                    teslaChart.data.datasets[0].data[teslaChart.data.datasets[0].data.length - 1] = currentPrice;
+                    teslaChart.update('none');
+                }
+            }, 900);
+
+            const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
+            new Chart(ctxDonut, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tesla Shares', 'Liquid Cash', 'Other Assets'],
+                    datasets: [{
+                        data: [70, 20, 10],
+                        backgroundColor: ['#E82127', '#2a2a2a', '#5c5c5c'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '72%',
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function initializeLiveActivityFeed() {
+            const feedData = [
+                { text: 'Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)', time: '2 mins ago' },
+                { text: 'Investor ID ***911 withdrew <span class="text-neutral-400 font-mono font-semibold">$1,400</span> to Bank Account', time: '12 mins ago' },
+                { text: 'Investor ID ***104 added position capital pipeline (<span class="text-emerald-400 font-mono font-semibold">$10,250</span> via USDT)', time: 'Just now' },
+                { text: 'Investor ID ***661 secured 15 fractional equities (<span class="text-emerald-400 font-mono font-semibold">$850</span>)', time: '4 mins ago' },
+                { text: 'Investor ID ***319 clearing system payout of <span class="text-neutral-400 font-mono font-semibold">$4,100</span> complete', time: '22 mins ago' },
+                { text: 'Investor ID ***882 initialized institutional collateral allocation (<span class="text-emerald-400 font-mono font-semibold">$15,000</span>)', time: '1 min ago' }
+            ];
+
+            const containerBox = document.getElementById('liveActivityBox');
+            const textBox = document.getElementById('activityText');
+            const timeBox = document.getElementById('activityTime');
+            let currentIndex = 0;
+
+            function cycleFeed() {
+                containerBox.classList.remove('translate-y-0', 'opacity-100');
+                containerBox.classList.add('-translate-y-2', 'opacity-0');
+
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % feedData.length;
+                    const currentItem = feedData[currentIndex];
+                    textBox.innerHTML = currentItem.text;
+                    timeBox.innerText = currentItem.time;
+                    containerBox.classList.remove('-translate-y-2');
+                    containerBox.classList.add('translate-y-2');
+
+                    setTimeout(() => {
+                        containerBox.classList.remove('translate-y-2', 'opacity-0');
+                        containerBox.classList.add('translate-y-0', 'opacity-100');
+                    }, 50);
+                }, 500);
+            }
+
+            function queueNextCycle() {
+                const randomizedInterval = Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
+                setTimeout(() => {
+                    cycleFeed();
+                    queueNextCycle();
+                }, randomizedInterval);
+            }
+            queueNextCycle();
+        }
+
+        // NEW: Load Real Transactions from Google Sheet
         async function loadTransactions() {
             const container = document.getElementById('transactionsList');
-            container.innerHTML = '<div class="text-center py-8 text-neutral-500">Loading transactions...</div>';
+            container.innerHTML = '<div class="text-center py-8 text-neutral-500">Loading real transactions...</div>';
 
             try {
                 const response = await fetch(API_URL, {
                     method: "POST",
+                    mode: "cors",
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({ action: "getTransactionHistory", userId: userId })
                 });
                 const result = await response.json();
 
-                if (result.status === "success" && result.transactions.length > 0) {
+                if (result.status === "success" && result.transactions && result.transactions.length > 0) {
                     container.innerHTML = result.transactions.map(tx => `
                         <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
                             <div class="flex items-center space-x-3">
@@ -396,15 +684,17 @@
                         </div>
                     `).join('');
                 } else {
-                    container.innerHTML = `<div class="text-center py-8 text-neutral-500">No transactions yet.</div>`;
+                    container.innerHTML = `<div class="text-center py-8 text-neutral-500">No transactions found yet.</div>`;
                 }
             } catch (err) {
-                container.innerHTML = `<div class="text-center py-8 text-red-400">Could not load transactions.</div>`;
+                container.innerHTML = `<div class="text-center py-8 text-red-400">Could not load transactions from sheet.</div>`;
             }
         }
 
         // Call it when dashboard loads
-        // (Already added in the if (!userId) block above)
+        window.onload = function() {
+            if (userId) loadTransactions();
+        };
     </script>
 </body>
 </html>
