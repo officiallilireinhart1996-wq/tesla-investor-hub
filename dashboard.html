@@ -264,7 +264,7 @@
             </div>
         </div>
 
-        <!-- Transactions History (New Section) -->
+        <!-- Transactions History -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4 shadow-xl">
             <div class="flex items-center justify-between">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Transaction History</h4>
@@ -275,7 +275,6 @@
             </div>
             
             <div id="transactionsList" class="space-y-3 max-h-80 overflow-y-auto pr-1 custom-scroll">
-                <!-- Sample transactions -->
                 <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
                     <div class="flex items-center space-x-3">
                         <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
@@ -289,48 +288,7 @@
                         <p class="text-[10px] text-neutral-500">2 hours ago</p>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 text-lg">↑</div>
-                        <div>
-                            <p class="text-sm font-medium text-neutral-200">Withdrawal</p>
-                            <p class="text-[10px] text-neutral-500 font-mono">Bank Transfer</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-red-400 font-medium font-mono">-$1,400.00</p>
-                        <p class="text-[10px] text-neutral-500">Yesterday</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
-                        <div>
-                            <p class="text-sm font-medium text-neutral-200">Deposit</p>
-                            <p class="text-[10px] text-neutral-500 font-mono">USDT Transfer</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-emerald-400 font-medium font-mono">+$10,250.00</p>
-                        <p class="text-[10px] text-neutral-500">Jul 1</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
-                        <div>
-                            <p class="text-sm font-medium text-neutral-200">Fractional Share Buy</p>
-                            <p class="text-[10px] text-neutral-500 font-mono">TSLA • 15 shares</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-emerald-400 font-medium font-mono">+$850.00</p>
-                        <p class="text-[10px] text-neutral-500">Jun 29</p>
-                    </div>
-                </div>
+                <!-- More transactions... -->
             </div>
         </div>
 
@@ -596,40 +554,74 @@
         }
 
         function initializePremiumCharts() {
-            // Glowing Line Chart
+            // === UPDATED TESLA CHART - MATCHING YOUR VIDEO ===
             const ctxLine = document.getElementById('deliveryChart').getContext('2d');
             const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
-            gradient.addColorStop(0, 'rgba(232, 33, 39, 0.3)');
+            gradient.addColorStop(0, 'rgba(232, 33, 39, 0.45)');
             gradient.addColorStop(1, 'rgba(232, 33, 39, 0)');
 
-            new Chart(ctxLine, {
+            const teslaChart = new Chart(ctxLine, {
                 type: 'line',
                 data: {
-                    labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13'],
+                    labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13', 'MAR', 'APR', 'MAY 14', 'JUN', 'JUL', 'AUG 15'],
                     datasets: [{
-                        data: [1000, 1200, 1100, 1500, 1400, 1800, 2500, 4228],
+                        data: [980, 1250, 1180, 1620, 1480, 1750, 2100, 2850, 5200, 7800, 10500, 9200, 11800, 15200],
                         borderColor: '#E82127',
-                        borderWidth: 3,
-                        tension: 0.4,
+                        borderWidth: 3.5,
+                        tension: 0.35,
                         fill: true,
                         backgroundColor: gradient,
                         pointRadius: 0,
-                        borderCapStyle: 'round'
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: { duration: 2000, easing: 'easeInOutQuart' },
-                    plugins: { legend: { display: false } },
+                    animation: {
+                        duration: 4200,
+                        easing: 'easeOutExpo'
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
-                        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666', font: { size: 9 }, maxTicksLimit: 4 } }
+                        x: { 
+                            grid: { display: false, color: '#222' }, 
+                            ticks: { color: '#666', font: { size: 9 } } 
+                        },
+                        y: { 
+                            grid: { color: '#1a1a1a' }, 
+                            ticks: { 
+                                color: '#666', 
+                                font: { size: 9 },
+                                callback: function(value) { return '$' + value/1000 + 'K'; }
+                            } 
+                        }
+                    },
+                    elements: {
+                        line: { borderJoinStyle: 'round' }
                     }
                 }
             });
 
-            // Doughnut Allocation
+            // Live price updater (like in your video)
+            let currentPrice = 4228;
+            const priceLabels = [4228, 6386, 8322, 10000, 9826, 11000, 9056, 13000, 15200];
+            let priceIndex = 0;
+
+            setInterval(() => {
+                if (priceIndex < priceLabels.length - 1) {
+                    priceIndex++;
+                    currentPrice = priceLabels[priceIndex];
+                    teslaChart.data.datasets[0].data[teslaChart.data.datasets[0].data.length - 1] = currentPrice;
+                    teslaChart.update('none');
+                }
+            }, 900);
+
+            // Doughnut Allocation (unchanged)
             const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
             new Chart(ctxDonut, {
                 type: 'doughnut',
@@ -697,3 +689,4 @@
     </script>
 </body>
 </html>
+
