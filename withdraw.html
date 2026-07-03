@@ -63,7 +63,6 @@
                 </div>
 
                 <div id="bankingFieldsContainer" class="hidden space-y-4 pt-2">
-                    
                     <div id="standardFields" class="space-y-4">
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-2">Recipient Account Number / IBAN</label>
@@ -133,11 +132,6 @@
             const standardFields = document.getElementById('standardFields');
             const manualFields = document.getElementById('manualFields');
 
-            document.getElementById('standardAccount').required = false;
-            document.getElementById('manualBankName').required = false;
-            document.getElementById('manualAccount').required = false;
-            document.getElementById('manualRouting').required = false;
-
             if (assetSelect.value === "") {
                 fieldsContainer.classList.add('hidden');
                 return;
@@ -148,15 +142,9 @@
             if (assetSelect.value === "Other") {
                 standardFields.classList.add('hidden');
                 manualFields.classList.remove('hidden');
-                
-                document.getElementById('manualBankName').required = true;
-                document.getElementById('manualAccount').required = true;
-                document.getElementById('manualRouting').required = true;
             } else {
                 manualFields.classList.add('hidden');
                 standardFields.classList.remove('hidden');
-                
-                document.getElementById('standardAccount').required = true;
             }
         }
 
@@ -192,7 +180,7 @@
                 action: "submitWithdrawal", 
                 userId: userId,
                 amount: amount,
-                asset: finalAssetLabel,
+                method: finalAssetLabel,
                 address: combinedBankingString
             };
 
@@ -210,7 +198,7 @@
                     document.getElementById('formCard').classList.add('hidden');
                     document.getElementById('successCard').classList.remove('hidden');
                 } else {
-                    throw new Error(result.message);
+                    throw new Error(result.message || "Unknown action protocol.");
                 }
             } catch (err) {
                 statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
@@ -223,3 +211,4 @@
     </script>
 </body>
 </html>
+
