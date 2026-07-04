@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Messages</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; }
+        .chat-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+
+    <header class="px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] flex items-center justify-between">
+        <a href="dashboard.html" class="text-neutral-400">← Back</a>
+        <span class="font-bold text-[#E82127]">ADMIN SUPPORT REPLIES</span>
+    </header>
+
+    <div id="chatContainer" class="flex-1 p-4 overflow-y-auto space-y-6 bg-[#0a0a0a]">
+        <!-- Messages load here -->
+    </div>
+
+    <div class="p-4 border-t border-[#222]">
+        <input type="text" id="replyInput" placeholder="Type reply..." 
+               class="w-full bg-[#1c1c1c] border border-[#333] rounded-2xl px-5 py-3 text-white mb-2">
+        <button onclick="sendReply()" 
+                class="w-full bg-[#E82127] py-3 rounded-2xl font-medium">Send Reply</button>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+        let currentUserId = null;
+
+        async function loadAllMessages() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = '<div class="text-center py-12 text-neutral-500">Loading all conversations...</div>';
+
+            try {
+                // For simplicity, we'll load recent messages (you can improve later)
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "getMessages", userId: "all" })
+                });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    container.innerHTML = result.messages.map(msg => `
+                        <div class="bg-[#1f1f1f] p-4 rounded-2xl">
+                            <p class="text-xs text-neutral-500">User: ${msg.userId}</p>
+                            <p class="mt-1">${msg.message}</p>
+                            <p class="text-[10px] text-neutral-500 mt-2">${msg.timestamp}</p>
+                            <input type="text" id="reply-${msg.id}" placeholder="Reply here..." class="mt-3 w-full bg-[#0d0d0d] border border-[#333] rounded-xl px-4 py-2 text-sm">
+                            <button onclick="sendAdminReply('${msg.id}', '${msg.userId}')" class="mt-2 text-xs bg-[#E82127] px-4 py-1 rounded-lg">Send Reply</button>
+                        </div>
+                    `).join('');
+                }
+            } catch(e) {
+                container.innerHTML = '<div class="text-red-400 text-center">Error loading messages</div>';
+            }
+        }
+
+        async function sendAdminReply(msgId, userId) {
+            const input = document.getElementById(`reply-${msgId}`);
+            const replyText = input.value.trim();
+            if (!replyText) return;
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        action: "replyMessage",
+                        userId: userId,
+                        msgId: msgId,
+                        reply: replyText
+                    })
+                });
+                input.value = '';
+                alert("Reply sent!");
+                loadAllMessages();
+            } catch(e) {
+                alert("Failed to send reply");
+            }
+        }
+
+        // Load messages when page opens
+        loadAllMessages();
+    </script>
+</body>
+</html>
 
