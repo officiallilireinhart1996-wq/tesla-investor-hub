@@ -3,61 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Replies</title>
+    <title>Test Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white p-4 min-h-screen">
+<body class="bg-black text-white p-6">
 
-    <h1 class="text-red-500 font-bold text-xl mb-6">ADMIN SUPPORT REPLIES</h1>
+    <h1 class="text-red-500 text-2xl mb-8">ADMIN TEST PAGE</h1>
 
-    <div id="list" class="space-y-6"></div>
+    <button onclick="loadMessages()" class="bg-red-600 px-6 py-3 rounded-xl mb-6">Load Messages</button>
+
+    <div id="output" class="bg-zinc-900 p-4 rounded-2xl min-h-96"></div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
 
-        async function load() {
-            const div = document.getElementById('list');
-            div.innerHTML = "<p>Loading messages...</p>";
+        async function loadMessages() {
+            const output = document.getElementById('output');
+            output.innerHTML = "Loading...";
 
             try {
-                const r = await fetch(API_URL, {
+                const res = await fetch(API_URL, {
                     method: "POST",
+                    headers: {"Content-Type": "text/plain"},
                     body: JSON.stringify({ action: "getMessages", userId: "all" })
                 });
-                const data = await r.json();
+                const data = await res.json();
 
-                if (data.messages && data.messages.length > 0) {
-                    div.innerHTML = data.messages.map(m => `
-                        <div class="bg-zinc-900 p-4 rounded-2xl">
-                            <p class="text-xs text-gray-400">User ${m.userId}</p>
-                            <p class="my-3">${m.message}</p>
-                            <input id="i${m.id}" class="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-sm" placeholder="Reply...">
-                            <button onclick="reply('${m.id}', '${m.userId}')" class="mt-3 bg-red-600 w-full py-3 rounded-xl">Send Reply</button>
-                        </div>
-                    `).join('');
-                } else {
-                    div.innerHTML = "<p class='text-gray-500 text-center py-12'>No messages yet.</p>";
-                }
+                output.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
             } catch(e) {
-                div.innerHTML = "<p class='text-red-400'>Error</p>";
+                output.innerHTML = "Error: " + e.message;
             }
         }
-
-        window.reply = async function(msgId, userId) {
-            const input = document.getElementById('i' + msgId);
-            const text = input.value.trim();
-            if (!text) return;
-
-            await fetch(API_URL, {
-                method: "POST",
-                body: JSON.stringify({ action: "replyMessage", userId, msgId, reply: text })
-            });
-            input.value = "";
-            alert("Reply sent");
-            load();
-        };
-
-        load();
     </script>
 </body>
 </html>
