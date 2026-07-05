@@ -58,12 +58,42 @@
             </form>
         </div>
 
-        <!-- Success -->
-        <div id="successCard" class="hidden text-center bg-[#141414] border border-[#222] rounded-2xl p-8">
-            <div class="text-6xl mb-4 text-emerald-400">✅</div>
-            <h2 class="text-2xl font-bold text-emerald-400">Transaction Submitted</h2>
-            <p class="text-neutral-400 mt-2">Your transfer has been recorded successfully.</p>
-            <a href="dashboard.html" class="block mt-8 bg-neutral-900 py-4 rounded-2xl">Return to Dashboard</a>
+        <!-- Receipt Screen -->
+        <div id="receiptCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+            <div class="text-center">
+                <div class="mx-auto w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-4xl">✅</span>
+                </div>
+                <h2 class="text-2xl font-bold text-emerald-400">Transaction Submitted</h2>
+                <p class="text-neutral-400 mt-1">Processing • Expected in 5-30 minutes</p>
+            </div>
+
+            <div class="mt-8 bg-[#0d0d0d] rounded-2xl p-5 space-y-4">
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Amount</span>
+                    <span class="font-mono font-bold" id="receiptAmount">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Asset</span>
+                    <span class="font-mono" id="receiptAsset"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Recipient</span>
+                    <span class="font-mono text-sm break-all" id="receiptRecipient"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Status</span>
+                    <span class="text-emerald-400 font-medium">Processing</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Date</span>
+                    <span class="font-mono text-sm" id="receiptDate"></span>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="block mt-8 w-full text-center bg-neutral-900 py-4 rounded-2xl text-sm hover:bg-neutral-800">
+                Return to Dashboard
+            </a>
         </div>
     </main>
 
@@ -78,15 +108,27 @@
             const btn = document.getElementById('submitBtn');
             const statusBox = document.getElementById('statusBox');
             const formCard = document.getElementById('formCard');
-            const successCard = document.getElementById('successCard');
+            const receiptCard = document.getElementById('receiptCard');
 
             btn.disabled = true;
             btn.innerHTML = 'Processing...';
 
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            const currentBalance = parseFloat(localStorage.getItem('balance') || 0); // You can improve this later
+
+            if (amount > currentBalance) {
+                statusBox.className = "mb-4 p-4 text-red-400 bg-red-950/30 border border-red-900 rounded-xl";
+                statusBox.textContent = "Insufficient balance. Available: $" + currentBalance.toFixed(2);
+                statusBox.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerText = "Authorize Outbound Dispatch";
+                return;
+            }
+
             const payload = {
                 action: "submitTransfer",
                 userId: userId,
-                amount: parseFloat(document.getElementById('sendAmount').value),
+                amount: amount,
                 asset: document.getElementById('assetSelect').value,
                 recipient: document.getElementById('recipientAddress').value
             };
@@ -101,7 +143,12 @@
 
                 if (result.status === "success") {
                     formCard.classList.add('hidden');
-                    successCard.classList.remove('hidden');
+                    receiptCard.classList.remove('hidden');
+
+                    document.getElementById('receiptAmount').textContent = '$' + amount.toFixed(2);
+                    document.getElementById('receiptAsset').textContent = payload.asset;
+                    document.getElementById('receiptRecipient').textContent = payload.recipient;
+                    document.getElementById('receiptDate').textContent = new Date().toLocaleString();
                 } else {
                     throw new Error(result.message);
                 }
@@ -116,3 +163,4 @@
     </script>
 </body>
 </html>
+
