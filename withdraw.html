@@ -106,15 +106,38 @@
             </form>
         </div>
 
-        <div id="successCard" class="hidden fixed inset-0 bg-black/90 z-[100] flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500">
-            <div class="w-20 h-20 border-4 border-emerald-500 rounded-full flex items-center justify-center mb-6">
-                <svg class="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path class="animate-check" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
-                </svg>
+        <!-- Receipt Screen -->
+        <div id="receiptCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
+            <div class="text-center">
+                <div class="mx-auto w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-4xl">✅</span>
+                </div>
+                <h2 class="text-2xl font-bold text-emerald-400">Withdrawal Request Submitted</h2>
+                <p class="text-neutral-400 mt-1">Processing • Expected in 24-72 hours</p>
             </div>
-            <h2 class="text-white font-bold text-lg">Withdrawal request submitted successfully.</h2>
-            <p class="text-neutral-400 text-xs mt-2">Processing time: 24–72 hours.</p>
-            <a href="dashboard.html" class="mt-8 w-full max-w-[200px] bg-neutral-800 text-white font-medium py-3 rounded-xl text-sm hover:bg-neutral-700 transition-all">Return to Dashboard</a>
+
+            <div class="mt-8 bg-[#0d0d0d] rounded-2xl p-5 space-y-4">
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Amount</span>
+                    <span class="font-mono font-bold" id="receiptAmount">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Method</span>
+                    <span class="font-mono" id="receiptMethod"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Status</span>
+                    <span class="text-emerald-400 font-medium">Processing</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-neutral-400">Date</span>
+                    <span class="font-mono text-sm" id="receiptDate"></span>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="block mt-8 w-full text-center bg-neutral-900 py-4 rounded-2xl text-sm hover:bg-neutral-800">
+                Return to Dashboard
+            </a>
         </div>
     </main>
 
@@ -152,12 +175,25 @@
             e.preventDefault();
             const statusBox = document.getElementById('statusBox');
             const submitBtn = document.getElementById('submitBtn');
-            
+            const formCard = document.getElementById('formCard');
+            const receiptCard = document.getElementById('receiptCard');
+
             statusBox.classList.add('hidden');
             submitBtn.disabled = true;
             submitBtn.innerText = "Transmitting settlement request...";
 
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const currentBalance = parseFloat(localStorage.getItem('balance') || 0);
+
+            if (amount > currentBalance) {
+                statusBox.className = "mb-4 p-4 text-red-400 bg-red-950/30 border border-red-900 rounded-xl";
+                statusBox.innerText = "Insufficient balance. Available: $" + currentBalance.toFixed(2);
+                statusBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Initialize Extraction Protocol";
+                return;
+            }
+
             const selection = document.getElementById('assetSelect').value;
             
             let finalAssetLabel = selection;
@@ -195,8 +231,12 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    document.getElementById('formCard').classList.add('hidden');
-                    document.getElementById('successCard').classList.remove('hidden');
+                    formCard.classList.add('hidden');
+                    receiptCard.classList.remove('hidden');
+
+                    document.getElementById('receiptAmount').textContent = '$' + amount.toFixed(2);
+                    document.getElementById('receiptMethod').textContent = finalAssetLabel;
+                    document.getElementById('receiptDate').textContent = new Date().toLocaleString();
                 } else {
                     throw new Error(result.message || "Unknown action protocol.");
                 }
@@ -211,3 +251,4 @@
     </script>
 </body>
 </html>
+
