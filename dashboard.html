@@ -271,7 +271,7 @@
             </div>
         </div>
 
-        <!-- Futures & Watchlist (Updated) -->
+        <!-- Futures & Watchlist -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4">
             <div class="flex border-b border-neutral-800">
                 <button onclick="switchTab(0)" id="tabFutures" class="flex-1 py-3 text-sm font-medium border-b-2 border-red-600 text-white">Futures</button>
@@ -643,7 +643,12 @@
 
         // Futures Tabs
         function switchTab(tab) {
-            alert("Tab switched to: " + (tab === 0 ? "Futures" : tab === 1 ? "Watchlist" : "News"));
+            // Simple demo - you can expand later
+            if (tab === 0) {
+                document.getElementById('futuresContent').style.display = 'block';
+            } else {
+                alert("This tab is coming soon");
+            }
         }
 
         function viewAllFutures() {
@@ -853,4 +858,3 @@
     </script>
 </body>
 </html>
-
