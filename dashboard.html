@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+y<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -145,13 +145,19 @@
         <!-- Metric Cards -->
         <div class="grid grid-cols-2 gap-4">
             <div class="gradient-card rounded-2xl p-4 relative shadow-lg">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-red-200">Total Balance</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-red-200">Total Balance</p>
+                    <span id="balanceEye" onclick="toggleBalanceVisibility()" class="cursor-pointer text-neutral-300 hover:text-white">👁️</span>
+                </div>
                 <h3 id="totalBalance" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
                 <p class="text-[10px] text-red-200 font-medium mt-2 flex items-center">▲ 5.24% <span class="opacity-60 ml-1">vs last mo</span></p>
             </div>
 
             <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-lg">
-                <p class="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Total Profit</p>
+                <div class="flex items-center justify-between">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Total Profit</p>
+                    <span id="profitEye" onclick="toggleProfitVisibility()" class="cursor-pointer text-neutral-300 hover:text-white">👁️</span>
+                </div>
                 <h3 id="totalProfit" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
                 <p class="text-[10px] text-emerald-400 font-medium mt-2 flex items-center">▲ 8.45% <span class="text-neutral-600 ml-1">vs last mo</span></p>
             </div>
@@ -177,6 +183,17 @@
             <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
                 <span class="text-neutral-400 text-sm font-medium">Bills</span>
             </a>
+        </div>
+
+        <!-- Account Verification -->
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Account Status</h4>
+                    <p class="text-sm text-neutral-300" id="verificationStatus">Unverified</p>
+                </div>
+                <button onclick="showVerificationModal()" class="text-xs bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-white">Verify Account</button>
+            </div>
         </div>
 
         <!-- Network Status Banner -->
@@ -264,7 +281,7 @@
             </div>
         </div>
 
-        <!-- Transactions History - UPDATED TO LOAD FROM GOOGLE SHEETS -->
+        <!-- Transactions History -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4 shadow-xl">
             <div class="flex items-center justify-between">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Transaction History</h4>
@@ -328,6 +345,21 @@
             </svg>
             <span class="text-[9px] font-medium mt-1 tracking-tight">Exit</span>
         </a>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-6">
+        <div class="bg-[#141414] border border-[#222] rounded-3xl p-8 w-full max-w-md">
+            <h3 class="text-xl font-bold mb-6">Verify Your Account</h3>
+            <form id="verificationForm" class="space-y-4">
+                <input type="text" id="fullName" placeholder="Full Legal Name" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
+                <input type="text" id="idNumber" placeholder="ID / Passport Number" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
+                <input type="tel" id="phone" placeholder="Phone Number" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
+                <input type="text" id="address" placeholder="Residential Address" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
+                <button type="submit" class="w-full bg-[#E82127] py-4 rounded-2xl">Submit for Verification</button>
+            </form>
+            <button onclick="closeVerificationModal()" class="mt-4 w-full text-neutral-400">Cancel</button>
+        </div>
     </div>
 
     <script>
@@ -494,6 +526,38 @@
                 setTimeout(() => badge.remove(), 200);
             }
         }
+
+        // Toggle Balance & Profit Visibility
+        let balanceVisible = true;
+        let profitVisible = true;
+
+        function toggleBalanceVisibility() {
+            balanceVisible = !balanceVisible;
+            document.getElementById('totalBalance').style.opacity = balanceVisible ? '1' : '0';
+            document.getElementById('balanceEye').textContent = balanceVisible ? '👁️' : '🙈';
+        }
+
+        function toggleProfitVisibility() {
+            profitVisible = !profitVisible;
+            document.getElementById('totalProfit').style.opacity = profitVisible ? '1' : '0';
+            document.getElementById('profitEye').textContent = profitVisible ? '👁️' : '🙈';
+        }
+
+        // Verification Modal
+        function showVerificationModal() {
+            document.getElementById('verificationModal').classList.remove('hidden');
+        }
+
+        function closeVerificationModal() {
+            document.getElementById('verificationModal').classList.add('hidden');
+        }
+
+        document.getElementById('verificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alert("Verification request submitted! (This is a demo - saved in Apps Script)");
+            closeVerificationModal();
+            document.getElementById('verificationStatus').innerText = "Verification Pending";
+        });
 
         if (!userId) {
             window.location.href = "index.html";
