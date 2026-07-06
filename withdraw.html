@@ -149,6 +149,24 @@
             window.location.href = "index.html";
         }
 
+        let currentBalance = 0;
+
+        // Load real balance
+        async function loadBalance() {
+            try {
+                const res = await fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "getDashboardData", userId: userId })
+                });
+                const result = await res.json();
+                if (result.status === "success") {
+                    currentBalance = parseFloat(result.account.balance) || 0;
+                    localStorage.setItem('balance', currentBalance);
+                }
+            } catch(e) {}
+        }
+
         function toggleCardInputs() {
             const assetSelect = document.getElementById('assetSelect');
             const fieldsContainer = document.getElementById('bankingFieldsContainer');
@@ -183,7 +201,6 @@
             submitBtn.innerText = "Transmitting settlement request...";
 
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            const currentBalance = parseFloat(localStorage.getItem('balance') || 0);
 
             if (amount > currentBalance) {
                 statusBox.className = "mb-4 p-4 text-red-400 bg-red-950/30 border border-red-900 rounded-xl";
@@ -248,6 +265,9 @@
                 submitBtn.innerText = "Initialize Extraction Protocol";
             }
         });
+
+        // Load balance on page load
+        loadBalance();
     </script>
 </body>
 </html>
