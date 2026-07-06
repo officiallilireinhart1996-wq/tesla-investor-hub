@@ -164,6 +164,7 @@
 
         let currentBalance = 0;
         let pendingPayload = null;
+        let isVIP = localStorage.getItem('isVIP') === 'true'; // Check VIP status
 
         // Load real balance
         async function loadBalance() {
@@ -329,6 +330,32 @@
 
         // Load balance on page load
         loadBalance();
+
+        // Add VIP country banks
+        function addCountryBanks() {
+            if (!isVIP) return;
+
+            const select = document.getElementById('assetSelect');
+            
+            // Add India banks if VIP
+            const indiaGroup = document.createElement('optgroup');
+            indiaGroup.label = "India Banks (VIP)";
+            indiaGroup.innerHTML = `
+                <option value="State Bank of India">State Bank of India</option>
+                <option value="HDFC Bank">HDFC Bank</option>
+                <option value="ICICI Bank">ICICI Bank</option>
+                <option value="Axis Bank">Axis Bank</option>
+                <option value="Punjab National Bank">Punjab National Bank</option>
+            `;
+            select.appendChild(indiaGroup);
+
+            // Add more country groups based on user location (you can expand this)
+        }
+
+        // Call on load
+        window.onload = function() {
+            addCountryBanks();
+        };
     </script>
 </body>
 </html>
