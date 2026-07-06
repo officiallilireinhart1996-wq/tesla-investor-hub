@@ -106,6 +106,19 @@
             </form>
         </div>
 
+        <!-- PIN Prompt -->
+        <div id="pinModal" class="hidden fixed inset-0 bg-black/90 z-[200] flex items-center justify-center p-6">
+            <div class="bg-[#141414] border border-[#222] rounded-3xl p-8 w-full max-w-xs text-center">
+                <h3 class="font-bold text-lg mb-4">Enter 4-Digit PIN</h3>
+                <input type="password" id="pinInput" maxlength="4" inputmode="numeric" 
+                       class="w-full text-center text-4xl bg-[#1c1c1c] border border-[#333] rounded-2xl py-4 tracking-widest focus:outline-none focus:border-[#E82127]">
+                <div class="mt-6 flex gap-3">
+                    <button onclick="cancelPin()" class="flex-1 py-3 bg-neutral-800 rounded-2xl">Cancel</button>
+                    <button onclick="verifyPin()" class="flex-1 py-3 bg-[#E82127] rounded-2xl">Confirm</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Receipt Screen -->
         <div id="receiptCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl">
             <div class="text-center">
@@ -150,6 +163,7 @@
         }
 
         let currentBalance = 0;
+        let pendingPayload = null;
 
         // Load real balance
         async function loadBalance() {
@@ -165,6 +179,77 @@
                     localStorage.setItem('balance', currentBalance);
                 }
             } catch(e) {}
+        }
+
+        // Check if PIN is set
+        function hasPin() {
+            return localStorage.getItem('userPin') !== null;
+        }
+
+        // Show PIN setup
+        function showPinSetup() {
+            const pin = prompt("Create your 4-digit security PIN for transactions:");
+            if (pin && pin.length === 4 && !isNaN(pin)) {
+                localStorage.setItem('userPin', pin);
+                alert("PIN set successfully!");
+                submitWithPin();
+            } else {
+                alert("Please enter a valid 4-digit PIN.");
+            }
+        }
+
+        // Verify PIN
+        function showPinPrompt() {
+            document.getElementById('pinModal').classList.remove('hidden');
+            document.getElementById('pinInput').focus();
+        }
+
+        function cancelPin() {
+            document.getElementById('pinModal').classList.add('hidden');
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').innerText = "Initialize Extraction Protocol";
+        }
+
+        function verifyPin() {
+            const enteredPin = document.getElementById('pinInput').value.trim();
+            const savedPin = localStorage.getItem('userPin');
+
+            if (enteredPin === savedPin) {
+                document.getElementById('pinModal').classList.add('hidden');
+                document.getElementById('pinInput').value = '';
+                submitWithPin();
+            } else {
+                alert("Incorrect PIN. Try again.");
+                document.getElementById('pinInput').value = '';
+            }
+        }
+
+        function submitWithPin() {
+            const payload = pendingPayload;
+            if (!payload) return;
+
+            const formCard = document.getElementById('formCard');
+            const receiptCard = document.getElementById('receiptCard');
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(result => {
+                if (result.status === "success") {
+                    formCard.classList.add('hidden');
+                    receiptCard.classList.remove('hidden');
+
+                    document.getElementById('receiptAmount').textContent = '$' + payload.amount.toFixed(2);
+                    document.getElementById('receiptMethod').textContent = payload.method;
+                    document.getElementById('receiptDate').textContent = new Date().toLocaleString();
+                } else {
+                    alert(result.message || "Transaction failed.");
+                }
+            })
+            .catch(() => alert("Failed to process transaction."));
         }
 
         function toggleCardInputs() {
@@ -193,8 +278,6 @@
             e.preventDefault();
             const statusBox = document.getElementById('statusBox');
             const submitBtn = document.getElementById('submitBtn');
-            const formCard = document.getElementById('formCard');
-            const receiptCard = document.getElementById('receiptCard');
 
             statusBox.classList.add('hidden');
             submitBtn.disabled = true;
@@ -229,7 +312,7 @@
                 combinedBankingString = `ACC: ${accNum}`;
             }
 
-            const payload = {
+            pendingPayload = {
                 action: "submitWithdrawal", 
                 userId: userId,
                 amount: amount,
@@ -237,32 +320,10 @@
                 address: combinedBankingString
             };
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-
-                if (result.status === "success") {
-                    formCard.classList.add('hidden');
-                    receiptCard.classList.remove('hidden');
-
-                    document.getElementById('receiptAmount').textContent = '$' + amount.toFixed(2);
-                    document.getElementById('receiptMethod').textContent = finalAssetLabel;
-                    document.getElementById('receiptDate').textContent = new Date().toLocaleString();
-                } else {
-                    throw new Error(result.message || "Unknown action protocol.");
-                }
-            } catch (err) {
-                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
-                statusBox.innerText = err.message || "Failed to establish secure proxy channel.";
-                statusBox.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Initialize Extraction Protocol";
+            if (!hasPin()) {
+                showPinSetup();
+            } else {
+                showPinPrompt();
             }
         });
 
