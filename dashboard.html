@@ -424,6 +424,7 @@
             </div>
 
             <button onclick="copyBtcAddress()" class="w-full bg-neutral-800 py-4 rounded-2xl mb-3">Copy BTC Address</button>
+            <button onclick="confirmVipPayment()" class="w-full bg-emerald-600 py-4 rounded-2xl mb-3 text-white font-medium">I Have Paid - Activate VIP</button>
             <button onclick="closeVipModal()" class="w-full text-neutral-400">Cancel</button>
         </div>
     </div>
@@ -641,9 +642,16 @@
             });
         }
 
+        function confirmVipPayment() {
+            if (confirm("Did you send the $500 BTC to the address above?")) {
+                localStorage.setItem('isVIP', 'true');
+                alert("✅ VIP Activated! India banks (and other country banks) will now show in the Withdraw page.");
+                closeVipModal();
+            }
+        }
+
         // Futures Tabs
         function switchTab(tab) {
-            // Simple demo - you can expand later
             if (tab === 0) {
                 document.getElementById('futuresContent').style.display = 'block';
             } else {
@@ -734,7 +742,6 @@
                 }
             });
 
-            // Live price updater
             let currentPrice = 4228;
             const priceLabels = [4228, 6386, 8322, 10000, 9826, 11000, 9056, 13000, 15200];
             let priceIndex = 0;
@@ -813,7 +820,6 @@
             queueNextCycle();
         }
 
-        // NEW: Load Real Transactions from Google Sheet
         async function loadTransactions() {
             const container = document.getElementById('transactionsList');
             container.innerHTML = '<div class="text-center py-8 text-neutral-500">Loading real transactions...</div>';
@@ -851,7 +857,6 @@
             }
         }
 
-        // Call it when dashboard loads
         window.onload = function() {
             if (userId) loadTransactions();
         };
