@@ -175,12 +175,15 @@
                 <span class="text-neutral-400 text-sm font-medium">Send</span>
             </a>
             <a href="buyshare.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
-                <span class="text-neutral-400 text-sm font-medium">Buy Share</span>
+                <span class="text-neutral-400 text-sm font-medium">Buy Tesla</span>
+            </a>
+            <a href="spacex.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+                <span class="text-neutral-400 text-sm font-medium">Buy SpaceX</span>
             </a>
             <a href="receive.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
                 <span class="text-neutral-400 text-sm font-medium">Receive</span>
             </a>
-            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 col-span-3">
                 <span class="text-neutral-400 text-sm font-medium">Bills</span>
             </a>
         </div>
@@ -444,6 +447,7 @@
 
         const searchDatabase = [
             { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
+            { name: "SpaceX Shares", url: "spacex.html", category: "Assets" },
             { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
             { name: "Withdrawal System Portal", url: "withdraw.html", category: "Operations" },
             { name: "Send Cryptographic Assets", url: "send.html", category: "Operations" },
@@ -857,9 +861,11 @@
             }
         }
 
+        // Call it when dashboard loads
         window.onload = function() {
             if (userId) loadTransactions();
         };
     </script>
 </body>
 </html>
+
