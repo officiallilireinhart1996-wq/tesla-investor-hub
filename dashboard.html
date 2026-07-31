@@ -175,15 +175,12 @@
                 <span class="text-neutral-400 text-sm font-medium">Send</span>
             </a>
             <a href="buyshare.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
-                <span class="text-neutral-400 text-sm font-medium">Buy Tesla</span>
-            </a>
-            <a href="spacex.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
-                <span class="text-neutral-400 text-sm font-medium">Buy SpaceX</span>
+                <span class="text-neutral-400 text-sm font-medium">Buy Share</span>
             </a>
             <a href="receive.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
                 <span class="text-neutral-400 text-sm font-medium">Receive</span>
             </a>
-            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 col-span-3">
+            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
                 <span class="text-neutral-400 text-sm font-medium">Bills</span>
             </a>
         </div>
@@ -427,7 +424,6 @@
             </div>
 
             <button onclick="copyBtcAddress()" class="w-full bg-neutral-800 py-4 rounded-2xl mb-3">Copy BTC Address</button>
-            <button onclick="confirmVipPayment()" class="w-full bg-emerald-600 py-4 rounded-2xl mb-3 text-white font-medium">I Have Paid - Activate VIP</button>
             <button onclick="closeVipModal()" class="w-full text-neutral-400">Cancel</button>
         </div>
     </div>
@@ -447,7 +443,6 @@
 
         const searchDatabase = [
             { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
-            { name: "SpaceX Shares", url: "spacex.html", category: "Assets" },
             { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
             { name: "Withdrawal System Portal", url: "withdraw.html", category: "Operations" },
             { name: "Send Cryptographic Assets", url: "send.html", category: "Operations" },
@@ -646,16 +641,9 @@
             });
         }
 
-        function confirmVipPayment() {
-            if (confirm("Did you send the $500 BTC to the address above?")) {
-                localStorage.setItem('isVIP', 'true');
-                alert("✅ VIP Activated! India banks (and other country banks) will now show in the Withdraw page.");
-                closeVipModal();
-            }
-        }
-
         // Futures Tabs
         function switchTab(tab) {
+            // Simple demo - you can expand later
             if (tab === 0) {
                 document.getElementById('futuresContent').style.display = 'block';
             } else {
@@ -746,6 +734,7 @@
                 }
             });
 
+            // Live price updater
             let currentPrice = 4228;
             const priceLabels = [4228, 6386, 8322, 10000, 9826, 11000, 9056, 13000, 15200];
             let priceIndex = 0;
@@ -824,6 +813,7 @@
             queueNextCycle();
         }
 
+        // NEW: Load Real Transactions from Google Sheet
         async function loadTransactions() {
             const container = document.getElementById('transactionsList');
             container.innerHTML = '<div class="text-center py-8 text-neutral-500">Loading real transactions...</div>';
@@ -868,4 +858,3 @@
     </script>
 </body>
 </html>
-
