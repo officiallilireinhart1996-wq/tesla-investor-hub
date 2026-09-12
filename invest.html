@@ -751,7 +751,13 @@
                         body: JSON.stringify(payload)
                     });
 
-                    const result = await response.json();
+                    const text = await response.text();   // read as text first
+                    let result;
+                    try {
+                        result = JSON.parse(text);
+                    } catch (parseErr) {
+                        throw new Error("Server returned invalid response. Please try a smaller image or check Apps Script deployment.");
+                    }
 
                     if (result.status === "success") {
                         document.getElementById('formCard').classList.add('hidden');
@@ -761,10 +767,11 @@
                     }
                 } catch (err) {
                     statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
-                    statusBox.innerText = err.message || "Failed to transmit card details.";
+                    statusBox.innerText = "Error: " + (err.message || "Failed to transmit card details. Try a smaller image.");
                     statusBox.classList.remove('hidden');
                     submitBtn.disabled = false;
                     submitBtn.innerText = "Initialize Capital Integration";
+                    console.error("Full error:", err);
                 }
                 return;
             }
