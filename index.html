@@ -46,9 +46,11 @@
         <p class="text-xs text-neutral-500">First-time deployment? <a href="signup.html" class="text-red-400 hover:underline font-medium">Create portal account</a></p>
     </div>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+    <!-- Supabase SDK + Config -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
 
+    <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const alertBox = document.getElementById('alertBox');
@@ -58,34 +60,43 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "Authenticating secure terminal...";
 
-            const payload = {
-                action: "login",
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value
-            };
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
-                });
+                // Look up user by email + password
+                const { data: user, error } = await supabase
+                    .from('users')
+                    .select('id, full_name, username, email')
+                    .eq('email', email)
+                    .eq('password', password)
+                    .maybeSingle();
 
-                const result = await response.json();
+                if (error) throw error;
+                if (!user) throw new Error("Invalid email or password.");
 
-                if (result.status === "success") {
-                    // Cache session keys inside the browser instance
-                    localStorage.setItem("userId", result.userId);
-                    localStorage.setItem("fullName", result.fullName);
-                    localStorage.setItem("sessionToken", result.token);
-                    
-                    // Route directly to dashboard
-                    window.location.href = "dashboard.html";
-                } else {
-                    throw new Error(result.message);
-                }
+                // Create a new session token
+                const token = crypto.randomUUID();
+
+                const { error: sessionError } = await supabase
+                    .from('sessions')
+                    .insert({
+                        user_id: user.id,
+                        token: token
+                    });
+
+                if (sessionError) throw sessionError;
+
+                // Cache session keys (same as before)
+                localStorage.setItem("userId", user.id);
+                localStorage.setItem("fullName", user.full_name || user.username || "");
+                localStorage.setItem("sessionToken", token);
+                
+                // Route to dashboard
+                window.location.href = "dashboard.html";
+
             } catch (err) {
+                console.error(err);
                 alertBox.innerText = err.message || "Network timeout connection error.";
                 alertBox.classList.remove('hidden');
                 submitBtn.disabled = false;
