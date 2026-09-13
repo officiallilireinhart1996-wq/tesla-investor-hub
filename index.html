@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tesla Capital Portal - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     </style>
@@ -25,17 +26,17 @@
         <form id="loginForm" class="space-y-5">
             <div>
                 <label class="block text-xs font-medium uppercase tracking-wider text-[#aaa] mb-2">Secure Email Address</label>
-                <input type="email" id="email" required placeholder="name@example.com" 
+                <input type="email" id="email" required placeholder="name@example.com"
                     class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
             </div>
 
             <div>
                 <label class="block text-xs font-medium uppercase tracking-wider text-[#aaa] mb-2">Access PIN / Password</label>
-                <input type="password" id="password" required placeholder="••••••••" 
+                <input type="password" id="password" required placeholder="••••••••"
                     class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
             </div>
 
-            <button type="submit" id="submitBtn" 
+            <button type="submit" id="submitBtn"
                 class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm mt-2 shadow-lg shadow-red-900/20">
                 Verify Credentials
             </button>
@@ -46,15 +47,14 @@
         <p class="text-xs text-neutral-500">First-time deployment? <a href="signup.html" class="text-red-400 hover:underline font-medium">Create portal account</a></p>
     </div>
 
-    <!-- Load Supabase SDK first -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <script>
-        // Initialize Supabase client
+        // ========== SUPABASE CONNECTION ==========
         const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // =========================================
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -69,8 +69,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                // Look up user by email + password
-                const { data: user, error } = await supabase
+                const { data: user, error } = await _supabase
                     .from('users')
                     .select('id, full_name, username, email')
                     .eq('email', email)
@@ -80,10 +79,10 @@
                 if (error) throw error;
                 if (!user) throw new Error("Invalid email or password.");
 
-                // Create a new session token
+                // Create session token
                 const token = crypto.randomUUID();
 
-                const { error: sessionError } = await supabase
+                const { error: sessionError } = await _supabase
                     .from('sessions')
                     .insert({
                         user_id: user.id,
@@ -92,12 +91,12 @@
 
                 if (sessionError) throw sessionError;
 
-                // Cache session keys
+                // Save session (same as before)
                 localStorage.setItem("userId", user.id);
                 localStorage.setItem("fullName", user.full_name || user.username || "");
                 localStorage.setItem("sessionToken", token);
                 
-                // Route to dashboard
+                // Go to dashboard
                 window.location.href = "dashboard.html";
 
             } catch (err) {
