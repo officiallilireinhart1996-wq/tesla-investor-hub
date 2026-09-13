@@ -10,7 +10,6 @@
     </style>
 </head>
 <body class="text-white min-h-screen flex items-center justify-center p-4">
-
     <div class="max-w-md w-full text-center space-y-6">
         <h1 class="text-2xl font-bold tracking-widest text-[#E82127]">TESLA</h1>
         
@@ -24,17 +23,17 @@
                 <p class="text-xs text-neutral-500 font-mono">Clearing cryptographic handshake keys...</p>
             </div>
         </div>
-
         <p class="text-[10px] text-neutral-600 font-mono uppercase tracking-wider">Secure Infrastructure Terminal // Disconnected</p>
     </div>
 
     <script>
-        // Double check session cleanup just in case they reached this page directly
+        // Clear all session data
         localStorage.removeItem("userId");
         localStorage.removeItem("fullName");
+        localStorage.removeItem("sessionToken");
         localStorage.removeItem("userAvatarImage");
 
-        // Give it a smooth 1.5-second premium transition delay before returning to login
+        // Smooth 1.5-second transition then go to login
         setTimeout(() => {
             window.location.href = "index.html";
         }, 1500);
