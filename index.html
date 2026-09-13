@@ -46,11 +46,16 @@
         <p class="text-xs text-neutral-500">First-time deployment? <a href="signup.html" class="text-red-400 hover:underline font-medium">Create portal account</a></p>
     </div>
 
-    <!-- Supabase SDK + Config -->
+    <!-- Load Supabase SDK first -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-config.js"></script>
-
+    
     <script>
+        // Initialize Supabase client
+        const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const alertBox = document.getElementById('alertBox');
@@ -87,7 +92,7 @@
 
                 if (sessionError) throw sessionError;
 
-                // Cache session keys (same as before)
+                // Cache session keys
                 localStorage.setItem("userId", user.id);
                 localStorage.setItem("fullName", user.full_name || user.username || "");
                 localStorage.setItem("sessionToken", token);
